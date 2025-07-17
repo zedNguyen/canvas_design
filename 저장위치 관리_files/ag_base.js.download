@@ -1,0 +1,1364 @@
+document.write('<script src="/plugins/pinejs/js/aggrid/ag_locale_ko.js"></script>');
+document.write('<script src="/plugins/pinejs/js/aggrid/ag_renderer.js"></script>');
+document.write('<script src="/plugins/pinejs/js/aggrid/ag_formatter.js"></script>');
+document.write('<script src="/plugins/pinejs/js/aggrid/ag_editor.js"></script>');
+document.write('<script src="/plugins/pinejs/js/aggrid/ag_excel.js"></script>');
+
+const AG_EDITOR = {
+    NUMBER: 'numberEditor',
+    DATE: 'datePicker',
+    TEXTAREA: 'agLargeTextCellEditor',
+    CHECKBOX: 'checkboxEditor',
+    TEXT: 'agTextEditor'
+};
+
+/* ============================================================== */
+/* Grid Basic START
+/* ============================================================== */
+/**
+ * <b>Grid 생성 함수</b></br>
+ * <b>사용법</b>  : new Grid(gridDiv,gridOptions)</br>
+ * aggrid default option <a href='https://www.ag-grid.com/javascript-grid-properties/'>https://www.ag-grid.com/javascript-grid-properties</a></br>
+ * gridOptions : 재정의한 gridOptions (default option과 겹칠 경우 넘겨받은 gridOptions로 overwrite)
+ * <b>gridOptions 파라미터</b></br>
+ * gridOptions.bindFormId = grid-form binding을 사용해야 할 경우 대상 FORM의 ID 지정
+ * gridOptions.cud = true   (grid CUD 상태 에디트 모드)
+ * gridOptions.excelTitle  =  '사용이름'  엑셀다운로드시 생성되는 파일이름지정 (자동으로 시간 뒤에 붙음)
+ * gridOptions.gridFullHeightMode  : true   자동높이
+ */
+function Grid(gridDiv, gridOptions){
+     
+    let _this = this;
+    _this.gridDiv = pine.isEmpty(gridDiv)?null:gridDiv[0];
+    _this.gridOptions = $.extend({}, gridOptions);
+    _this.ajax = {};
+    _this.deletedRowData = [];
+    
+    // let the grid know which columns to use
+    setGridOptions();
+
+    // create the grid passing in the div to use together with the columns & data we want to use
+    new agGrid.Grid(_this.gridDiv, _this.gridOptions);
+
+    /* ============================================================== */
+    /* Aggrid 초기화
+     * => grid theme 일괄 설정
+    /* ============================================================== */
+    /*Grid의 최상위에 및 footer에 맞추어서 꽉 채워지게 변경*/
+    /*팝업 등 자동 조절이 필요 없는 경우가 있어 Grid Option에 gridFullHeightMode = true일때만 동작*/
+    if(_this.gridOptions.gridFullHeightMode){
+        $(_this.gridDiv).height(
+            $('.page-wrapper').height() - $(_this.gridDiv).position().top - $('.footer').height()
+        );
+    }
+
+    // grid theme 일괄 설정
+    gridDiv.addClass('ag-theme-balham');
+    
+    // bind form 을 사용하는 grid의 경우 입력필드에 각 change event를 일괄적으로 설정해준다.
+    if(!pine.isEmpty(_this.gridOptions.bindFormId)) {
+        setBindFormChangeEvent();
+    }
+    
+    /* ============================================================== */
+    /* Aggrid default grid option 가져오기 
+     * => column 기본 설정을 일괄 변경하기 위한 용도
+     * => 기본 설정 + 사용자 정의 설정을 merge하여 return한다.
+     * PARAMETER
+     * - columnDefs : 각 grid column definition
+    /* ============================================================== */
+    function setGridOptions() {
+        let defaultOptions = {
+                cud: false,
+                bindFormId: null,
+                gridFullHeightMode: false,
+                suppressPropertyNamesCheck: true, /* aggrid 기본옵션이 아닌 것들에 대한 warning OFF */
+                /* ▲ 사용자 정의 options */
+                defaultColDef: { 	
+                    sortable: true,
+                    resizable: true,
+                    filter: true,
+                    cellClass: 'ag-align-default',
+                    minWidth: 50,
+                    type: 'textFormat',
+                    headerClass: 'text-center'
+                },
+                //cellEditor: AG_EDITOR.TEXT
+                stopEditingWhenGridLosesFocus: true, /* editing is complete when focus out of grid */
+                //suppressCsvExport : true,
+                paginationPageSize: 100,
+                paging: false,
+                singleClickEdit: true,
+                overlayLoadingTemplate: '<span class="ag-overlay-loading-center">로딩중....</span>',
+                rowData: [],
+                rowSelection: 'single', /* 'single' or 'multiple',*/
+                enableRangeSelection : true,
+                suppressClipboardPaste: true, //클립보드 붙여넣기 활성화
+                //enterMovesDown: true, //수정 후 enter 입력시 다음 줄로 넘어감
+                //enterMovesDownAfterEdit: true, //수정 후 enter 입력시 다음 줄로 넘어감 
+                useAggFooter : aggFooterUseCheck(_this.gridOptions),
+                navigateToNextCell: fn_keyNavigation,
+                sendToClipboard: sendToClipboard,
+                onFilterChanged: fn_onFilterChanged, //Filter has changed and been applied by the grid.
+                //onFilterModified: fn_onFilterModified, //Filter UI has changed but not necessarily applied. This is useful when using an apply button if you want to know if the filter changed but was not applied.
+                /*
+                 * excel cell tyle 지정, header의 각 column에 cellClass:'excel-text'를
+                 * 추가한다.
+                 */
+                excelStyles : [ {
+                    id : 'ag-align-default',
+                    font : {
+                        size : 10,
+                    }
+                }, {
+                    id : 'excel-text',
+                    dataType : 'string',
+                    font : {
+                        bold : false,
+                        size : 10
+                    }
+                }, {
+                    id : 'excel-date',
+                    dataType : 'dateTime',
+                    font : {
+                        bold : false,
+                        size : 10
+                    }
+    
+                }, {
+                    id : 'header',
+                    font : {
+                        bold : true,
+                        size : 12
+                    }
+                }, {
+                    id : 'textFormat',
+                    dataType : 'string',
+                    font : {
+                        bold : false,
+                        size : 10
+                    }
+                }, {
+                    id : 'ag-align-right',
+                    font : {
+                        bold : false,
+                        size : 10
+                    }
+                }, {
+                    id : 'ag-align-center',
+                    font : {
+                        bold : false,
+                        size : 10
+                    }
+                }, {
+                    id : 'ag-align-left',
+                    font : {
+                        bold : false,
+                        size : 10
+                    }
+                }],
+                statusBar: {
+                    statusPanels: [
+                        { statusPanel: 'agTotalRowCountComponent' },
+                    ]
+                },
+                components: {
+                    numberEditor: ag_numberEditor,
+                    datePicker: ag_datePicker(),
+                    cudRenderer: ag_cudRenderer,
+                    checkboxEditor: ag_checkboxRendererEditor,
+                    AggFooterDefaultRenderer : aggFooterDefaultRenderer(),
+                    agTextEditor : ag_textEditor
+                },
+                localeText: ag_localeTextKo, /* 다국어 */
+                defaultExportParams : _this.getExcelOption(_this.gridOptions.excelTitle),
+                onCellValueChanged: function(event){
+                    if (!pine.isEmpty(event)) {
+                        let selData = event.data;
+                        
+                        // 행추가된 row type은 유지
+                        if(pine.isEmpty(selData.etype) && pine.nvl(event.newValue, '') != pine.nvl(event.oldValue, '')){
+                            selData.etype = 'U';
+                        }
+                        if(selData.etype != 'D' && selData.etype != 'C' && pine.nvl(event.newValue, '') != pine.nvl(event.oldValue, '')){
+                             selData.etype = 'U';
+                        }
+                        
+                    /*	 if (selData.etype !== 'C')
+                            selData.etype = 'U';*/
+                        
+                        _this.gridOptions.api.updateRowData({
+                            update : [ selData ]
+                        });
+                    
+                        
+                        //공통 풋터 재계산
+                        if( _this.gridOptions.useAggFooter == true) {
+                        let data_array = [];
+                        
+                        for(let i = 0 ; i<_this.gridOptions.api.rowModel.rowsToDisplay.length;i++){
+                            data_array.push(_this.gridOptions.api.rowModel.rowsToDisplay[i].data);
+                        }
+                        
+                        
+                        
+                        _this.gridOptions.api.setPinnedBottomRowData(aggFooterRender(_this.gridOptions.columnDefs,data_array));
+                        
+                        }
+                        // onCellValueChanged override 오류가 나서 잠시 숨김 
+                        // 화면단에서 onCellValueChanged() 호출 시 위 logic을 공통으로 수행한 후 정의된 화면단의 logic을 호출한다.
+                        if(typeof _this.gridOptions.onCellValueChanged === 'function') {
+                            _this.gridOptions.onCellValueChanged();
+                        }
+                    }
+                },
+                onGridReady: function (params) { 
+//                    _this.gridOptions.api.sizeColumnsToFit();
+                }
+            };
+        
+        //모든 행에 pinnedRowCellRenderer로 aggFooterDefaultRenderer() 지정
+        for(let i = 0 ; i < _this.gridOptions.columnDefs.length;i++){
+            _this.gridOptions.columnDefs[i].pinnedRowCellRenderer = aggFooterDefaultRenderer();
+        }
+        
+        //이벤트 옵션 백업
+        let new_eventOptions = {
+            onCellValueChanged : function(event) {
+            }
+        };
+        
+        _this.gridOptions = $.extend(true, {}, defaultOptions,_this.gridOptions);
+        new_eventOptions =  _.cloneDeep(_this.gridOptions); // onCellEvent를 다시만든다.
+        
+        _this.gridOptions.onCellValueChanged = function(event){
+            if (!pine.isEmpty(event)) {
+                let selData = event.data;
+                ///데이터가 바뀌었을떄 U 상태로 변경
+                if(pine.isEmpty(selData.etype) && pine.nvl(event.newValue, '') != pine.nvl(event.oldValue, '')){ 
+                    selData.etype = 'U';
+                }
+                if(selData.etype != 'D' && selData.etype != 'C' && pine.nvl(event.newValue, '') != pine.nvl(event.oldValue, '')){
+                    selData.etype = 'U';
+                }
+                _this.gridOptions.api.updateRowData({
+                    update : [ selData ]
+                });
+                if( _this.gridOptions.useAggFooter == true) {
+                //풋터 재계산
+                let data_array = [];
+                
+                for(let i = 0 ; i<_this.gridOptions.api.rowModel.rowsToDisplay.length;i++){
+                    data_array.push(_this.gridOptions.api.rowModel.rowsToDisplay[i].data);
+                }
+                
+                _this.gridOptions.api.setPinnedBottomRowData(aggFooterRender(_this.gridOptions.columnDefs,data_array));
+                
+                }
+                if(typeof new_eventOptions.onCellValueChanged === 'function') {
+                    new_eventOptions.onCellValueChanged(event);
+                }
+            }
+        }
+
+        /* ============================================================== */
+        /* 모드에 따른 column default 장착
+         * - multiple : checkbox column
+         * - cud : status column
+        /* ============================================================== */
+        // checkbox 장착
+        if(_this.gridOptions.rowSelection === 'multiple') {
+            _this.gridOptions.columnDefs.unshift({
+                headerCheckboxSelection: true,
+                headerCheckboxSelectionFilteredOnly: true, //필터된 내용만 체크 되도록 수정.
+                suppressRowClickSelection: false,
+                checkboxSelection: true,
+                width: 40,
+                editable: true,
+                suppressMenu: false,
+                sortable: false,
+                pinned: true
+            });
+        }
+    
+        // gridOptions.cud=true 일 경우, 행추가/행수정/행삭제 status column 표시 추가
+        if(_this.gridOptions.cud) {
+            _this.gridOptions.columnDefs.unshift({
+                width: 40,
+                field: 'etype',
+                editable: false,
+                cellRenderer: 'cudRenderer',
+                suppressMenu: true,
+                sortable: false,
+                headerName: '',
+            });
+        }
+        
+        //Default Column Setting USER EXIT
+        //CellRenderer가 CheckBox이면 editable false가 동작해야됨
+        //cellEditor미정의시 AG_EDITOR_TEXT를 기본으로 지정
+        for(let i = 0 ; i < _this.gridOptions.columnDefs.length;i++){
+            if (_this.gridOptions.columnDefs[i].cellRenderer === AG_EDITOR.CHECKBOX) {
+                _this.gridOptions.columnDefs[i].editable = false;
+            }
+            if (_this.gridOptions.columnDefs[i].cellEditor == undefined) {
+                _this.gridOptions.columnDefs[i].cellEditor = AG_EDITOR.TEXT;
+            }
+            if (_this.gridOptions.columnDefs[i].editable == true) {
+                _this.gridOptions.columnDefs[i].editable = function(params) { // pinRenderer 클릭방지
+                    return !params.node.rowPinned;
+                }
+            }
+            // headerCheckboxSelection 체크박스 모드일때 수정모드 진입 방지
+            if (_this.gridOptions.columnDefs[i].headerCheckboxSelection !== undefined
+                    && _this.gridOptions.columnDefs[i].checkboxSelection !== undefined) {
+                _this.gridOptions.columnDefs[i].editable = false;
+            }
+
+            // AG_EDIOTR.NUMBER 이고 AG_FORMATTER가 선언되어있을떄 포맷 적용
+            // 아니면 AG_EDITOR와 FORMAT만 선언 되 어 있으면 EDITOR는 MASK적용하고 AG_FORMATTER
+            // 적용되도록
+            // 우선 MAKSKEDITOR와 AG_FORMATTER의 포맷 규칙이 달라서
+            // FORMAT를 보고 AG_NUBER를 수정해야할듯
+            /*
+             * if(_this.gridOptions.columnDefs[i].cellEditor ===
+             * AG_EDITOR.NUMBER &&
+             * !pine.isEmpty(_this.gridOptions.columnDefs[i].format)){ let
+             * format= _this.gridOptions.columnDefs[i].format;
+             * console.log('CELL'); _this.gridOptions.columnDefs[i].cellEditor =
+             * ag_numberFormatter( format );
+             * _this.gridOptions.columnDefs[i].valueFormatter =
+             * ag_numberFormatter( format );
+             *  }
+             */
+        }
+    }
+
+    /* ============================================================== */
+    /* form binding
+     * ------------------------------------------------------------------
+     * form binding을 위해 모든 input field에 change event를 걸어준다.
+     * (주의사항) jquery val()를 이용해서 setvalue를 할 경우,
+     *            val('XXX').change() 와 같이 change event를 반드시 호출해줘야 한다. 
+    /* ============================================================== */
+    function setBindFormChangeEvent() {
+        $('#' + _this.gridOptions.bindFormId + ' :input').not('.modal :input').on('change keyup paste apply.daterangepicker', function(e) {
+            _this.bindToGrid();
+        });
+    }
+
+    /* ============================================================== */
+    /* key navigation
+    /* ============================================================== */
+    function fn_keyNavigation(params) {
+        let previousCell = params.previousCellPosition;
+        let nextCell = params.nextCellPosition;
+        switch (params.key) {
+            case KEY_DOWN:
+                // set selected cell on current cell + 1
+            	 if(_this.gridOptions.rowSelection !== 'multiple') {
+                    _this.gridOptions.api.forEachNode(function(node) {
+                      if (previousCell.rowIndex + 1 === node.rowIndex) {
+                    		 node.setSelected(true);	  
+                      }
+                   });
+            	 }
+                return nextCell;
+            case KEY_UP:
+                // set selected cell on current cell - 1
+            	 if(_this.gridOptions.rowSelection !== 'multiple') {
+                     _this.gridOptions.api.forEachNode(function(node) {
+                       if (previousCell.rowIndex - 1 === node.rowIndex) {
+                     		 node.setSelected(true);	  
+                       }
+                    });
+             	 }
+                return nextCell;
+            case KEY_LEFT:
+            case KEY_RIGHT:
+                return nextCell;
+            default:
+                throw 'this will never happen, navigation is always one of the 4 keys above';
+        }
+    }
+    
+    function fn_onFilterChanged(params){
+        pine.log_info(params);
+        _this.gridOptions.api.deselectAll();
+        _this.refreshFooter();
+    }
+
+    function sendToClipboard(params) {
+
+        console.log('focusedCell: ', _this.gridOptions.api.getFocusedCell());
+        let focusedCell = _this.gridOptions.api.getFocusedCell();
+        let focusedRange = _this.gridOptions.api.getCellRanges();
+        console.log('columns.length: ', focusedRange[0].columns.length);
+        console.log('rows diff: ', focusedRange[0].endRow.rowIndex - focusedRange[0].startRow.rowIndex);
+        var temp = document.createElement("textarea");
+        temp.style.top = "0";
+        temp.style.left = "0";
+        temp.style.position = "fixed";
+
+        if (focusedRange[0].columns.length === 1 &&
+            focusedRange[0].endRow.rowIndex - focusedRange[0].startRow.rowIndex === 0) {
+            _this.gridOptions.api.forEachNodeAfterFilterAndSort(function (rowNode, index) {
+                if (index == focusedCell.rowIndex) {
+                    temp.value = rowNode.data[focusedCell.column.colId];
+                    document.body.appendChild(temp);
+                    temp.focus();
+                    temp.select();
+                    try {
+                        let successful = document.execCommand('copy');
+                        let msg = successful ? 'successful' : 'unsuccessful';
+                        console.log('Fallback: Copying text command was ' + msg);
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(temp);
+                }
+            });
+        } else {
+            temp.value = params.data;
+            document.body.appendChild(temp);
+            temp.focus();
+            temp.select();
+            try {
+                let successful = document.execCommand('copy');
+                let msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Fallback: Copying text command was ' + msg);
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            document.body.removeChild(temp);
+        }
+    }
+    
+/*    function fn_onFilterModified(params){
+        pine.log_info('fn_onFilterModified');
+        pine.log_info(params);
+        _this.refreshFooter();
+    }*/
+}
+/* ============================================================== */
+/* Grid Basic END
+/* ============================================================== */
+
+
+/* ==============================================================
+ * Aggrid Ajax Call START
+ * ==============================================================
+ */
+/**
+ * <b>ajax로 데이터를 Load 하는 함수</b></br>
+ * <b>사용법</b>  : grid.loadData(loadParam)</br>
+ * <b>Example 1></b> </br>
+ * grid.loadData({</br>
+ * url: '/api/hplsd/combo/select_SPART', </br>
+ * params: params, </br>
+ * success: cb_success, </br>
+ * error: cb_error, </br>
+ * complete: cb</br>
+ * });</br>
+ * function cb_success(responseData) {</br>
+ * console.log('cb_success', arguments);</br>
+ * }</br>
+ * function cb_error(responseData) {</br>
+ * console.log('cb_error', arguments);</br>
+ * }</br>
+ * function cb() {</br>
+ * console.log('always call after ajax call');</br>
+ * }</br>
+ * <b>Example 2></b> </br>
+ * grid.loadData({</br>
+ * url: '/api/hplsd/combo/select_SPART',</br>
+ * params: params, </br>
+ * success: function() {</br>
+ * }, </br>
+ * error: function() {</br>
+ * }</br>
+ * });</br>
+ */
+Grid.prototype.loadData = function(loadParam) {
+    let timeout = null;
+    
+    if(loadParam.timeout != undefined){
+        timeout = loadParam.timeout;
+    }
+    
+    this.ajax = {
+        url: loadParam.url,
+        params : loadParam.params,
+        success: loadParam.success,
+        error: loadParam.error,
+        timeout : timeout
+    }
+    this.callAjax(this);
+}
+
+/**
+ * <b>ajax로 데이터를 reLoad 하는 함수</b></br>
+ * loadData의 설정을 그대로 사용하지만 params를 변경하여 재 통신한다/
+ * <b>사용법</b>  : grid.loadData(loadParam)</br>
+ * aggrid default option <a href='https://www.ag-grid.com/javascript-grid-properties/'>https://www.ag-grid.com/javascript-grid-properties</a></br>
+ * gridOptions : 재정의한 gridOptions (default option과 겹칠 경우 넘겨받은 gridOptions로 overwrite)
+ * <b>gridOptions 파라미터</b></br>
+ * gridOptions.bindFormId = grid-form binding을 사용해야 할 경우 대상 FORM의 ID 지정
+ * gridOptions.cud = true   (grid CUD 상태 에디트 모드)
+ * gridOptions.gridFullHeightMode  : true   자동높이
+ */
+
+/**
+ * <b>ajax로 데이터를 reLoad 하는 함수</b></br>
+ * loadData의 설정을 그대로 사용하지만 params를 변경하여 재 통신한다/
+ * <b>Example 1></b> </br>
+ * grid.reloadData({</br>
+ * params: params
+ * });</b>
+ */
+Grid.prototype.reloadData = function(params) {
+    if(!pine.isEmpty(params)) {
+        this.ajax.params = params;
+    }
+    this.callAjax(this);
+}
+
+/**
+ * <b>ajax로 데이터를 reLoad 하는 함수</b></br>
+ * loadData의 설정을 그대로 사용하지만 params , sync를 변경하여 재 통신한다/
+</b>
+ */
+Grid.prototype.reloadDataSync = function(params) {
+    if(!pine.isEmpty(params)) {
+        this.ajax.params = params;
+    }
+    this.ajax.async = false;
+    this.callAjax(this);
+}
+
+//call ajax
+Grid.prototype.callAjax = function(_this) {
+    // load mask
+    _this.gridOptions.api.showLoadingOverlay();
+
+    pine.ajax({
+        url : _this.ajax.url,
+        params : _this.ajax.params,
+        timeout : _this.ajax.timeout,
+        async : _this.ajax.async==null?true:_this.ajax.async,
+        /* success callback */
+        success : function(result) {
+            // cud일 경우 deleted row data reset
+            if (_this.gridOptions.cud) {
+                _this.deletedRowData = [];
+            }
+
+            _this.gridOptions.api.setRowData(result.data);
+
+            // Aggregation에 값이 있는지 체크
+            if (_.isEmpty(_.find(_this.gridOptions.columnDefs, 'aggregation')) == false) {
+                _this.gridOptions.api.setPinnedBottomRowData(aggFooterRender(_this.gridOptions.columnDefs, result.data));
+            }
+
+            if (typeof _this.ajax.success === 'function') {
+                _this.ajax.success(result);
+            }else{
+                _this.ajax.success = result;
+            }
+        },
+        /* error callback */
+        error : function(result) {
+            if (typeof _this.ajax.error === 'function') {
+                _this.ajax.error(result);
+            }
+        },
+        /* complete callback */
+        complete : function() {
+            // hide loadmask
+            _this.gridOptions.api.hideOverlay();
+
+            if (typeof _this.ajax.complete === 'function') {
+                _this.ajax.complete(result);
+            }
+        },
+        showLoadmask : false /* off default loadmask */
+    });
+}
+/* ==============================================================
+ * Aggrid Ajax Call END
+ * ==============================================================
+ */
+
+
+/* ============================================================== */
+/* Getter function START
+/* ============================================================== */
+/**
+ * <b>getGridOptions  </b></br>
+ * gridOptions을 반환한다.
+ * 분류 :  API 객체 호출  </br>
+ * <b>Example 1></b> </br>
+ * maingrid.getGridOptions();
+ */
+Grid.prototype.getGridOptions = function() {
+    return this.gridOptions;
+}
+
+/**
+ * <b>getApi() </b></br>
+ * gridOptions.api를 반환한다.
+ * 분류 :  API 객체 호출 </br>
+ * <b>Example 1></b> </br>
+ * maingrid.getApi();
+ */
+Grid.prototype.getApi = function() {
+    return this.gridOptions.api;
+}
+/**
+ * <b>getColumnDefs() </b></br>
+ * gridOptions.getColumnDefs를 반환한다.
+ * 분류 :  API 객체 호출 </br>
+ * <b>Example 1></b> </br>
+ * maingrid.getColumnDefs();
+ */
+Grid.prototype.getColumnDefs = function() {
+    return this.gridOptions.columnDefs;
+}
+/* ============================================================== */
+/* Getter function END
+/* ============================================================== */
+
+/* ============================================================== */
+/* Row Handling START
+/* ============================================================== */
+/**
+ * grid에서 포커스된 행 가져오기</br>
+ * 분류 :  Data Handling </br>
+ * <b>Example 1></b> </br>
+ * grid.getSelectedRows();
+ */
+Grid.prototype.getSelectedRows= function(){
+    let selectedRow = this.gridOptions.api.getSelectedRows();
+    return selectedRow;
+}
+
+/**
+ * 원하는 행을 선택한다.</br>
+ * 분류 :  Data Handling </br>
+ * @param {numbwer} rowIdx
+ * <b>Example></b> </br>
+ * grid.makeRowSelect(0);
+ */
+Grid.prototype.makeRowSelect = function(rowIdx){
+    // 포커싱 이동
+    let rowNode = this.gridOptions.api.getDisplayedRowAtIndex(rowIdx);
+    if (!pine.isEmpty(rowNode))
+        rowNode.setSelected(true);
+}
+/* ============================================================== */
+/* Row Handling END
+/* ============================================================== */
+
+/* ============================================================== */
+/* Data Handling START
+/* ============================================================== */
+/**
+ * <b>grid getDataCount() </b></br>
+ * data의 Count를 반환한다.
+ * 분류 :  Data Handling </br>
+ * @param
+ * <b>Example 1></b> </br>
+ * maingrid.getDataCount();
+ */
+Grid.prototype.getDataCount = function() {
+	let i = 0;
+	this.gridOptions.api.forEachNode(function(node) { 
+		i++;
+	});
+	return i;
+}
+
+/**
+ * <b>grid getDisplayedCount() </b></br>
+ * 화면에 보이는 데이터의 count를 반환한다.
+ * 분류 :  Data Handling </br>
+ * @param 
+ * <b>Example 1></b> </br>
+ * maingrid.getDataCount();
+ */
+Grid.prototype.getDataDisplayedCount = function() {	
+	return this.gridOptions.api.getDisplayedRowCount();
+}
+/**
+ * <b>grid getDisplayedCount() </b></br>
+ * 화면에 보이는 데이터를 반환한다.
+ * 분류 :  Data Handling </br>
+ * @param 
+ * <b>Example 1></b> </br>
+ * maingrid.getDisplayedData();
+ */
+Grid.prototype.getDisplayedData = function() {
+	let data_array = [];
+    for(let i = 0 ; i< this.gridOptions.api.rowModel.rowsToDisplay.length;i++){
+   	  data_array.push(this.gridOptions.api.rowModel.rowsToDisplay[i].data);
+    }	
+	return data_array;
+}
+
+/**
+ * <b>grid getAllRowData </b></br>
+ * 그리드에 있는 데이터 Rows를 반환한다.
+ * 분류 :  Data Handling </br>
+ * @param
+ * <b>Example 1></b> </br>
+ * maingrid.getAllRowData();
+ */
+Grid.prototype.getAllRowData = function() {	
+	let items = [];
+	this.gridOptions.api.forEachNode(function(node) { 
+	    items.push(node.data);
+	});
+	return items;
+}
+
+/* form -> grid data binding */
+Grid.prototype.bindToGrid = function() {
+    if(this.gridOptions.api.getSelectedRows().length !== 1) return;
+    
+    let params = pine.form_Serializable('#' + this.gridOptions.bindFormId);
+    let selData = this.gridOptions.api.getSelectedRows()[0];
+    
+    // 행추가된 row type은 유지
+    if(selData.etype!=='C') {
+        selData.etype = 'U';
+    }
+    let updateData = $.extend(true, selData, params);
+    
+    this.gridOptions.api.updateRowData({
+        update: [updateData]
+    });
+    
+    if(typeof bindToGrid === 'function') {
+        bindToGrid(updateData);
+    }
+}
+
+/* grid -> form data binding */
+Grid.prototype.bindToForm = function(selData) {
+    if(this.gridOptions.api.getSelectedRows().length !== 1) return;
+    
+    $('#' + this.gridOptions.bindFormId)[0].reset();
+    
+    pine.form_setValues('#' + this.gridOptions.bindFormId, selData);
+    
+    if(typeof bindToForm === 'function') {
+        bindToForm(selData);
+    }
+}
+
+/**
+ * <b>grid data 직접 로드</b></br>
+ * 분류 :  Data Handling </br>
+ * @param {jsonArray} rowDatas
+ * <b>Example 1></b> </br>
+ * maingrid.setRowData(rowDatas);
+ */
+Grid.prototype.setRowData = function(rowData) {
+    this.gridOptions.api.setRowData(rowData);
+}
+/**
+ * grid의 rowData와 rowIndex를 받아서 해당 행 데이터를 업데이트 한다.</br>
+ * 분류 :  Data Handling </br>
+ * @param {jsonObject} rowData
+ * @param {int} rowIdx 
+ * <b>Example 1></b> </br>
+ * grid.updateRowByIdx(rowdatas,0);
+ */
+Grid.prototype.updateRowByIdx = function(rowData,rowIdx){
+    let selectedRow = this.gridOptions.api.getDisplayedRowAtIndex(rowIdx);
+    selectedRow[0] = $.extend(true,  selectedRow[0], rowData);
+    this.gridOptions.api.updateRowData({
+       update : [ selectedRow[0] ]
+   });
+}
+/**
+ * grid에서 포커스된 행의 Row의 데이터를 업데이트 한다.</br>
+ * 분류 :  Data Handling </br>
+ * @param {jsonObject} rowData
+ * <b>Example 1></b> </br>
+ * grid.updateRowByIdx(rowdatas,0);
+ */
+Grid.prototype.updateSelectedRow= function(rowData){
+    let selectedRow = this.gridOptions.api.getSelectedRows();
+    selectedRow[0] = $.extend(true,  selectedRow[0], rowData);
+    this.gridOptions.api.updateRowData({
+       update : [ selectedRow[0] ]
+   });
+}
+
+/**
+ * grid 데이터를 변경한다.</br>
+ * 분류 :  Data Handling </br>
+ * 파라미터 {jsonArray} rowData[] </br>
+ * <b>Example 1 </b> </br>
+ * grid.updateRows(rowDataArray);</br>
+ */
+Grid.prototype.updateRows= function(rowData){
+    this.gridOptions.api.updateRowData({
+       update :  rowData 
+   });
+}
+/* ============================================================== */
+/* Data Handling END
+/* ============================================================== */
+
+/* ============================================================== */
+/* Aggrid editor CUD START
+/* ============================================================== */
+/* 행삭제 (delete) */
+/**
+ * grid의 선택된 행을 삭제한다.</br>
+ * 분류 :  Data Handling </br>
+ * @param {rowData} targetData
+ * <b>Example 1></b> </br>
+ * grid.deleteRows(); //포커스(선택된) 행 삭제
+ * <b>Example 2></b> </br>
+ * grid.deleteRows(rowData); //넘겨준 Row에 대한 행 삭제
+ */
+Grid.prototype.deleteRows = function(targetData) {
+    let res = null;
+    if (pine.isEmpty(targetData)) {
+        targetData = this.gridOptions.api.getSelectedRows();
+    }
+
+    // select nothing
+    if (pine.isEmpty(targetData))
+        return;
+
+    if (Array.isArray(targetData) == false) {
+        res = this.gridOptions.api.updateRowData({
+            remove : [ targetData ]
+        });
+    } else {
+        res = this.gridOptions.api.updateRowData({
+            remove : targetData
+        });
+    }
+
+    // 포커싱 이동
+    let rowNode = this.gridOptions.api
+            .getDisplayedRowAtIndex(res.remove[0].childIndex);
+    if (!pine.isEmpty(rowNode))
+        rowNode.setSelected(true);
+
+    // add 된 후 삭제된 row는 바로 삭제처리.
+    if (Array.isArray(targetData) == false){
+        this.deletedRowData = this.deletedRowData.concat(targetData);
+    }else{
+        targetData.forEach(function(item, idx) {
+            if (item.etype === 'C') {
+                targetData.splice(targetData.indexOf(idx), 1);
+            }
+        });
+       
+    }
+    //footer Refresh
+    this.refreshFooter();
+}
+
+/* 행삭제 (update) */
+/**
+ * 행의 Status를 삭제 상태로 만든다.</br>
+ * 분류 :  Data Handling </br>
+ * @param {rowData} targetData
+ * <b>Example 1></b> </br>
+ * showDeleteRows(); //포커스(선택된) 삭제된 
+ * <b>Example 2></b> </br>
+ * showDeleteRows(rowData); //넘겨준 Row에 대한 삭제 행 표시
+ */
+Grid.prototype.showDeleteRows = function(targetData) {
+     
+    if(pine.isEmpty(targetData)) {
+        targetData = this.gridOptions.api.getSelectedRows();
+    }
+
+    // select nothing
+    if(pine.isEmpty(targetData)) return;
+    
+    if(targetData[0].etype === 'C') {
+        let res = this.gridOptions.api.updateRowData({ remove: targetData });
+        
+        // 포커싱 이동
+        let rowNode = this.gridOptions.api.getDisplayedRowAtIndex(res.remove[0].childIndex);
+        if (!pine.isEmpty(rowNode))
+            rowNode.setSelected(true);
+    }
+    else {
+        targetData[0].etype = 'D';
+        this.gridOptions.api.updateRowData({ update: targetData });
+    }
+    
+    //footer Refresh
+    this.refreshFooter();
+}
+
+/**
+ * 신규 행을 추가한다.</br>
+ * 분류 :  Data Handling </br>
+ * @param {rowData} addData
+ * @param {int} idx
+ * <b>Example 1></b> </br>
+ * grid.addRow(); //신규 행 추가
+ * grid.addRow(addData,idx); //해당 index 부분에 데이터 추가
+ */
+Grid.prototype.addRow = function(addData, idx) {
+     
+    if(pine.isEmpty(idx)) idx = 0;
+    if(pine.isEmpty(addData)) addData={};
+    addData.etype = 'C';
+    let result = this.gridOptions.api.updateRowData({ add: [addData], addIndex: idx});
+    
+    // 추가한 row select
+    this.gridOptions.api.getRowNode(result.add[0].id).setSelected(true);
+    //footer Refresh
+    this.refreshFooter();
+}
+
+/**
+ * 행 복사</br>
+ * 분류 :  Data Handling </br>
+ * <b>Example</b> </br>
+ * grid.copyRows(); //포커스된 행을 복사한다.
+ */
+Grid.prototype.copyRows = function () {
+    
+    let selData = this.gridOptions.api.getSelectedRows();
+
+    // select nothing
+    if(pine.isEmpty(selData)) return true;
+
+    let copyData = $.extend({}, selData[0]);
+    copyData.etype = 'C';
+    
+    let result = this.gridOptions.api.updateRowData({ add: [copyData], addIndex: 0});
+    // 추가한 row select
+    this.gridOptions.api.getRowNode(result.add[0].id).setSelected(true);
+   //footer Refresh
+    this.refreshFooter();
+  
+    return false;
+}
+
+/**
+ * 수정된 데이터 가져오기 </br>
+ * grid.getCudData();
+ * @returns
+ *  returnData : 
+ * {
+ *      C : [{}] (추가)
+ *      D : [{}] (삭제)
+ *      U : [{}] (수정)
+ * }
+ */
+Grid.prototype.getCudData = function() {
+    let updateRows = [], insertRows = [], deleteRows = this.deletedRowData;
+    
+    this.gridOptions.api.forEachNode( function(rowNode, index) {
+        if(rowNode.data.etype === 'U'){
+            updateRows.push(rowNode.data);
+        }
+        else if(rowNode.data.etype === 'C'){
+            insertRows.push(rowNode.data);
+        }
+        else if(rowNode.data.etype === 'D'){
+            deleteRows.push(rowNode.data);
+        }
+    });
+    
+    let result = {
+        C: [],
+        U: [],
+        D: [],
+    };
+    if(updateRows.length > 0) {
+        result.U = updateRows;
+    }
+    if(insertRows.length > 0) {
+        result.C = insertRows;
+    }
+    if(deleteRows.length > 0) {
+        result.D = deleteRows;
+    }
+    
+    return result;
+}
+
+/**
+ * grid CUD data 변경여부 확인 </br>
+ * 분류 : Data Handling </br>
+ * grid.isCUDChanged(etype);</br></br>
+ * 
+ * @param {String} etype</br>
+ *        null = check all type
+ *        C = check added rows
+ *        U = check updated rows
+ *        D = check deleted rows
+ * @return {Boolean} isChanged
+ */
+Grid.prototype.isCUDChanged = function(etype) {
+    let cudData = this.getCudData();
+    // cud check all
+    if(pine.isEmpty(etype)) {
+        if(pine.isEmpty(cudData.C) && pine.isEmpty(cudData.U) && pine.isEmpty(cudData.D))
+            return false;
+    }
+    else if(etype==='C') {
+        if(pine.isEmpty(cudData.C))
+            return false;
+    }
+    else if(etype==='U') {
+        if(pine.isEmpty(cudData.U))
+            return false;
+    }
+    else if(etype==='D') {
+        if(pine.isEmpty(cudData.D))
+            return false;
+    }
+    return true;
+}
+
+/**
+ * CUD array에 올라온 변경된 행 데이터들을 초기화 한다.</br>
+ * 분류 :  Data Handling </br>
+ * grid.clearCUD();
+ * @param {Object} cud
+ * {
+ *      C : [] (추가)
+ *      D : [] (삭제)
+ *      U : [] (수정)
+ * }
+ */
+Grid.prototype.clearCUD = function(cud) {
+    this.deletedRowData = [];
+    cud = {
+        C: [],
+        U: [],
+        D: [],
+    }
+    return cud;
+}
+
+/**
+ * clear grid row data</br>
+ * 분류 :  Data Handling </br>
+ * grid.clearRowData();
+ */
+Grid.prototype.clearRowData = function() {
+    this.clearCUD();
+    this.gridOptions.api.setRowData([]);
+}
+/* ============================================================== */
+/* Aggrid editor CUD END
+/* ============================================================== */
+
+
+/* ============================================================== */
+/* Footer START
+/* ============================================================== */
+/**
+ * footer 값을 강제로 Refresh 한다.</br>
+ * 분류 :  Data Handling </br>
+ * <b>Example 1></b> </br>
+ * grid.refreshFooter(); //풋터 전체 데이터 Refresh
+ */
+Grid.prototype.refreshFooter = function() {
+    //footer를 사용하는지 확인
+	//전체 갱신
+	//CopyRow하고 Footer를 재계산
+    if(this.gridOptions.useAggFooter==true){
+        let data_array = this.getDisplayedData();
+        this.gridOptions.api.setPinnedBottomRowData(aggFooterRender(this.gridOptions.columnDefs,data_array));
+    }
+    
+}
+
+/**
+ * footer에서 aggregation이 custom인 것에 서 field를 지정하면 값을 변경할수 있도록</br>
+ * 분류 :  Data Handling </br>
+ * <b>Example 1></b> </br>
+ * maingrid.setAggregationText('TOT','123123',true); //aggregation변경후 footer refresh
+ */
+Grid.prototype.setAggregationText = function(field, value, isfooterRefresh) {
+	
+    let index = -1;
+    
+    //index를 찾는다.
+     for(let i = 0 ;i <  this.gridOptions.columnDefs.length; i++){ 
+    	 if( this.gridOptions.columnDefs[i].field === field ){
+    		 index = i;
+    		 break;
+    	 }
+     }
+    
+    if(index != -1 ){
+   	 
+    if(this.gridOptions.columnDefs[index].aggregation === 'CUSTOM'){
+    	this.gridOptions.columnDefs[index].aggregation_text=value;
+   		//this 갱신
+   		//CopyRow하고 Footer를 재계산
+    	//isRefresh가 true일때 적용
+    	if(isfooterRefresh==true){
+    		let data_array = this.getDisplayedData();
+       	 	this.gridOptions.api.setPinnedBottomRowData(aggFooterRender(this.gridOptions.columnDefs,data_array));	
+    	}		
+   	 } 	
+    }
+}
+
+/*
+ * Header를 읽어서 해당 Header 컬럼에 aggregation에 Sum,Min,Max,Avg,Custom 가 정의 되있으면
+   해당 컬럼을 키로 추가하고 연산을 수행함
+ */
+function aggFooterDefaultRenderer(){
+    
+    function setStyle(element, propertyObject) {
+          for (let property in propertyObject) {
+            element.style[property] = propertyObject[property];
+          }
+    }
+    function CellRenderer() {}
+    
+    CellRenderer.prototype.createGui  = function(){
+        let template =
+            '<div style=" width:100% "></div>';
+        /*     '<span id='theOption' class='flex-container'><span id='theValue' style='flex: 5'></span><button id='theButton' style=' flex: 1'> ··· </button></span>'; */
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = template;
+        this.eGui = tempDiv.firstElementChild;
+    };
+    
+    CellRenderer.prototype.init = function(params) {
+        // create the gui
+        this.createGui();
+        // keep params, we use it in onButtonClicked
+        this.params = params;
+        setStyle(this.eGui, params.style);
+        if(params.value){
+            this.eGui.innerHTML = params.value;
+        }
+    }
+    
+    CellRenderer.prototype.getGui = function() {
+        // returns our gui to the grid for this cell
+        return this.eGui;
+    };
+    CellRenderer.prototype.destroy = function() {
+        // be good, clean up the listener
+        //this.eButton.removeEventListener('click', this.buttonClickListener);
+    };
+      
+    return CellRenderer; 
+}
+
+//공통 풋터의 사용여부를 점검하여 columeDef에 넣어줍니다.
+function aggFooterUseCheck(gridOptions){
+let result = false;
+    //index를 찾는다.
+     for(let i = 0 ;i <  gridOptions.columnDefs.length; i++){ 
+         //하나라도 정의되어있으면 변경
+         if(gridOptions.columnDefs[i].aggregation != undefined){
+             result = true;
+             break;
+         }
+     }
+     return result;
+}
+
+function aggFooterRender(columnDefs, rowData) {
+    let result = [];
+    let foot_result = {};
+    for (let i = 0; i < columnDefs.length; i++) {
+
+        if (columnDefs[i].aggregation) {
+            let prefix = '';
+
+            let cal_result = 0;
+
+            if (columnDefs[i].aggregation.toUpperCase() === 'SUM') {
+                let field = columnDefs[i].field;
+                let temp_data = 0;
+                for(let j = 0; j < rowData.length; j++){
+                    
+                    temp_data = rowData[j][field];
+                    
+                    if(pine.isEmpty(temp_data)){
+                        temp_data = Number(0);
+                    }else{
+                        temp_data = Number(temp_data);
+                    }
+                
+                   cal_result = cal_result +temp_data;
+                
+                }
+            } else if (columnDefs[i].aggregation.toUpperCase() === 'COUNT') {
+                /* 갯수는 array 갯수 그대로 출력 */
+                /* 나중에 IF문을 이용해서 있는것만 체크해서 넣어도 될듯 */
+                cal_result = rowData.length;
+            } else if (columnDefs[i].aggregation.toUpperCase() === 'MAX') {
+               let field = columnDefs[i].field;
+               if(rowData.length > 1){
+                   cal_result = _.maxBy(rowData, function (x){ return x[field]})[field];
+               }else if(rowData.length == 1){
+                   cal_result = rowData[0][field];
+               }
+            } else if (columnDefs[i].aggregation.toUpperCase() === 'MIN') {
+                let field = columnDefs[i].field;
+                if(rowData.length > 1){
+                   cal_result = _.minBy(rowData, function (x){ return x[field]})[field];
+                }else if(rowData.length == 1){
+                   cal_result = rowData[0][field];
+                }  
+            } else if (columnDefs[i].aggregation.toUpperCase() === 'AVG') {
+                let field = columnDefs[i].field;
+                if(rowData.length > 1){
+                   cal_result = _.meanBy(rowData, function (x){ return x[field]})[field];
+                 }else if(rowData.length == 1){
+                   cal_result = rowData[0][field];
+                 }  
+            }
+           
+            
+            //aggregation_text 가 있으면 해당 Text를 붙여서 표시한다.
+            //기본적으로 숫자는 다 콤마를 붙인다.
+            //aggregation_format이 있으면 numeralJs로 해당 문법을 사용해준다.
+            
+            
+            if(!pine.isEmpty(columnDefs[i].aggregation_format)){
+                cal_result = numeral(cal_result).format(columnDefs[i].aggregation_format);
+            }else{
+                //기본 타입 사용 
+                cal_result = pine.number_getDigitComma(cal_result);
+            }
+            
+            
+            
+            
+            if(pine.isEmpty(columnDefs[i].aggregation_text)){
+                  foot_result[columnDefs[i].field] =  cal_result;
+            }else{
+                  foot_result[columnDefs[i].field] =  columnDefs[i].aggregation_text + cal_result;  // 계산
+            }
+            
+            
+            //만약에 Custom 모드이면 다른걸 무시하고  aggregation_text에 넣은 값을 바로 보여준다.
+            if(columnDefs[i].aggregation === 'CUSTOM'){
+                   if(pine.isEmpty(columnDefs[i].aggregation_text)){
+                      foot_result[columnDefs[i].field] =  '';//공백
+                 }else{
+                      foot_result[columnDefs[i].field] =  columnDefs[i].aggregation_text; //입력된 문자 넣기
+                 }
+            }
+           
+        }
+    }
+    result.push(foot_result);
+    return result;
+}
+/* ============================================================== */
+/* Footer END
+/* ============================================================== */
+
+
+/* ============================================================== */
+/* excel START
+/* ============================================================== */
+/**
+ * 오른쪽 클릭 엑셀 다운로드시 설정</br>
+ */
+Grid.prototype.getExcelOption = function(excelTitle){
+    //타이틀 설정
+    let m_title = excelTitle;
+
+    if (pine.isEmpty(excelTitle)) {
+        m_title = document.title;
+    }
+    
+    let excelColumns = [];
+    // hide된것은 엑셀에 보이지 않는다.
+    $(this.gridOptions.columDefs).each(function(index, item) {
+        if (item.hide !== true) {
+            excelColumns.push(item.field);
+        }
+    });
+
+    let excel_params = {
+        fileName : m_title + '_' + moment().format('YYYYMMDDHHmm'),
+        columnKeys : excelColumns
+    };
+    return excel_params;
+}
+
+/**
+ * 엑셀 다운로드 </br>
+ * 분류 : Data Handling </br>
+ * grid.exportExcel(excelTitle);
+ * 
+ * @param {String} excelTitle
+ */
+Grid.prototype.exportExcel = function(excelTitle) {
+    let params = this.getExcelOption(excelTitle);
+    this.gridOptions.api.exportDataAsExcel(params);
+}
+/* ============================================================== */
+/* excel download END
+/* ============================================================== */
+
+/* ============================================================== */
+/* GRID 콤보박스 처리 START
+ * ComboItem Object */
+/* ============================================================== */
+let comboItem = function (P_CODE_CD,P_CODE_NM){
+    this.CODE_CD = P_CODE_CD;
+    this.CODE_NM = P_CODE_NM;
+}
+
+function ag_genComboList(list,field_code,field_name){
+    let combolist = [];
+    
+    if(Array.isArray(list)==false){
+       console.error('ComboList는 JsonList형식의 데이터가 필요합니다.');
+    }
+    
+    for(let i = 0 ; i<list.length;i++){
+        combolist[i] =new comboItem(list[i][field_code],list[i][field_name]);
+    }
+    return combolist;
+}
+//CODE_NM을 넣으면 CODE_CD를 리턴해준다.
+function lookupCODE(mappings, CODE_NM) {
+    for (let i = 0; i< mappings.length;i++) {
+        if (mappings[i].CODE_NM == CODE_NM) {
+            return mappings[i].CODE_CD;
+        }    
+    }
+    return '';
+}
+//CODE_CD을 넣으면 CODE_NM을 리턴해준다.
+function lookupNAME(mappings, CODE_CD) {
+    for (let i = 0; i< mappings.length;i++) {
+        if (mappings[i].CODE_CD == CODE_CD) {
+            return mappings[i].CODE_NM;
+        }    
+    }
+    return '';
+}
+//Select Option에 append 해준다.
+function ag_combo_option_append(select_obj,code_cd,code_nm){
+    $(select_obj).find('select').append($('<option>', {
+        value: code_cd,
+        text: code_nm
+    }).attr('align','center'));
+}
+/* ============================================================== */
+/* GRID 콤보박스 처리 END
+/* ============================================================== */

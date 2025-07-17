@@ -1,0 +1,387 @@
+/* ==============================================================
+ * USAGE  : new Grid(gridDiv, gridOptions)
+ * PARAMETER
+ * - gridDiv : target grid element
+ * - gridOptions : 재정의한 gridOptions (default option과 겹칠 경우 넘겨받은 gridOptions로 overwrite)
+ * ============================================================== */
+/**********************************************
+* AG-GRID CUD 상태값 보여주기
+**********************************************/
+function ag_cudRenderer(params) {
+     
+    let element;
+    
+    if(!pine.isEmpty(params.value)){
+        element = document.createElement('span');
+        let iElement = document.createElement('i');
+        
+        if(params.value === 'C') {
+            element.setAttribute('style', 'color:green;');
+            iElement.setAttribute('class', 'fas fa-plus');
+        }
+        else if(params.value === 'U') {
+            element.setAttribute('style', 'color:blue;');
+            iElement.setAttribute('class', 'far fa-edit');
+        }
+        else if(params.value === 'D') {
+            element.setAttribute('style', 'color:red;');
+            iElement.setAttribute('class', 'fas fa-minus');
+        }
+        element.appendChild(iElement);
+    }
+    return element;
+}
+
+/**
+* <b>ag_btnRenderer</b></br>
+* 버튼 렌더러</br>
+* 클릭 이벤트를 오버라이드 할 수 있음<br>
+* <b>파라미터</b></br>
+* _this.btnOptions.textColor ='black';</br>
+* _this.btnOptions.backgroundColor = 'white';</br>
+* _this.btnOptions.text = '버튼';</br>
+* click_func(params) : function -> 버튼을 클릭할 시 발생될 이벤트 </br>
+* <b>사용법</b></br>
+* {    headerName : '삭제', </br>
+* field : 'DELETE',</br>
+* width: 80,</br>
+* editable : false,</br>
+* cellRenderer : <b>ag_btnRenderer</b>(btnOptions = {text : '삭제'},function(params){ </br>
+* console.log(params); //params </br> 
+* }) </br>
+* } </br>
+* @return {CellRenderer} CellRenderer
+*/
+function ag_btnRenderer(btnOptions,click_func){
+    
+     //alert(_this.btnOptions.backgroundColor);
+    //현재는 color와 text를 가져올수 있음  
+   //let data;
+   function CellRenderer() {}
+   
+   CellRenderer.prototype.createGui  = function(){
+       let template =
+           '<span style="line-height: 10px;"><button id="theButton" style="float:center;" class="btn btn-outline-secondary btn-grid"></button></span>';
+       let tempDiv = document.createElement('div');
+       tempDiv.innerHTML = template;
+       this.eGui = tempDiv.firstElementChild;
+   };
+   
+   CellRenderer.prototype.init = function(params) {
+       // create the gui
+       this.createGui();
+       // keep params, we use it in onButtonClicked
+       this.params = params;
+
+       // attach the value to the value span
+     
+       //let eValue = this.eGui.querySelector('#theValue');
+
+       // setup the button, first get reference to it
+       this.eButton = this.eGui.querySelector('#theButton');
+      
+
+       // bind the listener so 'this' is preserved, also keep reference to it for removal
+       this.buttonClickListener = this.onButtonClicked.bind(this);
+       this.cellClickListener = this.onCellClicked.bind(this);
+
+       this.eButton.addEventListener('click', this.buttonClickListener);
+       this.eGui.addEventListener('click',this.cellClickListener);
+      
+       let _this = this;
+       _this.btnOptions = {};
+        _this.btnOptions.textColor ='#212529';
+        _this.btnOptions.backgroundColor = '#fff';
+        _this.btnOptions.text = '버튼';
+        _this.btnOptions = $.extend({},  _this.btnOptions, btnOptions);
+       $(this.eButton).css('background-color', _this.btnOptions.backgroundColor );
+       $(this.eButton).css('color',  _this.btnOptions.textColor);
+       $(this.eButton).html(_this.btnOptions.text);
+       this.eButton.style.display='inherit';
+   };
+
+   CellRenderer.prototype.onCellClicked = function() {
+       // start editing this cell. see the docs on the params that this
+       // method takes
+       /*
+        * let startEditingParams = { rowIndex: this.params.rowIndex, colKey:
+        * this.params.column.getId(), };
+        */
+       this.eButton.style.display = 'inherit';
+       // this.params.api.startEditingCell(startEditingParams);
+   };
+   CellRenderer.prototype.onButtonClicked = function() {
+       click_func(this.params);
+   };
+   CellRenderer.prototype.getGui = function() {
+       // returns our gui to the grid for this cell
+       return this.eGui;
+   };
+   CellRenderer.prototype.destroy = function() {
+       // be good, clean up the listener
+       this.eButton.removeEventListener('click', this.buttonClickListener);
+   };
+
+   return CellRenderer; 
+};
+
+/**
+ * <b>ag_btnSearchRenderer</b></br>
+ * 텍스트 |...| 으로된 텍스트와 버튼을 이용할수 있는 렌더러</br>
+ * 클릭 이벤트를 오버라이드 할 수 있음<br>
+ * <b>파라미터</b></br>
+ * click_func(params) : function -> 버튼을 클릭할 시 발생될 이벤트 </br>
+ * <b>사용법</b></br>
+ * {    headerName : '담당자', </br>
+ * field : 'PERNR_NM',</br>
+ * width: 80,</br>
+ * editable : false,</br>
+ * cellRenderer : <b>ag_btnSearchRenderer</b>(function(params){ </br>
+ * console.log(params); //값 파라미터 사용가능 </br> 
+ * }) </br>
+ * } </br>
+ * @return {CellRenderer} CellRenderer
+ */
+function ag_btnSearchRenderer(click_func){
+     
+    //let data;
+    function CellRenderer() {}
+    
+    CellRenderer.prototype.createGui  = function(){
+        let template =
+            '<span><button id="theButton" style="float:left;" class="btn btn-outline-secondary btn-pop-grid"><i class="ti-search"></i></button>&nbsp;<span id="theValue"></span></span>';
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = template;
+        this.eGui = tempDiv.firstElementChild;
+    };
+    
+    CellRenderer.prototype.init = function(params) {
+        // create the gui
+        this.createGui();
+        // keep params, we use it in onButtonClicked
+        this.params = params;
+
+        // attach the value to the value span
+      
+        let eValue = this.eGui.querySelector('#theValue');
+
+        // setup the button, first get reference to it
+        this.eButton = this.eGui.querySelector('#theButton');
+
+        // bind the listener so 'this' is preserved, also keep reference to it for removal
+        this.buttonClickListener = this.onButtonClicked.bind(this);
+        this.cellClickListener = this.onCellClicked.bind(this);
+
+        this.eButton.addEventListener('click', this.buttonClickListener);
+        this.eGui.addEventListener('click',this.cellClickListener);
+       
+        //값이 없으면 button을 visible
+        //값이 있으면 button을 none
+        if(params.value){
+            eValue.innerHTML = params.value;
+            this.eButton.style.display='inherit';
+        }else{
+            this.eButton.style.display='inherit';
+        }
+    };
+
+    CellRenderer.prototype.onCellClicked = function() {
+        // start editing this cell. see the docs on the params that this
+        // method takes
+        /*
+         * let startEditingParams = { rowIndex: this.params.rowIndex, colKey:
+         * this.params.column.getId(), };
+         */
+        this.eButton.style.display = 'inherit';
+        // this.params.api.startEditingCell(startEditingParams);
+    };
+    CellRenderer.prototype.onButtonClicked = function() {
+        click_func(this.params);
+    };
+    CellRenderer.prototype.getGui = function() {
+        // returns our gui to the grid for this cell
+        return this.eGui;
+    };
+    CellRenderer.prototype.destroy = function() {
+        // be good, clean up the listener
+        this.eButton.removeEventListener('click', this.buttonClickListener);
+    };
+
+    return CellRenderer; 
+};
+
+/**
+ * <b>ag_comboRenderer</b></br>
+ * CODE와 NAME이 있을때 CODE를 읽어 NAME을 콤보리스트로 표시해주는 렌더러</br>
+ * <b>파라미터</b></br>
+ * comboList : comboItem (ag_base참조) -> [{CODE_CD,CODE_NM},{CODE_CD,CODE_NM}]</br>
+ * <b>사용법</b></br>
+ * {headerName : 'SPART(combo)',
+ * field : 'PERNR_NM',</br>
+ * cellEditor: ag_comboEditor(comboList),
+ * cellRenderer : ag_comboRenderer(comboList)
+ * }</br>
+ * @return {CellRenderer} CellRenderer 
+ */
+function ag_comboRenderer (comboList) {
+    function CellRenderer() {};
+    
+    CellRenderer.prototype.createGui  = function(){
+        /*<![CDATA[*/
+        let template =  '<span id="aggrid_span" align="center"></span>';
+        let tempDiv = document.createElement('div'); 
+        tempDiv.innerHTML = template; //템플릿으로 객체 생성 
+        this.eGui = tempDiv.firstElementChild;
+        
+    };
+    CellRenderer.prototype.init = function(params) {
+        // create the gui
+        this.createGui();
+        this.params = params;
+        if(params.value){
+            this.eGui.innerHTML = lookupNAME(comboList,params.value);
+        }
+    };
+    // returns the new value after editing
+    CellRenderer.prototype.getGui = function() {
+        // returns our gui to the grid for this cell
+        return this.eGui;
+    };
+    CellRenderer.prototype.destroy = function() {
+        // be good, clean up the listener
+        // CellRenderer.remove();
+    };
+    return CellRenderer;
+}
+
+/***************************************************************
+ * Ag checkboxRenderer
+ ***************************************************************/
+
+/**
+ * <b>ag_checkboxRenderer</b></br>
+ * 체크박스를 사용하는 렌더러</br>
+ * 클릭 이벤트를 오버라이드 할 수 있음<br>
+ * <b>파라미터</b></br>
+ * click_func(params) : function -> 버튼을 클릭할 시 발생될 이벤트 </br>
+ * <b>사용법</b></br>
+ * {    headerName : '담당자', </br>
+ * field : 'PERNR_NM',</br>
+ * width: 80,</br>
+ * editable : false,</br>
+ * cellRenderer : <b>ag_checkboxRenderer</b>(function(params){ </br>
+ * console.log(params); //값 파라미터 사용가능 </br> 
+ * }) </br>
+ * } </br>
+ * @return {CellRenderer} CellRenderer
+ */
+function ag_checkboxRenderer () {
+    function CellRenderer() {}
+    CellRenderer.prototype.createGui  = function(){
+        let template ='<input type="checkbox" name="checkbox" value="Y" uncheckValue="N" />';
+        let tempDiv = document.createElement('div'); 
+        tempDiv.innerHTML = template; //템플릿으로 객체 생성 
+        this.eGui = tempDiv.firstElementChild;
+        this.tempDiv = tempDiv;
+    };
+    
+/*    CellRenderer.prototype.init = function(params) {
+        // create the gui
+        this.createGui();
+    };*/
+    CellRenderer.prototype.init = function(params) {
+        // create the gui
+        this.createGui();
+        this.params = params;
+        let eCheck = this.eGui;
+        
+        let checkValue = params.colDef.checkValue; //checkvalue
+        let uncheckValue = params.colDef.uncheckValue;//uncheckvalue
+        
+        //check ,uncheck 기준 Value 확인
+        if(pine.isEmpty(checkValue)){
+            checkValue = 'Y';
+        }
+        if(pine.isEmpty(uncheckValue)){
+            uncheckValue = 'N';
+        }
+        
+
+        let chk_bool = false;
+        
+        // empty일 때 체크박스 체크함???
+        // if(pine.isEmpty(params.value) || (checkValue == params.value) ){
+        if( checkValue == params.value ) {
+            chk_bool = true;
+        }
+        
+        $(eCheck).prop('checked',chk_bool);
+        
+        if(this.params.colDef.editable) {
+            $(eCheck).prop('disabled',false);
+            // this.onCellClickListener = this.onCellClickListener.bind(this);
+            // this.tempDiv.addEventListener('click', this.onCellClickListener);
+        } else {
+            $(eCheck).prop('disabled',true);
+        }
+    };
+    // returns the new value after editing
+      CellRenderer.prototype.getGui = function() {
+        // returns our gui to the grid for this cell
+        return this.eGui;
+      };
+      CellRenderer.prototype.destroy = function() {
+        // be good, clean up the listener
+          //CellRenderer.remove();
+      };
+      return CellRenderer;
+}
+
+
+/**
+ * <b>ag_fileSizeRenderer</b></br>
+ * 파일 사이즈 렌더러</br>
+ * 파일 사이즈를 출력해주는 렌더러<br>
+ * <b>사용법</b></br>
+ * {    headerName : '파일크기', </br>
+ * field : 'FILE_SIZE',</br>
+ * width: 80,</br>
+ * editable : false,</br>
+ * cellRenderer : <b>ag_fileSizeRenderer()</br>
+ * } </br>
+ * @return {CellRenderer} CellRenderer
+ */
+function ag_fileSizeRenderer () {
+    function CellRenderer() {};
+    
+    CellRenderer.prototype.createGui  = function(){
+        /*<![CDATA[*/
+        let template =  '<span id="aggrid_span" align="center"></span>';
+        let tempDiv = document.createElement('div'); 
+        tempDiv.innerHTML = template; //템플릿으로 객체 생성 
+        this.eGui = tempDiv.firstElementChild;
+    };
+    CellRenderer.prototype.init = function(params) {
+        // create the gui
+        this.createGui();
+    };
+    CellRenderer.prototype.init = function(params) {
+        // create the gui
+        this.createGui();
+        this.params = params;
+        if(params.value){
+            console.log(params);
+            this.eGui.innerHTML = pine.file_formatBytes(params.value).string;
+        } 
+    };
+    // returns the new value after editing
+    CellRenderer.prototype.getGui = function() {
+        // returns our gui to the grid for this cell
+        return this.eGui;
+    };
+    CellRenderer.prototype.destroy = function() {
+        // be good, clean up the listener
+        // CellRenderer.remove();
+    };
+    return CellRenderer;
+}

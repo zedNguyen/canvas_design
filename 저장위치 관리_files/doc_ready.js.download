@@ -1,0 +1,40 @@
+$(document).ready(function(){
+    // PINE libaray 초기화
+    let pine_config = {
+        pageLoadMode: '_blank', 
+    };
+    pine.setConfig(pine_config);
+    
+    /* 달력 아이콘 클릭 처리 */
+    $('.btn-datepicker').click(function(event) {
+        $(this).prev().trigger('focus');
+    });
+
+    /* Bootstrap-TouchSpin */
+    $('.vertical-spin').TouchSpin({
+        verticalbuttons: true,
+        // max값 미설정 시 max: 100
+//        max: 9999
+    });
+    
+    /*검색조건 Collapse 기본 초기화*/
+    $('.collapse_card .collapse_arrow').text('▼');
+    $('.collapse_card').collapse({
+        open: function() {
+        // The context of 'this' is applied to
+        // the collapsed details in a jQuery wrapper
+        $('.collapse_card .collapse_arrow').text('▼');
+            this.slideDown(1000);
+        },
+        close: function() {
+            $('.collapse_card .collapse_arrow').text('▶');
+            this.slideUp(1000);
+        }
+        //persist: true
+    });
+    
+   
+    // page scroll position reset
+//    $('window').scrollTop(0);
+  
+});

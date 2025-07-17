@@ -1,0 +1,316 @@
+/**
+ * @description 첨부파일 리스트 초기화
+ * @param       attachId(html ID), fileList(Null 인 경우 최초 화면), editable(파일 삭제 가능 여부 T/F)
+ * @return      true / false
+*/
+Pine.prototype.file_init = function (attachId, fileList, editable) {
+        
+        do {
+            let initProc = true;
+            let deletable = true;
+            
+            if (attachId == undefined || attachId == '' || $('#'+attachId) == undefined) break;
+            
+            if (fileList != undefined && fileList != '')  {
+                initProc = false;
+            }
+            
+            if (editable != undefined && editable != '' && editable == false)  {
+                editable == false;
+            }
+
+            /* HTML 화면 그리기 ------ */
+            let htmlStr = '';
+            htmlStr +='<input type="hidden" id="'+attachId+'_fileCnt" name="FILECNT" value="0" />'
+            htmlStr +='<div id="'+attachId+'_fileDiv"></div>'
+            $('#'+attachId).append(htmlStr);
+            /* ----------------------- */
+            
+            if (initProc) {
+                // 첨부 박스 생성
+                this.file_add(attachId); 
+            } else {
+                // 첨부 리스트 불러오기
+                this.file_setList(attachId, fileList, editable);
+            }
+            
+            return true;
+        
+        } while (false);
+        
+        alert('fileInit 함수를 처리 중 에러가 발생했습니다.');
+        
+        return false;
+}
+/**
+ * @description 첨부파일 명 표시
+ * @param       파일 객체
+ * @return      void
+ */
+Pine.prototype.file_add= function (attachId) {
+        // 파일 개수 처리
+        let _curFileCnt = parseInt($('#'+attachId+'_fileCnt').val()) + 1;
+        $('#'+attachId+'_fileCnt').val(_curFileCnt);
+        
+        // 파일 영역 그리기 
+        let _curFileId = 'attach_' + _curFileCnt;
+        
+        let _html = '';
+        _html += '<div class="attach-file">';
+        _html += '  <input type="file" onChange="pine.file_checkSize(\''+_curFileId+'\', 20)" id="' + _curFileId + '" name="' + _curFileId + '" accept="image/png, image/jpeg, image/gif, .doc, .docx, .ppt, .pptx, .xls, .xlsx, txt, rtf, zip" />';
+        _html += '  <input type="text" class="input-file-name" placeholder="파일을 선택하세요." readOnly />';
+        _html += '  <div class="btn-file-section">';
+        _html += '      <button type="button" class="btn-file indigo" onclick="$(\'#' + _curFileId + '\').trigger(\'click\')">파일선택</button>';
+        _html += '      <button type="button" class="btn-file" onclick="pine.file_add(\''+attachId+'\');">추가</button>';
+        if(_curFileCnt > 1){
+            _html += '      <button type="button" class="btn-file" onclick="$(this).parent().parent().remove();">삭제</button>';  
+        }else{
+            _html += '      <button type="button" class="btn-file" onclick="pine.file_cancel(\'' + _curFileId + '\');">선택취소</button>';
+        }
+        _html += '  </div>';
+        _html += '</div>';
+        $('#' + attachId + '_fileDiv').append(_html);
+        
+        $('#' + _curFileId).on('change', function () {
+            let oFile = $(this)[0].files;
+            if(oFile.length < 1){
+                return;
+            }
+            
+            let filename;
+                            
+            if (window.FileReader) {
+                filename = $(this)[0].files[0].name;
+            } else {
+                filename = $(this).val().split('/').pop().split('\\').pop();
+            }
+            $(this).siblings('.input-file-name').val(filename);
+        });
+    }
+
+/**
+ * @description 첨부 취소
+ * @param       파일 객체
+ * @return      void
+ */
+Pine.prototype.file_cancel = function (fileId) {
+    let agent = navigator.userAgent.toLowerCase();
+    if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf('msie') != -1) ){ 
+        $('#' + fileId).replaceWith( $('#' + fileId).clone(true) ); 
+    } else { // other browser 일때 input[type=file] init. 
+        $('#' + fileId).val(''); 
+    }
+    $('#' + fileId).siblings('.input-file-name').val('');
+}
+
+/**
+ * @description 첨부파일 사이즈 체크
+ * @param       파일ID, 제한 파일 크기(MB) 
+ * @return      void
+ */
+Pine.prototype.file_checkSize = function (fileId, limitSize) {
+    let oFile = $('#' + fileId)[0].files;
+    if(oFile.length < 1){
+        this.file_cancel(fileId);
+    }
+    
+    size = oFile[0].size;
+    
+    let limit = parseInt(limitSize) * 1024 * 1024;
+    if (size > limit) {
+        alert('첨부파일은 최대 ' + limitSize + 'MB 까지만 첨부 가능합니다');
+        this.file_cancel(fileId);
+    }
+}
+
+/**
+ * @description 파일 다운로드 표시
+ * @param       파일영역ID, 파일리스트(객체), 삭제가능여부
+ * @return      void
+ */
+Pine.prototype.file_setList = function (attachId, fileList, editable) {
+    
+    let _html = '';
+    
+    if (fileList == undefined || fileList == null | fileList.length <= 0) {
+        return;
+    }
+    for (let i = 0; i < fileList.length; i++) {
+        let fileUid = fileList[i].fileUid;
+        
+        _html += '<ul class="attached-file">';
+        _html += '<input type="hidden" id="isDel_'+fileUid+'" name="ISDEL_'+fileUid+'" value="" />';
+        
+        if (editable) {
+            _html += '<li id="attached_'+fileUid+'"><a href="#" onclick="pine.file_download(\''+fileUid+'\');return false;">'+fileList[i].fileOriginNm+'</a><button class="btn-file" onclick="pine.file_delete(\''+fileUid+'\');" type="button">삭제</button></li>';
+        } else {
+            _html += '<li id="attached_'+fileUid+'"><a href="#" onclick="pine.file_download(\''+fileUid+'\');return false;">'+fileList[i].fileOriginNm+'</a></li>';
+        }
+        
+        _html += '</ul>';
+    }
+    
+    $('#' + attachId + '_fileDiv').append(_html);
+    
+    if (editable) {
+       this.file_add(attachId); 
+    } 
+}
+
+/**
+ * @description 파일 삭제
+ * @param       fileKey
+ * @return      void
+ */
+Pine.prototype.file_delete = function (fileUid) {
+    if(confirm('삭제한 파일은 복구되지 않습니다. 삭제하시겠습니까?')){
+        let param = {fileUid : fileUid};
+        pine.ajax({
+           url : '/api/file/delete.do',
+           params: param,
+           success: function (ret) {
+               $('#attached_'+fileUid).remove();
+               $('#isDel_'+fileUid).val('Y');  
+               alert('삭제되었습니다.');
+           },
+        });
+    }
+}
+
+/**
+ * @description 파일 다운로드
+ * @param       fileId, fileSeq
+ * @return      void
+ */
+Pine.prototype.file_download = function (fileUid) {
+    location.href = '/api/file/download.do?FILE_UID=' + fileUid + '&loginUserId=' + $('#inputUserId').val() ;
+}
+
+/**
+ * <b>Byte단위 용량을 계산해주는 function</b></br>
+ * <b>사용법</b> </br>
+ * pine.file_formatBytes(262060275);  </br>
+ * 결과 : {size : 24.85, type: 'mb' , string: '24.85mb' } </br>
+ */
+Pine.prototype.file_formatBytes = function(bytes){
+    let kb = 1024;
+    let ndx = Math.floor( Math.log(bytes) / Math.log(kb) );
+    let fileSizeTypes = ['bytes', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb', 'zb', 'yb'];
+  
+    return {
+        size: +(bytes / kb / kb).toFixed(2),
+        type: fileSizeTypes[ndx],
+        string: +(bytes / kb / kb).toFixed(2) + fileSizeTypes[ndx]
+    };
+}
+
+/**
+ * @description 파일 AJAX - 임시, 정리필요
+ * @param       
+ * @return      void
+ */
+Pine.prototype.fileAjax = function (config) {
+    let _this = this;
+    let parameter = {};
+
+    //globalConfig에서 우선 찾음
+    
+    //paramMode config가 비어있으면 우선 글로벌 변수를 넣어준다.   
+    config.paramMode = (this.isEmpty(config.paramMode)) ? this.g_config.paramMode : config.paramMode;
+    
+    config.showLoadmask = (this.isEmpty(config.showLoadmask)) ? true : config.showLoadmask;
+    config.async = (this.isEmpty(config.async)) ? true : config.async;
+
+    // show loadmask
+    if (config.showLoadmask) {
+        
+    }
+    $.ajax({
+    	 url : config.url,
+         type : 'POST',
+         enctype : 'multipart/form-data',
+         data : config.params,
+         contentType : false,
+         processData : false,
+         cache: false,
+        //timeout: 600000,
+        success: function(result, statusText, response) {
+            // callback
+            if (result.status === false) {
+                if (!(_this.isEmpty(result.message)))
+                    alert(result.message);
+                else {
+                    console.log('ajax success but status fail : ', arguments);
+                    alert('에러가 발생했습니다');
+                }
+                
+                if (typeof config.error === 'function') {
+                    config.error(result);
+                }
+            }
+            else {
+                if (!(_this.isEmpty(result.message)))
+                    alert(result.message);
+                
+                if (typeof config.success === 'function') {
+                    config.success(result);
+                }
+            }
+        },
+        error: function(response, statusText, err) {
+            // http error check
+            switch(response.status) {
+                // user session handling error
+                case 401:
+                    alert(response.responseJSON.message);
+                    break;
+                // others
+                default:
+                    console.log('ajax failure : ', arguments);
+                    
+                    if(_this.isEmpty(response.responseJSON.message))
+                        alert(response.responseJSON.message);
+                    else 
+                        alert('에러가 발생했습니다.');
+            }
+
+            // callback
+            if (typeof config.error === 'function') {
+                config.error(response.responseJSON);
+            }
+        },
+        
+        complete: function(response) {
+            // hide loadmask
+            if (config.showLoadmask) {
+                
+            }
+            
+            // callback
+            if (typeof config.complete === 'function') {
+                config.complete(response.responseJSON);
+            }
+        }
+    });
+}
+
+/**
+ * 브라우저에 임시로 올라온 파일을 다운로드 받을 수 있다.
+ * @description 파일 다운로드
+ * @param       fileId, fileSeq
+ * @return      void
+ */
+Pine.prototype.file_localDownload = function (file) {
+    if(navigator.msSaveBlob){ // For ie and Edge
+        return navigator.msSaveBlob(file, file.name);
+    }
+    else{
+        let link = document.createElement('a');
+        link.href =(window.URL || window.webkitURL).createObjectURL(file);
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+        link.remove();
+        window.URL.revokeObjectURL(link.href);
+    }
+}

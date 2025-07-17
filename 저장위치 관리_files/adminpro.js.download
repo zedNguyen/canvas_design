@@ -1,0 +1,197 @@
+/*
+Template Name: Admin Pro Admin
+Author: Wrappixel
+Email: niravjoshi87@gmail.com
+File: js
+*/
+$(function() {
+    "use strict";
+    $(function() {
+        $(".preloader").fadeOut();
+    });
+    jQuery(document).on('click', '.mega-dropdown', function(e) {
+        e.stopPropagation()
+    });
+    // ==============================================================
+    // This is for the top header part and sidebar part
+    // ==============================================================
+    var set = function() {
+        var width = (window.innerWidth > 0) ? window.innerWidth : this.screen.width;
+        var topOffset = 0;
+        if (width < 1170) {
+            $("body").addClass("mini-sidebar");
+            $('.navbar-brand span').hide();
+            $(".sidebartoggler i").addClass("ti-menu");
+        } else {
+            $("body").removeClass("mini-sidebar");
+            $('.navbar-brand span').show();
+        }
+
+        var height = ((window.innerHeight > 0) ? window.innerHeight : this.screen.height) - 1;
+        height = height - topOffset;
+        if (height < 1) height = 1;
+        if (height > topOffset) {
+            $(".page-wrapper").css("min-height", (height) + "px");
+            $(".popup-page-wrapper").css("min-height", (height) + "px");
+//            $(".container-fluid").css("min-height", (height)-$(".topbar").height()-$(".footer").height() + "px");
+        }
+    };
+    $(window).ready(set);
+    $(window).on("resize", set);
+
+    // ==============================================================
+    // Theme options
+    // ==============================================================
+    $(".sidebartoggler").on('click', function() {
+        if ($("body").hasClass("mini-sidebar")) {
+            $("body").trigger("resize");
+            $("body").removeClass("mini-sidebar");
+            $('.navbar-brand span').show();
+
+        } else {
+            $("body").trigger("resize");
+            $("body").addClass("mini-sidebar");
+            $('.navbar-brand span').hide();
+
+        }
+    });
+
+    // this is for close icon when navigation open in mobile view
+    $(".nav-toggler").click(function() {
+        $("body").toggleClass("show-sidebar");
+        $(".nav-toggler i").toggleClass("ti-menu");
+        $(".nav-toggler i").addClass("ti-close");
+    });
+
+    $(".search-box a, .search-box .app-search .srh-btn").on('click', function() {
+        $(".app-search").toggle(200);
+    });
+    // ==============================================================
+    // Right sidebar options
+    // ==============================================================
+    $(".right-side-toggle").click(function() {
+        $(".right-sidebar").slideDown(50);
+        $(".right-sidebar").toggleClass("shw-rside");
+    });
+    // ==============================================================
+    // This is for the floating labels
+    // ==============================================================
+    $('.floating-labels .form-control').on('focus blur', function(e) {
+        $(this).parents('.form-group').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
+    }).trigger('blur');
+
+    // ==============================================================
+    // 메뉴 핸들링
+    // ==============================================================
+    $(function() {
+        // 메뉴 선택
+        var url = window.location;
+        var element = $('ul#sidebarnav .menutext').filter(function() {
+            return this.href == url;
+        }).addClass('active').parent().addClass('active');
+//        while (true) {
+//            if (element.is('li')) {
+//                element.parent().addClass('in').parent().addClass('active');
+//            } else {
+//                break;
+//            }
+//        }
+        
+        // 메뉴 선택 시 본문 > 메뉴 title 변경
+        if(element.length > 0) {
+            $('#pageTitleText')[0].innerText = (element[0].innerText).trim();
+            // document.title = (element[0].innerText).trim();
+        }
+        // page loading시 HOME text가 보였다 변경됨. 우선 조치함.
+        if (url.href.indexOf('/view/main')>-1) {
+            $('#pageTitleText')[0].innerText = 'HOME';
+        }
+        
+        // [스크롤 조정] 타겟 정의  
+        // - depth가 일정 치 않아 발생 요소만 타겟팅 가능함
+        var scrollElement = element;
+        
+        while (true) {
+            if (element.is('li')) {
+                // 상위 메뉴 선택
+                element = element.parent().addClass('in').parent().addClass('active');
+            } else {
+                break;
+            }
+        }
+        
+        // [스크롤 조정] 위치 조정 
+        // - 이 위치에서 작업 안하면 offset 값 세팅 안되어 있음
+        // - 최초 로그인 시 default value 필요
+        var scrollOffset = scrollElement.offset() || {top: 0};
+        $('.scroll-sidebar').scrollTop(scrollOffset.top);
+        
+    });
+    
+    // ==============================================================
+    //tooltip
+    // ==============================================================
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+    // ==============================================================
+    //Popover
+    // ==============================================================
+    $(function() {
+        $('[data-toggle="popover"]').popover()
+    })
+    // ==============================================================
+    // Sidebarmenu
+    // ==============================================================
+    $(function() {
+        $('#sidebarnav').AdminMenu();
+    });
+
+    // ==============================================================
+    // Perfact scrollbar
+    // ==============================================================
+    $('.scroll-sidebar, .right-side-panel, .message-center, .right-sidebar').perfectScrollbar();
+
+    // ==============================================================
+    // Resize all elements
+    // ==============================================================
+    $("body").trigger("resize");
+    // ==============================================================
+    // To do list
+    // ==============================================================
+    $(".list-task li label").click(function() {
+        $(this).toggleClass("task-done");
+    });
+
+
+
+    // ==============================================================
+    // Collapsable cards
+    // ==============================================================
+    $('a[data-action="collapse"]').on('click', function(e) {
+        e.preventDefault();
+        $(this).closest('.card').find('[data-action="collapse"] i').toggleClass('ti-minus ti-plus');
+        $(this).closest('.card').children('.card-body').collapse('toggle');
+
+    });
+    // Toggle fullscreen
+    $('a[data-action="expand"]').on('click', function(e) {
+        e.preventDefault();
+        $(this).closest('.card').find('[data-action="expand"] i').toggleClass('mdi-arrow-expand mdi-arrow-compress');
+        $(this).closest('.card').toggleClass('card-fullscreen');
+    });
+
+    // Close Card
+    $('a[data-action="close"]').on('click', function() {
+        $(this).closest('.card').removeClass().slideUp('fast');
+    });
+
+    // For Custom File Input
+    $('.custom-file-input').on('change',function(){
+        //get the file name
+        var fileName = $(this).val();
+        //replace the "Choose a file" label
+        $(this).next('.custom-file-label').html(fileName);
+    })
+
+});

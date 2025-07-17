@@ -1,0 +1,157 @@
+/**
+ * (웹표준에서만 동작)
+ * 
+ * @description 암호 정책 가져오기 (회원가입, 비밀번호 변경)
+ * @param       
+ * @return      pwdRules
+ */
+Pine.prototype.getPasswordRules = function (api, param) {
+    let callApi = api;
+    let _this = this;
+    let pwdRules = {
+        capital: false,
+        small: false,
+        number: false,
+        symbol: false,
+        minLength: 4,
+        maxLength: 20
+     };
+
+    if (pine.isEmpty(callApi)) {
+        callApi = '/api/admin/user/get-passwd-rules';       // 나의 정보>비밀번호변경
+    }
+
+     // 암호 정책 가져오기
+     pine.ajax({
+         url: callApi,
+         params: param,
+         success: function (result) {
+             let len = result.data.length;
+             for (let i = 0; i < len; i++) {
+                switch (result.data[i].CODE_CD) {
+                case '010':
+                    pwdRules.minLength = result.data[i].VALUE;
+                    break;
+                case '020':
+                    result.data[i].VALUE == 'Y' ? pwdRules.capital = true : pwdRules.capital = false;
+                    break;
+                case '021':
+                    result.data[i].VALUE == 'Y' ? pwdRules.small = true : pwdRules.small = false;
+                    break;
+                case '022':
+                    result.data[i].VALUE == 'Y' ? pwdRules.number = true : pwdRules.number = false;
+                    break;
+                case '023':
+                    result.data[i].VALUE == 'Y' ? pwdRules.symbol = true : pwdRules.symbol = false;
+                    break;
+                 }
+             }
+         }
+     });
+     
+     return pwdRules;
+}
+
+/* 
+ * @description 암호 규칙에 맞게 생성되었는지 확인하기
+ * @param       args, rules
+ * @return      boolean
+ */
+Pine.prototype.checkPassword = function (args, rules) {
+    let capital = args.search(/[A-Z]/g);
+    let small = args.search(/[a-z]/g);
+    let number = args.search(/\d/g);
+    let symbol = args.search(/[!@#$%^&*()_+\-=\?]/g);
+    
+    let msg = '암호 입력 시 ' + rules.minLength + '~20자 이내, \n';
+    
+    if (rules.capital) {
+        msg += '대문자 '
+    }
+    if (rules.small) {
+        msg += '소문자 '
+    }
+    if (rules.number) {
+        msg += '숫자 '
+    }
+    if (rules.symbol) {
+        msg += '특수문자(!@#$%^&*()_+-=?) '
+    }
+    msg += '1자 이상 포함되어야 합니다';
+    
+    if (rules.capital && capital < 0) {
+        alert(msg);
+        return false;
+    }
+
+    if (rules.small && small < 0) {
+        alert(msg);
+        return false;
+    }
+
+    if (rules.number && number < 0) {
+        alert(msg);
+        return false;
+    }
+    
+    if (rules.symbol && symbol < 0) {
+        alert(msg);
+        return false;
+    }
+    
+    if (args.length < rules.minLength || args.length > rules.maxLength) {
+        alert('암호는 8자 이상, 20자 이내로 입력해주세요');
+        return false;
+    }
+
+    return true;
+}
+
+/*
+*******************************************************
+* 시간 관련 function
+*******************************************************
+*/
+/**
+ * <b>인증시간 타이머 Function</b></br>
+ * <b>사용법</b> </br>
+ * 1) $ComTimer 객체 생성 </br>
+ * 2) $ComTimer.setTimer(타이머시간(초),인증시간 display id,객체 변수명) </br>
+ * 기존 타이머가 동작하고 있을경우에는 $ComTimer.clearTimer() 후 타이머 객체 생성
+ * @param number , String  </br>
+ */
+function $ComTimer(){
+    //prototype extend
+}
+$ComTimer.prototype = {
+        comSecond : ''
+        , timer : ''
+        , domId : ''
+        , fnTimer : function(){
+            let m = '0'+Math.floor(this.comSecond / 60) + ': ' + ((this.comSecond % 60).toString().length == 1?'0'+(this.comSecond % 60):(this.comSecond % 60));   // 남은 시간 계산
+            this.comSecond--;                   // 1초씩 감소
+            $('#'+this.domId).text(m);
+            if (this.comSecond < 0) {           // 시간이 종료 되었으면..
+                clearInterval(this.timer);      // 타이머 해제
+                alert('인증시간이 초과하였습니다. 다시 인증해주시기 바랍니다.');
+                $('#'+this.domId).text('');
+            }
+        }
+        ,fnStop : function(){
+            clearInterval(this.timer);
+        }
+    }
+$ComTimer.prototype.setTimer = function(second,id,letiable){
+    this.comSecond = second;
+    this.domId = id;
+    this.timer =  setInterval(function(){letiable.fnTimer()},1000);
+}
+
+$ComTimer.prototype.clearTimer = function(){
+    clearInterval(this.timer);
+    $('#'+this.domId).text('');
+    this.comSecond = '';
+    this.timer =  '';
+    this.domId = '';
+}
+

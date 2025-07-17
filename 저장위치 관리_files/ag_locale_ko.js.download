@@ -1,0 +1,224 @@
+/**********************************************
+* AG-GRID locale ko
+**********************************************/
+let ag_localeTextKo = {
+        // for filter panel
+        page: '페이지',
+        more: '...',
+        to: 'to',
+        of: 'of',
+        next: '다음',
+        last: '마지막',
+        first: '처음',
+        previous: '이전',
+        // for set filter
+        selectAll: '전체선택',
+        blanks: '공란',
+
+        // for number filter and text filter
+        equals: '동일',
+        notEqual: '다름',
+
+        // for the date filter
+        dateFormatOoo: 'yyyy-mm-dd',
+
+        // for number filter
+        lessThan: 'LessThan',
+        greaterThan: 'GreaterThan',
+        lessThanOrEqual: 'LessThanOrEqual',
+        greaterThanOrEqual: 'GreaterThanOrEqual',
+        inRange: 'InRange',
+        inRangeStart: 'RangeStart',
+        inRangeEnd: 'RangeEnd',
+
+        // for text filter
+        contains: 'Contains',
+        notContains: 'NotContains',
+        startsWith: 'Starts dawith',
+        endsWith: 'Ends dawith',
+
+        // filter conditions
+        andCondition: 'AND',
+        orCondition: 'OR',
+
+        // filter buttons
+        applyFilter: 'Apply',
+        resetFilter: 'Reset',
+        clearFilter: 'Clear',
+
+        // the header of the default group column
+        group: 'Group',
+
+        // tool panel
+        columns: '항목',
+        filters: '필터',
+        rowGroupColumns: 'Pivot 항목',
+        rowGroupColumnsEmptyMessage: 'drag cols to group',
+        valueColumns: 'Value Cols',
+        pivotMode: 'Pivot-Mode',
+        groups: '그룹화',
+        values: 'Values',
+        pivots: 'Pivots',
+        valueColumnsEmptyMessage: 'drag cols to aggregate',
+        pivotColumnsEmptyMessage: 'drag here to pivot',
+        toolPanelButton: 'tool panel',
+
+        // other
+        noRowsToShow: ' ',
+        enabled: 'Enabled',
+
+        // enterprise menu
+        pinColumn: '항목 고정',
+        valueAggregation: '항목 집계',
+        autosizeThiscolumn: '항목 자동맞춤',
+        autosizeAllColumns: '전체항목 자동맞춤',
+        groupBy: '그룹화',
+        ungroupBy: '그룹화 해제',
+        resetColumns: '항목 초기화',
+        expandAll: '전체 펼치기',
+        collapseAll: '전체 접기',
+        toolPanel: 'Tool Panel',
+        export: '내려받기',
+        csvExport: 'CSV 내려받기',
+        excelExport: '엑셀(.xlsx) 내려받기',
+        excelXmlExport: '엑셀(.xml) 내려받기',
+
+        // enterprise menu (charts)
+        pivotChartAndPivotMode: 'Pivot Chart & Pivot Mode',
+        pivotChart: 'Pivot Chart',
+        chartRange: 'Chart Range',
+
+        columnChart: 'Column',
+        groupedColumn: 'Grouped',
+        stackedColumn: 'Stacked',
+        normalizedColumn: '100% Stacked',
+
+        barChart: 'Bar',
+        groupedBar: 'Grouped',
+        stackedBar: 'Stacked',
+        normalizedBar: '100% Stacked',
+
+        pieChart: 'Pie',
+        pie: 'Pie',
+        doughnut: 'Doughnut',
+
+        line: 'Line',
+
+        xyChart: 'X Y (Scatter)',
+        scatter: 'Scatter',
+        bubble: 'Bubble',
+
+        areaChart: 'Area',
+        area: 'Area',
+        stackedArea: 'Stacked',
+        normalizedArea: '100% Stacked',
+
+        // enterprise menu pinning
+        pinLeft: '왼쪽고정 <<',
+        pinRight: '오른쪽고정 >>',
+        noPin: '고정해제',
+
+        // enterprise menu aggregation and status bar
+        sum: '합계',
+        min: '최소',
+        max: '최대',
+        none: 'None',
+        count: '갯수',
+        average: '평균',
+        filteredRows: 'Filtered',
+        selectedRows: 'Selected',
+        totalRows: '전체',
+        totalAndFilteredRows: 'Rows',
+
+        // standard menu
+        copy: '복사',
+        copyWithHeaders: '타이틀과 함께 복사',
+        ctrlC: 'Ctrl n C',
+        paste: '붙여넣기',
+        ctrlV: 'Ctrl n V',
+
+        // charts
+        pivotChartTitle: 'Pivot Chart',
+        rangeChartTitle: 'Range Chart',
+        settings: 'Settings',
+        data: 'Data',
+        format: 'Format',
+        categories: 'Categories',
+        defaultCategory: '(laNone)',
+        series: 'Series',
+        xyValues: 'X Y Values',
+        paired: 'Paired Mode',
+        axis: 'Axis',
+        color: 'Color',
+        thickness: 'Thickness',
+        xType: 'X Type',
+        automatic: 'Automatic',
+        category: 'Category',
+        number: 'Number',
+        time: 'Time',
+        xRotation: 'X Rotation',
+        yRotation: 'Y Rotation',
+        ticks: 'Ticks',
+        width: 'Width',
+        length: '길이',
+        padding: 'Padding',
+        chart: '차트',
+        title: '제목',
+        background: '배경색',
+        font: 'Font',
+        top: 'Top',
+        right: 'Right',
+        bottom: 'Bottom',
+        left: 'Left',
+        labels: 'Labels',
+        size: '사이즈',
+        minSize: '최대값',
+        maxSize: '최소값',
+        legend: 'Legend',
+        position: 'Position',
+        markerSize: 'Marker Size',
+        markerStroke: 'Marker Stroke',
+        markerPadding: 'Marker Padding',
+        itemPaddingX: 'Item Padding X',
+        itemPaddingY: 'Item Padding Y',
+        strokeWidth: 'Stroke Width',
+        offset: 'Offset',
+        offsets: 'Offsets',
+        tooltips: 'Tooltips',
+        callout: 'Callout',
+        markers: 'Markers',
+        shadow: 'Shadow',
+        blur: 'Blur',
+        xOffset: 'X Offset',
+        yOffset: 'Y Offset',
+        lineWidth: 'Line Width',
+        normal: 'Normal',
+        bold: 'Bold',
+        italic: 'Italic',
+        boldItalic: 'Bold Italic',
+        predefined: 'Predefined',
+        fillOpacity: 'Fill Opacity',
+        strokeOpacity: 'Line Opacity',
+        columnGroup: 'Column',
+        barGroup: 'Bar',
+        pieGroup: 'Pie',
+        lineGroup: 'Line',
+        scatterGroup: 'Scatter',
+        areaGroup: 'Area',
+        groupedColumnTooltip: 'Grouped',
+        stackedColumnTooltip: 'Stacked',
+        normalizedColumnTooltip: '100% Stacked',
+        groupedBarTooltip: 'Grouped',
+        stackedBarTooltip: 'Stacked',
+        normalizedBarTooltip: '100% Stacked',
+        pieTooltip: 'Pie',
+        doughnutTooltip: 'Doughnut',
+        lineTooltip: 'Line',
+        groupedAreaTooltip: 'Grouped',
+        stackedAreaTooltip: 'Stacked',
+        normalizedAreaTooltip: '100% Stacked',
+        scatterTooltip: 'Scatter',
+        bubbleTooltip: 'Bubble',
+        noDataToChart: 'No data available to be charted.',
+        pivotChartRequiresPivotMode: 'Pivot Chart requires Pivot Mode enabled.'
+    }

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>생산지시서 관리</title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <meta name="robots" content="noindex,nofollow" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Global site tag (gtag.js) - Google Analytics PROD만 동작 -->
+
+  <link href="./저장위치 관리_files/bootstrap.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/perfect-scrollbar.min.css" rel="stylesheet" />
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/style.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/jquery-ui.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./저장위치 관리_files/pinejs.css" />
+
+  <link href="./저장위치 관리_files/ag-grid.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/ag-theme-balham.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/aggrid.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/toastr.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/blue.css" id="theme" rel="stylesheet" />
+
+  <!-- Harmony Blue & custom styles for /learn pages -->
+  <link href="./style.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/custom.css" rel="stylesheet" />
+
+  <script src="./저장위치 관리_files/jquery.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/popper.min.js.download"></script>
+  <script src="./저장위치 관리_files/bootstrap.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/perfect-scrollbar.jquery.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/waves.js.download"></script>
+
+  <script src="./저장위치 관리_files/sidebarmenu.js.download"></script>
+  <!-- <script th:src="@{/plugins/pinejs/js/adminpro.js}"></script> -->
+
+  <script src="./저장위치 관리_files/adminpro.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.toast.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.serializeObject.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.validate.min.js.download"></script>
+  <script src="./저장위치 관리_files/messages_ko.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery-ui.min.js.download"></script>
+  <script src="./저장위치 관리_files/numeral.min.js.download"></script>
+  <script src="./저장위치 관리_files/lodash.4.17.15.min.js.download"></script>
+  <script src="./저장위치 관리_files/moment.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.collapse.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.bootstrap-touchspin.min.js.download"></script>
+  <!-- bootstrap submodal -->
+  <script src="./저장위치 관리_files/bs.sm.js.download"></script>
+
+  <script src="./저장위치 관리_files/xlsx.full.min.js.download"></script>
+  <script src="./저장위치 관리_files/fileSaver.min.js.download"></script>
+  <script src="./저장위치 관리_files/toastr.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.mask.js.download"></script>
+
+  <script src="./저장위치 관리_files/ag-grid-enterprise.min.noStyle.js.download"></script>
+  <script>
+    agGrid.LicenseManager.setLicenseKey(
+      "CompanyName=JSIT,LicensedGroup=HANSOL PNS IT-SERVICE,LicenseType=MultipleApplications,LicensedConcurrentDeveloperCount=3,LicensedProductionInstancesCount=2,AssetReference=AG-008218,ExpiryDate=21_May_2021_[v2]_MTYyMTU1MTYwMDAwMA==fb098f15da774457685846b99c4a3a7e"
+    );
+  </script>
+  <script src="./저장위치 관리_files/ag_base.js.download"></script>
+  <script src="./저장위치 관리_files/ag_locale_ko.js.download"></script>
+  <script src="./저장위치 관리_files/ag_renderer.js.download"></script>
+  <script src="./저장위치 관리_files/ag_formatter.js.download"></script>
+  <script src="./저장위치 관리_files/ag_editor.js.download"></script>
+  <script src="./저장위치 관리_files/ag_excel.js.download"></script>
+
+  <!-- CK Editor -->
+  <!-- ============================================================== -->
+  <script src="./저장위치 관리_files/ckeditor.js.download"></script>
+  <style>
+    .cke {
+      visibility: hidden;
+    }
+  </style>
+
+  <script src="./저장위치 관리_files/pine.js.download"></script>
+  <script src="./저장위치 관리_files/global-val.js.download"></script>
+  <script src="./저장위치 관리_files/core.js.download"></script>
+  <script src="./저장위치 관리_files/file.js.download"></script>
+  <script src="./저장위치 관리_files/auth.js.download"></script>
+  <script src="./저장위치 관리_files/editor.js.download"></script>
+  <script src="./저장위치 관리_files/aggridHelper.js.download"></script>
+
+  <!-- ============================================================== -->
+
+  <script src="./저장위치 관리_files/doc_ready.js.download"></script>
+</head>
+
+<body class="fix-header card-no-border main">
+  <div class="preloader" style="display: none">
+    <div class="loader">
+      <div class="loader__figure"></div>
+      <p class="loader__label">Harmony</p>
+    </div>
+  </div>
+
+  <div id="main-wrapper">
+    <header class="topbar">
+      <nav class="navbar top-navbar navbar-expand-md navbar-light">
+        <div class="navbar-header">
+          <a class="navbar-brand">
+            <b>
+              <img src="./저장위치 관리_files/logo-icon.png" alt="homepage" class="dark-logo" />
+
+              <img src="./저장위치 관리_files/logo-light-icon.png" alt="homepage" class="light-logo" />
+            </b>
+
+            <span>
+              <img src="./저장위치 관리_files/logo-text.png" alt="homepage" class="dark-logo" />
+
+              <img src="./저장위치 관리_files/logo-light-text.png" class="light-logo" alt="homepage" /></span>
+          </a>
+        </div>
+
+        <div class="navbar-collapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i
+                  class="ti-menu"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link sidebartoggler hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i
+                  class="fa-solid fa-bars"></i></a>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav my-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="javascript:void(0)">
+                <span style="font-weight: bold; font-size: 18px">dev서버</span>
+              </a>
+            </li>
+
+            <li class="nav-item hidden-xs-down search-box">
+              <a class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)" title="메뉴 검색"><i
+                  class="ti-search"></i></a>
+              <form class="app-search" onsubmit="return false">
+                <input type="text" id="menu-search-txt" class="form-control" placeholder="메뉴 검색" />
+                <a class="srh-btn"><i class="ti-close"></i></a>
+                <div id="menu-search" class="search-rslt"></div>
+              </form>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle waves-effect waves-dark" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <span>시스템관리</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right animated flipInY">
+                <ul class="dropdown-user">
+                  <li>
+                    <div class="dw-user-box">
+                      <div class="u-text">
+                        <h4>
+                          <i class="fas fa-user"></i>&nbsp;
+                          <span>시스템관리</span>
+                        </h4>
+                        <p class="text-muted"><span></span></p>
+                      </div>
+                    </div>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <a><i class="ti-settings"></i> 계정설정</a>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <a><i class="fa fa-power-off"></i> 로그아웃</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <aside class="left-sidebar">
+      <div class="scroll-sidebar ps-container ps-theme-default" data-ps-id="6445c0c0-d75d-a3cd-4fab-49cc73438c65">
+        <nav class="sidebar-nav active">
+          <ul id="sidebarnav" class="in">
+            <li class="nav-small-cap">즐겨찾기 ★</li>
+            <ul class="list-group" id="sidebarnav-favorite"></ul>
+            <li class="nav-devider"></li>
+
+            <li class="nav-small-cap">프로그램</li>
+
+            <li class="active">
+              <a class="has-arrow waves-effect waves-dark" aria-expanded="true">
+                <i class="mdi mdi-format-list-bulleted"></i>
+                <span class="hide-menu">Canvas</span>
+              </a>
+
+              <ul aria-expanded="true" class="collapse in show">
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page1.html"
+                    style="color: #007bff;">생산지시서
+                    관리</a>
+                </li>
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page2.html">길로틴 생산지시서
+                    관리</a>
+
+                </li>
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page3.html">생산실적(시트)
+                  </a>
+
+                </li>
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page4.html">생산실적(길로틴)
+                  </a>
+
+                </li>
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page5.html">생산일보
+                  </a>
+
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px">
+          <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px"></div>
+        </div>
+        <div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px">
+          <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px"></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="page-wrapper" style="min-height: 952px">
+      <div class="container-fluid r-aside">
+        <div class="row page-titles m-b-10">
+          <div class="col-md-5 align-self-center">
+            <!-- <h4 class="text-themecolor"><i class="fas fa-sticky-note pageIcon"></i><span id="pageTitles">HOME</span></h3> -->
+            <!-- <h6 class="text-themecolor" id="pageTitleText">HOME</h5> -->
+            <li id="pageTitleText">
+              생산지시서 관리<i class="fa-regular fa-star" style="
+                    font-size: 16px !important;
+                    font-weight: bold !important;
+                    margin-left: 5px;
+                  " data-favo="N"></i>
+            </li>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="toolbar-right">
+            <button id="btn-new" class="btn btn-harmony-blue btn-sm">
+              <i class="fa fa-plus"></i> 신규
+            </button>
+            <button id="btn-search" class="btn btn-harmony-blue btn-sm">
+              <i class="fa fa-search"></i> 검색
+            </button>
+            <button id="btn-save" class="btn btn-harmony-blue btn-sm">
+              <i class="fa fa-save"></i> 저장
+            </button>
+            <button id="btn-delete" class="btn btn-harmony-blue btn-sm">
+              <i class="fa fa-trash"></i> 삭제
+            </button>
+            <button id="btn-file" class="btn btn-harmony-blue btn-sm">
+              <i class="fa fa-database"></i> 파일
+            </button>
+            <button id="btn-print" class="btn btn-harmony-blue btn-sm">
+              <i class="fa fa-print"></i> 인쇄
+            </button>
+          </div>
+          <div class="after-floatright"></div>
+        </div>
+
+        <!-- SECTION Filter collapse -->
+        <div class="card" style="margin-bottom: 0px;" data-collapse="">
+          <div class="card-header field-header open" data-collapse-summary="" aria-expanded="true">
+            <a>
+              <a class="card-link" aria-expanded="true" aria-controls="cardBody">검색조건
+                <span class="expanded">
+                  <p><b>▼</b></p>
+                </span>
+              </a>
+            </a>
+          </div>
+          <div id="cardBody" class="collapse show field-body" aria-hidden="false">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-4 d-flex align-items-center">
+                  <label for="filter-prod-from">생산지시</label>
+                  <input type="date" id="filter-prod-from" name="filter-prod-from" class="form-control form-control-sm"
+                    style="width: 33%" placeholder="YYYY-MM-DD" />
+                  <span style="margin: 0 2px">~</span>
+                  <input type="date" id="filter-prod-to" name="filter-prod-to" class="form-control form-control-sm"
+                    style="width: 33%" placeholder="YYYY-MM-DD" />
+                  <input type="checkbox" id="filter-all" checked class="ml-1"
+                    style="vertical-align:middle; display: none;" />
+                  <label for="filter-all" class="mb-0 ml-1" style="font-size:0.95rem;"></label>
+                </div>
+                <div class="col d-flex align-items-center">
+                  <label for="filter-order-status">판매처</label>
+                  <select id="filter-order-status" name="filter-order-status" class="form-control form-control-sm"
+                    style="width: 100%">
+                    <option value="">전체</option>
+                    <option value="O1">진행</option>
+                    <option value="O2">완료</option>
+                  </select>
+                  <button class="btn_nvc_style btn-sm">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+                <div class="col d-flex align-items-center">
+                  <label for="filter-order-status">지종</label>
+                  <select id="filter-order-status" name="filter-order-status" class="form-control form-control-sm"
+                    style="width: 100%">
+                    <option value="">전체</option>
+                    <option value="O1">진행</option>
+                    <option value="O2">완료</option>
+                  </select>
+                  <button class="btn_nvc_style btn-sm">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+                <div class="col d-flex align-items-center">
+                  <label for="filter-order-status">오더상태</label>
+                  <select id="filter-order-status" name="filter-order-status" class="form-control form-control-sm"
+                    style="width: 100%">
+                    <option value="">전체</option>
+                    <option value="O1">진행</option>
+                    <option value="O2">완료</option>
+                  </select>
+                </div>
+                <div class="col d-flex align-items-center">
+                  <label for="filter-width">가로</label>
+                  <input type="number" id="filter-width" name="filter-width" class="form-control form-control-sm"
+                    placeholder="mm" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4 d-flex align-items-center">
+                  <label for="filter-due-from">납기일자</label>
+                  <input type="date" id="filter-due-from" name="filter-due-from" class="form-control form-control-sm"
+                    style="width: 33%" placeholder="YYYY-MM-DD" />
+                  <span style="margin: 0 2px">~</span>
+                  <input type="date" id="filter-due-to" name="filter-due-to" class="form-control form-control-sm"
+                    style="width: 33%" placeholder="YYYY-MM-DD" />
+                  <input type="checkbox" id="filter-all2" checked class="ml-1"
+                    style="vertical-align:middle; display: none;" />
+                  <label for="filter-all2" class="mb-0 ml-1" style="font-size:0.95rem;"></label>
+                </div>
+                <div class="col d-flex align-items-center">
+                  <label for="filter-job-type">납품처</label>
+                  <select id="filter-job-type" name="filter-job-type" class="form-control form-control-sm"
+                    style="width: 100%">
+                    <option value="">전체</option>
+                    <option value="J1">절단</option>
+                    <option value="J2">포장</option>
+                  </select>
+                  <button class="btn_nvc_style btn-sm">
+                    <i class="fas fa-ellipsis-h"></i>
+                  </button>
+                </div>
+                <div class="col d-flex align-items-center">
+                  <label for="filter-order-status">평량</label>
+                  <input type="text" id="filter-order-status" name="filter-order-status"
+                    class="form-control form-control-sm" />
+                </div>
+                <div class="col d-flex align-items-center">
+                  <label for="filter-order-status">작업유형</label>
+                  <select id="filter-order-status" name="filter-order-status" class="form-control form-control-sm"
+                    style="width: 100%">
+                    <option value="">전체</option>
+                    <option value="O1">진행</option>
+                    <option value="O2">완료</option>
+                  </select>
+                </div>
+                <div class="col d-flex align-items-center">
+                  <label for="filter-height">세로</label>
+                  <input type="number" id="filter-height" name="filter-height" class="form-control form-control-sm"
+                    placeholder="mm" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="learn-quickfilter d-flex justify-content-between align-items-center mb-1"
+          style="background: #f7f9fb; padding: 5px 0; border-radius: 8px">
+          <div class="d-flex " style="gap: 5px;">
+            <button type="button" class="btn btn-primary btn-sm">
+              생산지시 현황
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm">
+              전체선
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm">
+              1호기
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm">
+              2호기
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm">
+              3호기
+            </button>
+          </div>
+          <button type="button" class="btn btn-refresh btn-sm d-flex align-items-center">
+            <i class="fas fa-sync-alt me-1"></i> Refresh
+          </button>
+        </div>
+
+        <!-- Table Here -->
+        <div class="grid ag-theme-balham" id="productionGrid" style="height: 600px;"></div>
+
+        <!-- Second filter -->
+
+        <div class="second-filter container-fluid mb-2"
+          style="background: #f7f9fb; border-radius: 8px; padding: 10px 0;">
+          <div class="row justify-content-center align-items-center mb-1">
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <label class="mb-0 mr-1 font-weight-bold" style="font-size:0.8rem;" for="filter-prod-date2">생산일</label>
+              <button type="button" class="btn btn-outline-primary btn-sm mr-1">Today</button>
+              <input type="date" id="filter-prod-date2" class="form-control form-control-sm mr-2"
+                style=" min-width: 90px; font-size:0.8rem;" />
+            </div>
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <label class="mb-0 mr-1 font-weight-bold" for="filter-convert">컨버팅 호기</label>
+              <select id="filter-convert" class="form-control form-control-sm mr-2"
+                style=" min-width: 80px; font-size:0.95rem;">
+                <option>1호기</option>
+                <option>2호기</option>
+                <option>3호기</option>
+              </select>
+            </div>
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <button type="button" class="btn btn-harmony-blue btn-sm mr-1">소요시간 계산</button>
+              <button type="button" class="btn btn-harmony-blue btn-sm mr-2">중지시간 관리</button>
+            </div>
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <label class="mb-0 mr-1 font-weight-bold">점</label>
+              <input type="time" class="form-control form-control-sm mr-1" style=" min-width: 70px; font-size:0.8rem;"
+                value="12:00" />
+              <span class="mx-1">~</span>
+              <input type="time" class="form-control form-control-sm mr-2" style=" min-width: 70px; font-size:0.8rem;"
+                value="13:00" />
+            </div>
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <label class="mb-0 mr-1 font-weight-bold">저</label>
+              <input type="time" class="form-control form-control-sm mr-1" style=" min-width: 70px; font-size:0.8rem;"
+                value="19:00" />
+              <span class="mx-1">~</span>
+              <input type="time" class="form-control form-control-sm mr-2" style=" min-width: 70px; font-size:0.8rem;"
+                value="19:30" />
+            </div>
+          </div>
+          <div class="row justify-content-center align-items-center">
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <label class="mb-0 mr-1 font-weight-bold">일계(Ton)</label>
+              <span class="display-field badge badge-primary mx-1"
+                style="min-width:36px; font-size:0.8rem; font-weight:700; padding:4px 10px;">33.4</span>
+            </div>
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <label class="mb-0 mr-1 font-weight-bold">호기일계(Ton)</label>
+              <span class="display-field badge badge-warning mx-1"
+                style="min-width:36px; font-size:0.8rem; font-weight:700; padding:4px 10px; color:#fff;">16.1</span>
+            </div>
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <label class="mb-0 mr-1 font-weight-bold">일계(탕수)</label>
+              <span class="display-field badge badge-primary mx-1"
+                style="min-width:36px; font-size:0.8rem; font-weight:700; padding:4px 10px;">21</span>
+            </div>
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <label class="mb-0 mr-1 font-weight-bold">호기일계(탕수)</label>
+              <span class="display-field badge badge-warning mx-1"
+                style="min-width:36px; font-size:0.8rem; font-weight:700; padding:4px 10px; color:#fff;">11</span>
+            </div>
+            <div class="col-auto d-flex align-items-center flex-wrap mb-1">
+              <button type="button" class="btn btn-outline-info btn-sm ml-2">라벨 출력</button>
+              <button type="button" class="btn btn-primary btn-sm ml-1">생산지시</button>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- Fixed bottom info bar (moved back inside page-wrapper) -->
+      <div class="fixed-bottom-info-bar w-100 d-flex align-items-center justify-content-center"
+        style="position:fixed; bottom:0; left:0; z-index:1050; background:#f8fafd; border-top:1px solid #e0e0e0; min-height:36px; padding:2px 0; box-shadow:0 -2px 8px 0 rgba(0,0,0,0.03);">
+        <span class="mx-2 font-weight-bold" style="font-size:0.85rem;">오더기간 : <span class="badge badge-light"
+            style="font-size:0.85rem; font-weight:600; background:#fff; border:1px solid #d1d1d1;">2025-07-01~2025-07-14</span></span>
+        <button type="button" class="btn btn-success btn-xs mx-1 px-2 py-1"
+          style="font-size:0.8rem; min-width:48px;">오더대기 <span class="font-weight-bold ml-1">0</span></button>
+        <button type="button" class="btn btn-success btn-xs mx-1 px-2 py-1"
+          style="font-size:0.8rem; min-width:48px;">매입대기 <span class="font-weight-bold ml-1">0</span></button>
+        <button type="button" class="btn btn-primary btn-xs mx-1 px-2 py-1" style="font-size:0.8rem; min-width:48px;">오더
+          <span class="font-weight-bold ml-1">422</span></button>
+        <button type="button" class="btn btn-info btn-xs mx-1 px-2 py-1" style="font-size:0.8rem; min-width:48px;">투입완료
+          <span class="font-weight-bold ml-1">280</span></button>
+        <button type="button" class="btn btn-info btn-xs mx-1 px-2 py-1" style="font-size:0.8rem; min-width:48px;">지시완료
+          <span class="font-weight-bold ml-1">280</span></button>
+        <button type="button" class="btn btn-primary btn-xs mx-1 px-2 py-1"
+          style="font-size:0.8rem; min-width:48px;">생산완료 <span class="font-weight-bold ml-1">276</span></button>
+        <button type="button" class="btn btn-primary btn-xs mx-1 px-2 py-1"
+          style="font-size:0.8rem; min-width:48px;">납품완료 <span class="font-weight-bold ml-1">292</span></button>
+      </div>
+      <!-- End fixed bottom info bar -->
+
+      <footer class="footer text-center">© 2025 Harmony by HansolPNS</footer>
+    </div>
+    <!-- Fixed bottom info bar -->
+
+  </div> <!-- page-wrapper -->
+  </div> <!-- main-wrapper -->
+
+  <input type="hidden" id="spring_profile" value="dev" />
+  <input type="hidden" id="loginUserId" value="marusys" />
+  <input type="hidden" id="session_USER_ID" value="marusys" />
+  <input type="hidden" id="session_USER_NM" value="시스템관리" />
+  <input type="hidden" id="session_MANDT" value="100" />
+  <input type="hidden" id="session_MANDT_NM" value="지류유통" />
+  <input type="hidden" id="session_BUKRS" value="M200" />
+  <input type="hidden" id="session_BUKRS_NM" value="PNS지류유통" />
+  <input type="hidden" id="session_VKGRP" value="" />
+  <input type="hidden" id="session_VKGRP_NM" value="" />
+  <input type="hidden" id="session_MOBILE" value="" />
+  <input type="hidden" id="session_EMAIL" value="" />
+  <input type="hidden" id="session_KOSTL" value="" />
+  <input type="hidden" id="session_ADMIN_YN" value="N" />
+  <input type="hidden" id="session_LOGIN_DT" value="2025-07-15 19:30:24" />
+  <input type="hidden" id="session_SMART_ID" value="" />
+  <input type="hidden" id="session_SMART_PASSWORD" value="" />
+  <input type="hidden" id="session_USER_IP" value="0:0:0:0:0:0:0:1" />
+  <input type="hidden" id="session_SESSION_ID" value="" />
+  <input type="hidden" id="session_FIRST_TOPMENU" value="" />
+  <input type="hidden" id="session_MM" value="MM999" />
+  <input type="hidden" id="session_SD" value="SD999" />
+  <input type="hidden" id="session_CO" value="CO999" />
+  <input type="hidden" id="session_FI" value="FI999" />
+  <input type="hidden" id="session_CM" value="CM999" />
+  <input type="hidden" id="session_IN_IP_YN" value="N" />
+  <input type="hidden" id="session_UPPER_BU" value="" />
+  <input type="hidden" id="session_UPPER_NAME" value="" />
+
+  <input id="message" type="hidden" value="" />
+
+  <script>
+    $(document).ready(function () { });
+  </script>
+
+  <!-- 타임리프 사용을 위해서 th:inline="javascript" -->
+  <script>
+  </script>
+  <script>
+    // Column definitions for production grid (tái sử dụng)
+    const productionColumnDefs = [
+      { headerName: "출력선택", field: "print_select", width: 90, checkboxSelection: true, headerCheckboxSelection: true },
+      { headerName: "생산일자", field: "prod_date", width: 110 },
+      { headerName: "작업순서", field: "work_order", width: 90 },
+      { headerName: "호기", field: "machine_no", width: 70 },
+      { headerName: "생태", field: "prod_type", width: 70 },
+      { headerName: "판매처", field: "seller", width: 110 },
+      { headerName: "납품처", field: "buyer", width: 110 },
+      { headerName: "납기일자", field: "due_date", width: 110 },
+      { headerName: "납기시간", field: "due_time", width: 90 },
+      { headerName: "영업오더", field: "sales_order", width: 110 },
+      { headerName: "작업유형", field: "job_type", width: 90 },
+      { headerName: "생산오더", field: "prod_order", width: 110 },
+      { headerName: "재단구분", field: "cut_type", width: 90 },
+      { headerName: "FSC", field: "fsc", width: 60 },
+      { headerName: "투입지종", field: "input_paper", width: 90 },
+      { headerName: "투입평량", field: "input_weight", width: 90 },
+      { headerName: "투입가로", field: "input_width", width: 90 },
+      { headerName: "투입세로", field: "input_height", width: 90 },
+      { headerName: "투입인치", field: "input_inch", width: 90 },
+      { headerName: "계획 폭", field: "plan_width", width: 90 },
+      { headerName: "계획 가로", field: "plan_garo", width: 90 },
+      { headerName: "계획 세로", field: "plan_sero", width: 90 },
+      { headerName: "계획 수량( R )", field: "plan_qty_r", width: 110 },
+      { headerName: "계획 중량 (Kg)", field: "plan_weight_kg", width: 120 },
+      { headerName: "투입 롤수", field: "input_roll_cnt", width: 90 },
+      { headerName: "기계 속도", field: "machine_speed", width: 90 },
+      { headerName: "작업시간(분)", field: "work_time_min", width: 110 },
+      { headerName: "소요 길이", field: "need_length", width: 90 },
+      { headerName: "소요 (분)", field: "need_min", width: 90 },
+      { headerName: "중지(분)", field: "stop_min", width: 90 },
+      { headerName: "중지사유", field: "stop_reason", width: 110 },
+      { headerName: "CUT (정매)", field: "cut_main", width: 90 },
+      { headerName: "CUT (여분)", field: "cut_extra", width: 90 },
+      { headerName: "PT", field: "pt", width: 60 },
+      { headerName: "생산지시 선택", field: "prod_select", width: 110 },
+      { headerName: "확정 처리", field: "confirm_proc", width: 90 },
+      { headerName: "삭제 처리", field: "delete_proc", width: 90 },
+      { headerName: "비고 (생산유의사항)", field: "note_prod", width: 160 },
+      { headerName: "비고2 (포장유의사항)", field: "note_pack", width: 160 },
+      { headerName: "전달 사항", field: "note_transfer", width: 120 }
+    ];
+
+    // Grid options for production grid
+    const productionGridOptions = {
+      columnDefs: productionColumnDefs,
+      rowSelection: 'multiple',
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        filter: true,
+        minWidth: 60
+      },
+      suppressRowClickSelection: false,
+      animateRows: true,
+      rowData: [
+        {
+          print_select: false,
+          prod_date: "2025-07-10",
+          work_order: "1",
+          machine_no: "1호기",
+          prod_type: "일반",
+          seller: "한솔PNS",
+          buyer: "고객A",
+          due_date: "2025-07-14",
+          due_time: "14:00",
+          sales_order: "SO123456",
+          job_type: "절단",
+          prod_order: "PO987654",
+          cut_type: "정매",
+          fsc: "Y",
+          input_paper: "백상지",
+          input_weight: "80",
+          input_width: "1000",
+          input_height: "1200",
+          input_inch: "39.4",
+          plan_width: "1000",
+          plan_garo: "1000",
+          plan_sero: "1200",
+          plan_qty_r: "10",
+          plan_weight_kg: "800",
+          input_roll_cnt: "2",
+          machine_speed: "150",
+          work_time_min: "60",
+          need_length: "1500",
+          need_min: "60",
+          stop_min: "0",
+          stop_reason: "",
+          cut_main: "10",
+          cut_extra: "1",
+          pt: "PT1",
+          prod_select: false,
+          confirm_proc: "N",
+          delete_proc: "N",
+          note_prod: "주의사항 없음",
+          note_pack: "포장 주의",
+          note_transfer: "전달사항 없음"
+        }
+      ] // Dữ liệu sẽ được load động
+    };
+
+    // Khởi tạo grid khi DOM ready
+    document.addEventListener('DOMContentLoaded', function () {
+      new agGrid.Grid(document.getElementById('productionGrid'), productionGridOptions);
+    });
+  </script>
+  <script>
+    $(function () {
+      var path = window.location.pathname;
+      $('#sidebarnav a[href="' + path + '"]').each(function () {
+        $(this).parent('li').addClass('active');
+        $(this).closest('ul').addClass('in show').attr('aria-expanded', 'true');
+        $(this).closest('li').addClass('active');
+        $(this).attr('aria-expanded', 'true');
+      });
+    });
+  </script>
+</body>
+
+</html>

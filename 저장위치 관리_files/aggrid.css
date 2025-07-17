@@ -1,0 +1,36 @@
+/****************************************************
+ font
+***************************************************/
+.ag-theme-balham { font-family:  "Nanum Gothic", sans-serif; }
+/****************************************************
+ grid checkbox
+ - adminpro checkbox와 충돌. left 정의 추가
+***************************************************/
+.ag-theme-balham .ag-checkbox-input-wrapper input, .ag-theme-balham .ag-checkbox-input-wrapper input {
+  -webkit-appearance: none;
+  opacity: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: auto; /* 2021.07.22. checkbox issue */
+}
+/* adminpro checkbox와 충돌. ag그리드의 checkbox에 해당 옵션을 추가*/
+.ag-cell [type="checkbox"]:not(:checked), 
+.ag-cell [type="checkbox"]:checked {
+  position: relative;  
+  left: 0px; 
+  opacity: 1; 
+}
+/****************************************************
+ grid에서 사용되는 css 정의
+***************************************************/
+.ag-align-right {text-align: right;}
+.ag-align-default {text-align: center;}
+.ag-align-left {text-align: left;}
+/* grid header text align center */
+.ag-header-cell-text {flex: 1;}
+
+.ag-theme-balham .ag-ltr .ag-cell {
+    border-right: 1px solid #00000024;
+    font-weight: 600;
+}

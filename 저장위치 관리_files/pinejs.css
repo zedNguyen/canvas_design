@@ -1,0 +1,203 @@
+/* adminpro */
+@import url("/plugins/pinejs/css/adminpro.css");
+
+
+
+
+/* mainBody text size 변경 */
+.r-aside {
+    font-size: 13px;
+}
+
+
+.after-floatright {
+    clear: both;}
+  /* clearfix */
+.clearfix {*zoom:1;}
+.clearfix:before, .clearfix:after {display:block; content: ''; line-height: 0;}
+.clearfix:after {clear: both;}
+.grid {
+    width: 100%;
+    min-height: 200px;
+    margin-bottom: 10px;}
+/*******************
+카드 (접기/펼치기)
+******************/
+.card {
+    margin-bottom: 15px;}
+.card-body-bottom {
+    float: right;
+    margin-bottom: 5px;}
+.card-body-top {
+    margin-bottom: 7px;
+    float: right;}
+.collapsed p, .expanded p {
+    position: absolute;
+    top: 7px;
+    right: 20px;
+    font-weight: bold;
+    color: #333;}
+/*******************
+ toolbar
+******************/
+.toolbar {
+    margin-bottom: 5px;}
+.toolbar-left {
+    display: inline;}
+.toolbar-right {
+    display: inline;
+    float: right;}
+/*******************
+form
+******************/
+/*form label*/
+.form label {
+	font-weight: 600;
+	font-size: 13px;
+}
+.form { /* override bootstrap */
+    display: flex;
+    flex-wrap: wrap;}
+.form-group { /* override bootstrap */
+    margin-bottom: 5px;}
+.row {
+    margin-right: 0px;
+    margin-left: 0px;}
+.col-form-label { /* override bootstrap */
+    text-align:right;
+    width: 100px;
+    margin-right:5px;
+    margin-left:5px;}
+.form-control { /* override bootstrap */
+    color: black;
+    flex: 1;
+    margin-left:5px;}
+.form-control-sm { /* override bootstrap */
+    font-size: 13px;
+	font-weight: 600;
+}
+.form-control-md { /* override bootstrap */
+    font-size: 14px;}
+.width-fix {
+    flex: none;}
+.row-item5 {
+    width: 20%;}
+.row-item4 {
+    width: 25%;}
+.row-item3 {
+    width: 33%;}
+.row-item2 {
+    width: 50%;}
+.row-item1 {
+    width: 100%;}
+.form-group .d-flex {
+    display: flex !important;
+    flex: 1;}
+/*******************
+ field container
+******************/
+.field-header, .field-body {
+    color: #111;
+    background-color: #fff;
+    padding: 10px 10px 10px 10px;}
+.field-header {
+    border-top: 4px solid #003b61;
+    vertical-align: top;}
+.field-header a {
+    color: #111;}
+/*******************
+ datepicker
+******************/
+/* datepicker input 롤오버 시 손가락 모양 표시*/
+.btn-datepicker {
+    cursor: pointer;}
+.btn-datepicker > .readonly {
+    cursor: default;}
+.btn-datepicker > .disabled {
+    cursor: default;}
+button.ui-datepicker-current {
+    opacity: 1 !important;}
+/* datepicker DONE 버튼 숨기기 */
+button.ui-datepicker-close {
+    display: none;}
+/*******************
+ label
+******************/
+/* label required 표시 */
+label.required:before {
+    color: red;
+    content: "* ";}
+.edit-required::after {
+    color: red;
+    content: " *";}
+/*******************
+ button 
+******************/
+button:read-only {
+    cursor: default;}
+button:disabled {
+    cursor: default;}
+.btn-trigger {
+    height: 28px;
+    width: 28px;
+    font-size: 10px;
+    padding: .25rem .5rem;}
+.btn-pop-grid {
+    height: 23px;
+    width: 23px;
+    font-size: 10px;
+    padding: 0;}
+.btn-sm {
+    padding-left: 15px;
+    padding-right: 15px;}
+/*******************
+ Tab
+******************/
+.nav-tabs .nav-link.disabled {
+    color: #d1dae2;
+    background-color: transparent;
+    border-color: transparent;}
+.customtab2 li a.nav-link {
+    border: 0px;
+    margin-right: 3px;
+    color: #67757c;}
+.customtab2 li a.nav-link.active {
+    background: #398bf7;
+    color: #ffffff;}
+.customtab2 li a.nav-link:hover {
+    color: #ffffff;
+    background: #398bf7;}
+
+
+/*******************
+ Table
+******************/
+td {
+	font-size: 13px;
+	font-weight: 600;
+}
+
+
+
+/*******************
+ sidebar-nav
+******************/
+.sidebar-nav ul li a {
+    padding: 4px 35px 4px 15px;
+    display: block;
+    font-size: 14px;
+    color: #83888e;
+    font-weight: 400;
+}
+
+.sidebar-nav ul li ul li a {
+    padding: 4px 35px 4px 15px;
+}
+
+.sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
+    color: #1976d2;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+

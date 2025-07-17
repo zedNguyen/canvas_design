@@ -1,0 +1,7 @@
+document.write('<script src="/plugins/pinejs/js/global-val.js"></script>');
+document.write('<script src="/plugins/pinejs/js/core.js"></script>');
+//Third Party
+document.write('<script src="/plugins/pinejs/js/file.js"></script>');
+document.write('<script src="/plugins/pinejs/js/auth.js"></script>');
+document.write('<script src="/plugins/pinejs/js/editor.js"></script>');
+document.write('<script src="/plugins/pinejs/js/aggridHelper.js"></script>');

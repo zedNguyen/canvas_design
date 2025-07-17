@@ -1,0 +1,105 @@
+/**
+* USAGE  : fn_win_onload();<br>
+* DESC   : 각 화면의 window.onload에서 필수 호출
+*/
+
+function fn_win_onload() {
+    //홈화면 제목 설정
+    var url = window.location;
+    var element = $('ul#sidebarnav .menutext').filter(function() {
+        return this.href == url;
+    }).addClass('active').parent().addClass('active');
+    
+    //즐겨찾기 찾기A
+    var favorite_element = $('ul#sidebarnav .fav_menutext').filter(function() {
+        return this.href == url;
+    });
+//    console.log(favorite_element);
+    
+    //현재 
+    
+    //#is
+    // 메뉴 선택 시 본문 > 메뉴 title 변경
+    if(element.length > 0) {
+           $('#pageTitleText')[0].innerText = (element[0].innerText).trim();
+           document.title = (element[0].innerText).trim();
+           if(favorite_element.length > 0){
+               $('#pageTitleText').append('<i class="mdi mdi-star favorite_btn" style="font-size:18px !important; weight: bold !important;"  data-favo="Y"></i>');
+           }else{
+               $('#pageTitleText').append('<i class="mdi mdi-star-outline favorite_btn" style="font-size:18px !important; weight: bold !important; "  data-favo="N"></i>');
+           }
+           $(".favorite_btn").on('click',favo_click);
+        
+    }
+    // page loading시 HOME text가 보였다 변경됨. 우선 조치함.
+    if (url.href.indexOf('/view/main')>-1) {
+        $('#pageTitleText')[0].innerText = 'HOME';
+    }
+    
+    function favo_click(){
+        
+        let favo_status  = $(this).data('favo');
+        let urls = window.location;
+         //console.log(urls);
+        let PROG_ID = urls.pathname.replace("/view/hpl","").split("/").join("."); //실제 서버 등록아이디
+        let MENU_ID = urls.pathname.replace("/view/hpl","").split("/").join("-"); //왼쪽 즐겨찾기 네비게이션 등록아이디
+        if(favo_status === "Y"){
+               
+                
+            let params = { PROG_ID : PROG_ID }; 
+            
+             pine.ajax({ 
+             url: "/api/hplcm/menu/menu_110/DELETE_FAVO_PRGM", 
+             params: params, 
+              success: function(){ 
+                  alert("즐겨찾기가 삭제되었습니다.");
+                  $('#pageTitleText *').remove();
+                  $('#pageTitleText').append('<i class="mdi mdi-star-outline favorite_btn" style="font-size:18px !important; weight: bold !important;"  data-favo="N"></i>');
+                  let obj = '#sidebarnav-favorite #'+MENU_ID.toUpperCase();
+                  $(obj).remove();
+                  $(".favorite_btn").on('click',favo_click);
+                  
+              }, 
+              error: function() { 
+              } 
+             });
+            
+                /*//ajax로 즐겨찾기 Remove*/
+                
+                //파라미터로 PROG_ID 만 넣으면됨
+                //USER_ID는 컨트롤러
+                //BUKRS도 컨트롤러
+            }else{
+              
+               //ajax로 즐겨찾기 Remove
+
+               // pathname: "/view/hplsd/ords/ords_060"
+               // view/hpl 요걸 자르고 .으로 replace하면 프로그램 cd임 요걸 넘겨줌~
+                //프로그램 CD : CM.DEVR.DEVR_111
+                let params = { PROG_ID : PROG_ID }; 
+                
+                pine.ajax({ 
+                 url: "/api/hplcm/menu/menu_110/INSERT_FAVO_PRGM", 
+                 params: params, 
+                  success: function(){ 
+                     alert("즐겨찾기가 추가되었습니다.");
+                     $('#pageTitleText *').remove();
+                      let title = $('#pageTitleText')[0].innerText;
+                     $('#pageTitleText').append('<i class="mdi mdi-star favorite_btn" style="font-size:18px !important; weight: bold !important; "  data-favo="Y"></i>');
+                     let obj =  '<li id="'+MENU_ID.toUpperCase()+'"> <a href="'+urls+'" class="waves-effect waves-dark fav_menutext" target="_blank">'+title+'</a>';
+                     $('#sidebarnav-favorite').append(obj);
+                     $(".favorite_btn").on('click',favo_click);   
+
+                  }, 
+                  error: function() { 
+                  } 
+                 });
+            }
+    }
+    
+    // [스크롤 조정] 위치 조정 
+    // - 이 위치에서 작업 안하면 offset 값 세팅 안되어 있음
+    // - 최초 로그인 시 default value 필요
+    let scrollOffset = element.offset() || {top: 0};
+    $('.scroll-sidebar').scrollTop(scrollOffset.top);
+}

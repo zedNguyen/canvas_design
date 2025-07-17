@@ -1,0 +1,353 @@
+/* 가로 min-with 고정 => 가로스크롤 생성 */
+body.main {
+    min-width: 1200px;
+    overflow-x: auto !important;
+}
+body.popup {
+    min-width: 400px;
+    width: 100%;
+    overflow-x: auto !important;
+}
+.popup-page-wrapper {
+  background: #f4f6f9;
+  position: relative; }
+/*******************
+Bread crumb override
+******************/
+.page-titles {
+    margin-left: 0px;
+}
+#pageTitleText, .pageIcon {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+.list-group{
+    max-height: 150px;
+    margin-bottom: 10px;
+    overflow-y :scroll;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    -webkit-overflow-scrolling: touch;
+}
+.pageIcon {
+    margin-right: 6px;
+}
+.searchGroup {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    float: right;
+}
+.emphasize-label {
+    width:100px;
+    margin-left:5px;
+    margin-right:5px;
+    font-weight:bold;
+    text-align:center;
+    background-color:green;
+    padding-top:3px;
+    color:white;
+}
+.detail-table td {
+    border: 1px solid #e9ecef;
+}
+/* 사용자 관리 상세 화면 라벨 */
+.detail-label {
+    background-color: #e9ecef;
+    width: 120px;
+    font-weight: bold;
+}
+/* 사용자 관리 상세 화면 서브타이틀 */
+.content-title {
+    color: black;
+    font-weight: bold;
+    margin : 0px 0px 5px 15px;
+}
+.content-title::before {
+    content: "| ";
+}
+.fa-question-circle {
+    color: #22b8cf;
+}
+.ui-tooltip {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+/* 사용자 상세 수정 - 에코연동 시 입력창 테두리 제거 */
+.user-edit-disable {
+    border: none;
+}
+/* 사용자 상세 수정 - select 마진 변경 */
+select.user-edit {
+    margin: 0px 0px 0px 0px;
+    max-width: 120px;
+}
+.rules-label {
+    background-color: #e9ecef;
+    width: 180px;
+    font-weight: bold;
+}
+.rules-indent-1 {
+    text-indent: 2em;
+}
+.rules-indent-2 {
+    text-indent: 4em;
+}
+.rules-table {
+    border: 1px solid #ced4da;
+}
+.list-left {
+    width: 27%;
+    float: left;
+}
+.list-right {
+    width: 73%;
+    float: right;
+}
+/*******************
+ commonLayout
+******************/
+.up-button-toggle{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    z-index: 11; }
+.right-side-toggle-effect-remove i {
+    position: static;
+    animation-iteration-count: 0;
+    -webkit-animation-iteration-count: 0; }
+
+
+
+
+.body-film {
+    min-height: 100%;
+    overflow-y: scroll;
+}
+
+.footer {
+    padding: 5px 5px;
+}
+/*******************
+fileLayout
+******************/
+.attach-file {
+    position: relative;
+    display: block;
+    margin-bottom: 15px;
+    width: 100%;
+    height: 40px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    list-style:none;
+    padding-left:0px;
+}
+.attach-file input[type=file] {
+    display: none;
+}
+.attach-file input[type=text] {
+    float: left;
+    display: block;
+    width: calc(100% - 40px);
+    padding: 0 15px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 12px;
+    background: #fff;
+    border: 0;
+    box-sizing: border-box;
+}
+.attach-file .btn-file-section {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    display: inline-block;
+}
+.attach-file .btn-file {
+    display: inline-block;
+    width: 80px;
+    height: 30px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    background: #737ca0;
+    border: 0;
+    cursor: pointer;
+}
+
+.attach-file:after{content:"";clear:both;display:block;}
+.attach-file:before{content:"";float:left;display:block;width:40px;height:40px;background:url(/img/icon/file_icon2.png) no-repeat center center #abb0c6;}
+
+.attached-file {
+    list-style:none;
+    padding-left:0px;
+}
+.attached-file li a {
+	display:inline-block;
+	height:15px;
+	padding-left:12px;
+	font-size:12px;
+	line-height:15px;
+	color:#2d2d2d;
+	vertical-align:middle;
+	background:url(/img/icon/file_icon.png) no-repeat 0 center;
+}
+.attached-file li .btn-file {
+	display:inline-block;
+	margin-left:5px;
+	width:15px;
+	height:15px;
+	font-size:0;
+	vertical-align:middle;
+	border:0;
+	background:url(/img/icon/file_delete.png) no-repeat center center;
+	cursor:pointer
+}
+.detail-table td img{
+    max-width:100%;
+}
+.file-icon {
+	width:15px;
+	height:15px;
+	display:inline-block;
+	vertical-align:middle;
+	background:url(/img/icon/file_icon.png) no-repeat 0 center;
+}
+
+/* sample-alert.html */
+.alert-body{
+    padding: 0px;    
+}
+.alert-form{
+	padding: 10px 15px;
+}
+.alert-form:not(:first-child){
+    border-top: 7px solid #f4f6f9;
+}
+.alert-table td, .alert-table th{
+	padding: .55rem;
+}
+.alert-table td{
+	vertical-align: middle;
+}
+.alert-table input, .alert-table textarea{
+	display: inline-block;
+    padding: 3px 2px 3px 5px;
+    border: 1px solid #bbb;
+    border-radius: 2px;
+}
+.alert-table input{
+	min-width: 140px;
+}
+.alert-table .input-user-nm{
+	min-width: 70px;
+	width: 100px;
+}
+.alert-table input[type=email]{
+	min-width: 170px;
+}
+.alert-table textarea{
+	width: 41%;
+	height: 100px;
+}
+.title-section-span{
+	background-color: #003b61;
+	padding-left: 2.5px;
+	margin-right: 5px;
+}
+.title-section-text{
+	display: inline-block;
+	font-size: 14px;
+	font-weight: 900;
+	margin: 6px 0px 8px;
+}
+.wide-textarea{
+	height: 130px !important;
+	width: 100% !important;
+}
+.email-subject{
+	display: inline-block;
+	width: 100%;
+	margin-bottom: 10px;
+}
+.sms-maxLength-text, .hantalk-maxLength-text{
+	display: inline-block;
+	margin: -3px 0px 3px 5px;
+	vertical-align: text-bottom;
+}
+.align-left {
+  text-align: left;
+}
+/*Chrome Check box 클릭 이벤트 발생 문제 해결*/
+input:read-only {
+    pointer-events: auto; /* 20210729 none -> auto */
+}
+/* 20210729 file input pointer-events auto - 박정진, 이벤트 none 발생 */
+input[type='file'] {
+  pointer-events: auto;
+}
+
+.auth-timer {
+    
+}
+
+
+/*-- ============================================================== 
+ 메뉴바 숨김 Ipad & above all(768px) 
+ ============================================================== */
+@media (min-width: 768px) {
+  .mini-sidebar .page-wrapper {
+    margin-left: 0px; }
+}
+
+
+/* .page-wrapper {
+    padding-bottom: 10px;
+    height : 100vh !important;
+} */
+
+
+
+
+/* .container-fluid {
+    padding: 15px 10px 10px 10px;
+    height :  90vh !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+}  */
+
+/* /*******************
+ toolbar in form-contorl IE에서 herit 밀림방지
+ 근데 정해진 폼이아닌 다르게 코딩했다고하여 우선 주석
+******************/
+
+.toolbar {
+    margin-bottom: 5px;
+}
+
+.toolbar-left .form-control-sm{
+    display: inherit !important;
+}
+.toolbar-right .form-control-sm{
+    display: inherit !important;
+    float: right;
+}
+
+/*-- ============================================================== 
+ Cascading Style Sheets
+ ============================================================== */
+.inline-left {
+    display: inline;
+    float: left;
+}
+
+.inline-right {
+    display: inline;
+    float: right;
+}
+.inline-right .form-control-sm {
+    display: inline-block;
+    clear: both;
+}

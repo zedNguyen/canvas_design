@@ -1,0 +1,74 @@
+/**
+ * ag_numberFormatter
+ * aggrid에서 숫자 포맷을 출력하기 위한 Formatter </br>
+ * form의 ag_numberFormatter하는 Function. </br>
+ * 기본적으로 반올림으로 적용 round </br>
+ * 수정하고싶으면 포맷뒤에 파라미터로 { rule :  Math.round } 을 추가 하여 사용 </br>
+ * Math.round Math.abs, Math,floor, Math.ceil, Math.rand 을 사용 할수있다. </br>
+ * format : string -> 날짜 포맷 <a href='http://numeraljs.com/'>http://numeraljs.com/</a>문법 참조</br> 
+ * 사용샘플 주소 <a href='http://localhost:8080/view/guide/grid/aggrid-basic'>http://localhost:8080/view/guide/grid/aggrid-basic</a> </br>
+ * @param {string} format
+ * @return {ValueFormatter} ValueFormatter
+ * <b>사용법</b></br>
+ * {headerName : 'NETPR',  </br>
+ * field : 'NETPR',</br>
+ * cellEditor: AG_EDITOR.NUMBER, </br>
+ * valueFormatter: ag_numberFormatter('0,0') </br>
+ * }</br>
+ * @example
+ * ag_numberFormatter('0,0')
+ * ag_numberFormatter('0,0' , { rule :  Math.floor })
+ */
+function ag_numberFormatter(format,options) {
+     
+    function ValueFormatter(params) {
+        
+        let result;
+        let agg_prefix = '';
+        let agg_value = 0;
+        let valueFormat = format;
+        let option;
+        
+      
+        if(options == undefined){
+            option = { rule : Math.round };
+        }else{
+            option = $.extend({}, options);
+            if(option.rule == undefined){
+                option = { rule : Math.round };
+            }
+        }
+
+        if(pine.isEmpty(params.value)) return;
+        
+        if(!params.node || !params.node.rowPinned){
+        	
+        	if(valueFormat){
+        /*	    console.log("before : ", params.value);
+        	    console.log("rule : ", option.rule);
+        	    console.log("after : ", numeral(params.value).format(valueFormat,option.rule));*/
+        	    result  =  numeral(params.value).format(valueFormat,option.rule); //format 적용
+             
+             }else{
+                 result  =  params.value;
+                 //numberFormatter인데 valueFormat을 안넣었으니까 넣으라고 친절하게알려줌
+                 console.info('numberFormatter에는 valueFormat 을 지정하셔야 적용됩니다.');
+                 console.info('예 { valueFormatter: numberFormatter ,valueFormat:"0,0"} '); 
+             }
+        	
+        }else{
+        	//pineRenderer 부분 인데 찝찝함... 우선 남겨놓음
+             if(valueFormat){
+                 result  =  numeral(agg_value).format(valueFormat,option.rule); //numeral format 적용
+             }else{
+                 result  =  params.value;
+                 console.info('numberFormatter에는 valueFormat 을 지정하셔야 적용됩니다.');
+                 console.info('예 { valueFormatter: numberFormatter ,valueFormat:"0,0"} ');
+             }
+
+        }
+
+        return result;
+    }
+    return ValueFormatter;
+}

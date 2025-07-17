@@ -1,0 +1,87 @@
+/* ============================================================== */
+/*Pine.JS Aggrid용 Helper JS
+/* ============================================================== */
+
+
+/* ============================================================== */
+/* ColumeDef Generate
+ * 컬럼 데피니션 자동 제너레이터
+/* ============================================================== */
+/**
+ * Json -> Aggrid ColumeDef String을 생성</br>
+ * 분류 : Data Handling </br>
+ * Array일 경우 첫번째 행으로 생성</br>
+ * 콘솔로그로도 자동출력됨 </br>
+ * example </br>
+ * let jsonString = grid.jsonToAggridColumnDefs(result.data); </br>
+ * @param {JsonObject or JsonArray} data
+ */
+Pine.prototype.jsonToAggridColumnDefsString = function(data){
+    
+    let jsonData = {};
+    //데이터가 없으면 동작 안함
+    if(data == undefined || pine.isEmpty(data)){
+        return;
+    }
+    //Array일 경우 [0]번째 만 가지고 작업함
+    if(Array.isArray(data)==true && data.length > 0){
+        jsonData = data[0];
+     }else{
+        jsonData = data;
+     }
+    
+    var b = Object.getOwnPropertyNames(jsonData);
+    var list_array = [];
+
+    //json객체 만들기
+    //추후 width는 본문 첫번째줄을 세서 width를 계산해 주도록 추가
+    for(let i = 0 ; i <b.length ; i++){
+       let obj =  { headerName : b[i],   field : b[i]     ,  width: 100 , suppressSizeToFit: true};
+       list_array.push(obj);
+    }
+
+    // console.log(columnDefslist_array);
+    console.log("-----  JSON STRING COLUM PLEASE COPY ----");
+    var myJSON = JSON.stringify(list_array,  null, 4);
+    myJSON = 'columnDefs : '  + myJSON;
+    myJSON = myJSON.replace(/\"/gi, "\'");  //정규식버전
+    console.log(myJSON);
+    //myJSON = pine.replaceALL(myJSON, '\"', "\'");
+    return myJSON;
+}
+/**
+ * jsonTocolumnDefsArray
+ * Json -> Aggrid ColumeDef을 생성</br>
+ * 분류 : Data Handling </br>
+ * Array일 경우 첫번째 행으로 생성</br>
+ * 콘솔로그로도 자동출력됨 </br>
+ * example </br>
+ * let columeDefs = jsonToAggridColumnDefsArray(result.data); </br>
+ * @param {JsonObject or JsonArray} data
+ */
+Pine.prototype.jsonToAggridColumnDefsArray = function(data){
+    
+    let jsonData = {};
+    //데이터가 없으면 동작 안함
+    if(data == undefined || pine.isEmpty(data)){
+        return;
+    }
+    //Array일 경우 [0]번째 만 가지고 작업함
+    if(Array.isArray(data)==true && data.length > 0){
+        jsonData = data[0];
+     }else{
+        jsonData = data;
+     }
+    
+    var b = Object.getOwnPropertyNames(jsonData);
+    var list_array = [];
+
+    //json객체 만들기
+    //추후 width는 본문 첫번째줄을 세서 width를 계산해 주도록 추가
+    for(let i = 0 ; i <b.length ; i++){
+       let obj =  { headerName : b[i],   field : b[i]     ,  width: 100 ,suppressSizeToFit: true};
+       list_array.push(obj);
+    }
+    
+    return list_array;
+}

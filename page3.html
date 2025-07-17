@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>생산실적(시트)
+
+  </title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <meta name="robots" content="noindex,nofollow" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Global site tag (gtag.js) - Google Analytics PROD만 동작 -->
+
+  <link href="./저장위치 관리_files/bootstrap.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/perfect-scrollbar.min.css" rel="stylesheet" />
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/style.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/jquery-ui.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./저장위치 관리_files/pinejs.css" />
+
+  <link href="./저장위치 관리_files/ag-grid.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/ag-theme-balham.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/aggrid.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/toastr.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/blue.css" id="theme" rel="stylesheet" />
+
+  <!-- Harmony Blue & custom styles for /learn pages -->
+  <link href="./style.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/custom.css" rel="stylesheet" />
+
+  <script src="./저장위치 관리_files/jquery.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/popper.min.js.download"></script>
+  <script src="./저장위치 관리_files/bootstrap.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/perfect-scrollbar.jquery.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/waves.js.download"></script>
+
+  <script src="./저장위치 관리_files/sidebarmenu.js.download"></script>
+  <!-- <script th:src="@{/plugins/pinejs/js/adminpro.js}"></script> -->
+
+  <script src="./저장위치 관리_files/adminpro.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.toast.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.serializeObject.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.validate.min.js.download"></script>
+  <script src="./저장위치 관리_files/messages_ko.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery-ui.min.js.download"></script>
+  <script src="./저장위치 관리_files/numeral.min.js.download"></script>
+  <script src="./저장위치 관리_files/lodash.4.17.15.min.js.download"></script>
+  <script src="./저장위치 관리_files/moment.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.collapse.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.bootstrap-touchspin.min.js.download"></script>
+  <!-- bootstrap submodal -->
+  <script src="./저장위치 관리_files/bs.sm.js.download"></script>
+
+  <script src="./저장위치 관리_files/xlsx.full.min.js.download"></script>
+  <script src="./저장위치 관리_files/fileSaver.min.js.download"></script>
+  <script src="./저장위치 관리_files/toastr.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.mask.js.download"></script>
+
+  <script src="./저장위치 관리_files/ag-grid-enterprise.min.noStyle.js.download"></script>
+  <script>
+    agGrid.LicenseManager.setLicenseKey(
+      "CompanyName=JSIT,LicensedGroup=HANSOL PNS IT-SERVICE,LicenseType=MultipleApplications,LicensedConcurrentDeveloperCount=3,LicensedProductionInstancesCount=2,AssetReference=AG-008218,ExpiryDate=21_May_2021_[v2]_MTYyMTU1MTYwMDAwMA==fb098f15da774457685846b99c4a3a7e"
+    );
+  </script>
+  <script src="./저장위치 관리_files/ag_base.js.download"></script>
+  <script src="./저장위치 관리_files/ag_locale_ko.js.download"></script>
+  <script src="./저장위치 관리_files/ag_renderer.js.download"></script>
+  <script src="./저장위치 관리_files/ag_formatter.js.download"></script>
+  <script src="./저장위치 관리_files/ag_editor.js.download"></script>
+  <script src="./저장위치 관리_files/ag_excel.js.download"></script>
+
+  <!-- CK Editor -->
+  <!-- ============================================================== -->
+  <script src="./저장위치 관리_files/ckeditor.js.download"></script>
+  <style>
+    .cke {
+      visibility: hidden;
+    }
+  </style>
+
+  <script src="./저장위치 관리_files/pine.js.download"></script>
+  <script src="./저장위치 관리_files/global-val.js.download"></script>
+  <script src="./저장위치 관리_files/core.js.download"></script>
+  <script src="./저장위치 관리_files/file.js.download"></script>
+  <script src="./저장위치 관리_files/auth.js.download"></script>
+  <script src="./저장위치 관리_files/editor.js.download"></script>
+  <script src="./저장위치 관리_files/aggridHelper.js.download"></script>
+
+  <!-- ============================================================== -->
+
+  <script src="./저장위치 관리_files/doc_ready.js.download"></script>
+</head>
+
+<body class="fix-header card-no-border main">
+  <div class="preloader" style="display: none">
+    <div class="loader">
+      <div class="loader__figure"></div>
+      <p class="loader__label">Harmony</p>
+    </div>
+  </div>
+
+  <div id="main-wrapper">
+    <header class="topbar">
+      <nav class="navbar top-navbar navbar-expand-md navbar-light">
+        <div class="navbar-header">
+          <a class="navbar-brand">
+            <b>
+              <img src="./저장위치 관리_files/logo-icon.png" alt="homepage" class="dark-logo" />
+
+              <img src="./저장위치 관리_files/logo-light-icon.png" alt="homepage" class="light-logo" />
+            </b>
+
+            <span>
+              <img src="./저장위치 관리_files/logo-text.png" alt="homepage" class="dark-logo" />
+
+              <img src="./저장위치 관리_files/logo-light-text.png" class="light-logo" alt="homepage" /></span>
+          </a>
+        </div>
+
+        <div class="navbar-collapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i
+                  class="ti-menu"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link sidebartoggler hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i
+                  class="fa-solid fa-bars"></i></a>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav my-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="javascript:void(0)">
+                <span style="font-weight: bold; font-size: 18px">dev서버</span>
+              </a>
+            </li>
+
+            <li class="nav-item hidden-xs-down search-box">
+              <a class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)" title="메뉴 검색"><i
+                  class="ti-search"></i></a>
+              <form class="app-search" onsubmit="return false">
+                <input type="text" id="menu-search-txt" class="form-control" placeholder="메뉴 검색" />
+                <a class="srh-btn"><i class="ti-close"></i></a>
+                <div id="menu-search" class="search-rslt"></div>
+              </form>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle waves-effect waves-dark" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <span>시스템관리</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right animated flipInY">
+                <ul class="dropdown-user">
+                  <li>
+                    <div class="dw-user-box">
+                      <div class="u-text">
+                        <h4>
+                          <i class="fas fa-user"></i>&nbsp;
+                          <span>시스템관리</span>
+                        </h4>
+                        <p class="text-muted"><span></span></p>
+                      </div>
+                    </div>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <a><i class="ti-settings"></i> 계정설정</a>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <a><i class="fa fa-power-off"></i> 로그아웃</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <aside class="left-sidebar">
+      <div class="scroll-sidebar ps-container ps-theme-default" data-ps-id="6445c0c0-d75d-a3cd-4fab-49cc73438c65">
+        <nav class="sidebar-nav active">
+          <ul id="sidebarnav" class="in">
+            <li class="nav-small-cap">즐겨찾기 ★</li>
+            <ul class="list-group" id="sidebarnav-favorite"></ul>
+            <li class="nav-devider"></li>
+
+            <li class="nav-small-cap">프로그램</li>
+
+            <li class="active">
+              <a class="has-arrow waves-effect waves-dark" aria-expanded="true">
+                <i class="mdi mdi-format-list-bulleted"></i>
+                <span class="hide-menu">Canvas</span>
+              </a>
+
+              <ul aria-expanded="true" class="collapse in show">
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page1.html">생산지시서
+                    관리</a>
+                </li>
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page2.html">길로틴 생산지시서
+                    관리</a>
+
+                </li>
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page3.html"
+                    style="color: #007bff;">생산실적(시트)
+                  </a>
+
+                </li>
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page4.html">생산실적(길로틴)
+                  </a>
+
+                </li>
+                <li>
+                  <a class="has-arrow waves-effect waves-dark" aria-expanded="false" href="./page5.html">생산일보
+                  </a>
+
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px">
+          <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px"></div>
+        </div>
+        <div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px">
+          <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px"></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="page-wrapper" style="min-height: 952px">
+      <div class="container-fluid r-aside">
+        <div class="row page-titles m-b-10">
+          <div class="col-md-5 align-self-center">
+            <!-- <h4 class="text-themecolor"><i class="fas fa-sticky-note pageIcon"></i><span id="pageTitles">HOME</span></h3> -->
+            <!-- <h6 class="text-themecolor" id="pageTitleText">HOME</h5> -->
+            <li id="pageTitleText">
+              생산실적(시트)<i class="fa-regular fa-star" style="
+                    font-size: 16px !important;
+                    font-weight: bold !important;
+                    margin-left: 5px;
+                  " data-favo="N"></i>
+            </li>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="toolbar-right">
+            <button class="btn btn-harmony-blue btn-sm"><i class="fa fa-industry"></i> 공정</button>
+            <button class="btn btn-harmony-blue btn-sm"><i class="fa fa-gears"></i> 호기</button>
+            <button class="btn btn-harmony-blue btn-sm"><i class="fa fa-users"></i> 반</button>
+            <button class="btn btn-harmony-blue btn-sm"><i class="fa fa-briefcase"></i> 근무</button>
+          </div>
+          <div class="after-floatright"></div>
+        </div>
+
+        <!-- SECTION Filter collapse -->
+        <div class="card" style="margin-bottom: 0px;" data-collapse="">
+          <div class="card-header field-header open" data-collapse-summary="" aria-expanded="true">
+            <a>
+              <a class="card-link" aria-expanded="true" aria-controls="cardBody">검색조건
+                <span class="expanded">
+                  <p><b>▼</b></p>
+                </span>
+              </a>
+            </a>
+          </div>
+          <div id="cardBody" class="collapse show field-body" aria-hidden="false">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-4 d-flex align-items-center">
+                  <label for="filter-prod-from">생산지시</label>
+                  <input type="date" id="filter-prod-from" name="filter-prod-from" class="form-control form-control-sm"
+                    style="width: 33%" placeholder="YYYY-MM-DD" />
+                  <span style="margin: 0 2px">~</span>
+                  <input type="date" id="filter-prod-to" name="filter-prod-to" class="form-control form-control-sm"
+                    style="width: 33%" placeholder="YYYY-MM-DD" />
+                  <input type="checkbox" id="filter-all" checked class="ml-1"
+                    style="vertical-align:middle; display: none;" />
+                  <label for="filter-all" class="mb-0 ml-1" style="font-size:0.95rem;"></label>
+                </div>
+
+                <div class="col-4 d-flex align-items-center" style="gap: 10px;">
+                  <div style="margin-left: 50px;">
+                    <input type="checkbox" id="filter-all-3" checked class="mr-1"
+                      style="vertical-align:middle; display: none;" />
+                    <label for="filter-all-3" style="font-size:0.90rem;" class="mb-0 mr-2">미마감</label>
+                  </div>
+                  <div>
+                    <input type="checkbox" id="filter-1" class="mr-1" style="vertical-align:middle; display: none;" />
+                    <label for="filter-1" style="font-size:0.90rem;" class="mb-0 mr-2">마감</label>
+                  </div>
+                </div>
+
+                <div class="col-4 d-flex align-items-center justify-content-end" style="gap: 10px;">
+                  <!-- 지시검색 button -->
+                  <button type="button" class="btn btn-primary btn-sm ml-3" style="min-width:90px;">지시검색</button>
+                  <!-- 생산요청서출력 button -->
+                  <button type="button" class="btn btn-info btn-sm ml-2" style="min-width:120px;">생산요청서출력</button>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- 
+        SECTION BODY -->
+        <div class="section-body">
+          <div class="row">
+            <!-- Bảng bên trái: Thông tin sản xuất -->
+            <div class="col-md-8" style="padding: 0px;">
+              <div class="card mb-2">
+                <div class="card-header py-1">
+                  <div class="d-flex align-items-center learn-quickfilter">
+                    <span class="mr-2 font-weight-bold">작업지시-시트커터
+                    </span>
+                    <button type="button" class="btn btn-refresh btn-sm d-flex align-items-center ml-auto">
+                      <i class="fas fa-sync-alt me-1"></i> Refresh
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Table sản xuất chính -->
+                <div id="mainGrid" class="ag-theme-balham" style="height: 300px; width: 100%;"></div>
+
+              </div>
+              <!-- Ghi chú và truyền đạt -->
+              <div class="row mb-2 ">
+                <div class="col-md-6" style="padding: 0px;">
+                  <div class="input-group pr-2"
+                    style="height: 100%; background-color:#e9ecef ; border-radius: 4px; padding: 4px;">
+                    <span style="font-weight: bold; font-size: 1.15rem; text-align: center;">비고</span>
+                    <textarea type="text" class="form-control" placeholder="비고 입력" value="비고 입력 " rows="2"></textarea>
+                  </div>
+                </div>
+                <div class="col-md-6 pl-2" style="padding: 0px;">
+                  <div class="input-group"
+                    style="height: 100%; background-color:#e9ecef ; border-radius: 4px; padding: 4px;">
+                    <span style="font-weight: bold; font-size: 1.15rem; text-align: center;">전달</span>
+                    <textarea type="text" class="form-control" placeholder="전달 내용" value="전달 내용" rows="2"></textarea>
+                  </div>
+                </div>
+              </div>
+              <!-- Bảng sản xuất 실적 -->
+              <div class="card">
+                <div class="card-header py-2">
+                  <span class="font-weight-bold">생산실적</span>
+                </div>
+                <div id="prodResultGrid" class="ag-theme-balham" style="height: 200px; width: 100%;"></div>
+              </div>
+            </div>
+            <!-- Bảng bên phải: Thông tin phụ -->
+            <div class="col-md-4" style="height: auto; display: flex; flex-direction: column; gap: 10px;">
+              <div class="card mb-2">
+                <div class="card-header py-2 px-3">
+                  <span class="font-weight-bold">상태</span>
+                </div>
+                <div class="card-body p-2" style="min-height:120px;">
+                  <div class="d-flex flex-column gap-2">
+                    <button class="btn btn-success mb-2 d-flex align-items-center" type="button">
+                      <i class="fa fa-play mr-2"></i> 시작
+                    </button>
+                    <button class="btn btn-danger mb-2 d-flex align-items-center" type="button">
+                      <i class="fa fa-times mr-2"></i> 취소
+                    </button>
+                    <button class="btn btn-primary mb-2 d-flex align-items-center" type="button">
+                      <i class="fa fa-check mr-2"></i> 마감
+                    </button>
+                    <button class="btn btn-warning mb-2 d-flex align-items-center" type="button">
+                      <i class="fa fa-undo mr-2"></i> 마감취소
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="card" style="flex: 1;">
+                <div class="card-header py-2 px-3 d-flex justify-content-between align-items-center">
+                  <span class="font-weight-bold">상세정보</span>
+                  <span class="font-weight-bold" style="font-size:0.9rem;">사용롤: 400*9000*152000</span>
+                </div>
+                <div class="card-body p-2" style="min-height:180px;">
+                  <div id="detailRollGrid" class="ag-theme-balham" style="height: 100%; width: 100%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Second filter -->
+
+        <!-- Custom horizontal toolbar like image -->
+        <div class="custom-toolbar d-flex align-items-center mb-2 px-3"
+          style="background: #e9eaed; border-radius: 4px; padding: 4px 0; gap: 6px;">
+          <button class="btn btn-secondary btn-sm px-3 d-flex align-items-center" type="button">
+            <i class="fa fa-cogs mr-2"></i> 영업오더
+            <span class="ml-1 font-weight-bold" style="font-size:1rem;">6000115198</span>
+          </button>
+          <button class="btn btn-secondary btn-sm px-3 d-flex align-items-center" type="button">
+            <i class="fa fa-tasks mr-2"></i> 작업유형
+            <span class="ml-1 font-weight-bold" style="font-size:1rem;">(예시)</span>
+          </button>
+          <button class="btn btn-secondary btn-sm px-3 d-flex align-items-center" type="button">
+            <i class="fa fa-map-marker-alt mr-2"></i> 도착지
+            <span class="ml-1 font-weight-bold" style="font-size:1rem;">(예시)</span>
+          </button>
+          <button class="btn btn-secondary btn-sm px-3 d-flex align-items-center" type="button">
+            <i class="fa fa-list-ol mr-2"></i> 수량(R)
+            <span class="ml-1 font-weight-bold" style="font-size:1rem;">57</span>
+          </button>
+          <button class="btn btn-secondary btn-sm px-3 d-flex align-items-center" type="button">
+            <i class="fa fa-balance-scale mr-2"></i> 중량(kg)
+            <span class="ml-1 font-weight-bold" style="font-size:1rem;">5489.1</span>
+          </button>
+          <span class="display-field font-weight-bold ml-2"
+            style="background:#444; color:#fff; border-radius:2px; padding:4px 18px; font-size:1rem; min-width:60px; text-align:center;">생산(R)
+            <span style="font-weight:700;">5</span></span>
+          <span class="display-field font-weight-bold ml-2"
+            style="background:#444; color:#fff; border-radius:2px; padding:4px 18px; font-size:1rem; min-width:60px; text-align:center;">생산(kg)
+            <span style="font-weight:700;">481.5</span></span>
+        </div>
+      </div>
+
+
+
+
+      <!-- Fixed bottom info bar (moved back inside page-wrapper) -->
+      <div class="fixed-bottom-info-bar w-100 d-flex align-items-center justify-content-center"
+        style="position:fixed; bottom:0; left:0; z-index:1050; background:#f8fafd; border-top:1px solid #e0e0e0; min-height:36px; padding:2px 0; box-shadow:0 -2px 8px 0 rgba(0,0,0,0.03);">
+        <span class="mx-2 font-weight-bold" style="font-size:0.85rem;">오더기간 : <span class="badge badge-light"
+            style="font-size:0.85rem; font-weight:600; background:#fff; border:1px solid #d1d1d1;">2025-07-01~2025-07-14</span></span>
+        <button type="button" class="btn btn-success btn-xs mx-1 px-2 py-1"
+          style="font-size:0.8rem; min-width:48px;">오더대기 <span class="font-weight-bold ml-1">0</span></button>
+        <button type="button" class="btn btn-success btn-xs mx-1 px-2 py-1"
+          style="font-size:0.8rem; min-width:48px;">매입대기 <span class="font-weight-bold ml-1">0</span></button>
+        <button type="button" class="btn btn-primary btn-xs mx-1 px-2 py-1" style="font-size:0.8rem; min-width:48px;">오더
+          <span class="font-weight-bold ml-1">422</span></button>
+        <button type="button" class="btn btn-info btn-xs mx-1 px-2 py-1" style="font-size:0.8rem; min-width:48px;">투입완료
+          <span class="font-weight-bold ml-1">280</span></button>
+        <button type="button" class="btn btn-info btn-xs mx-1 px-2 py-1" style="font-size:0.8rem; min-width:48px;">지시완료
+          <span class="font-weight-bold ml-1">280</span></button>
+        <button type="button" class="btn btn-primary btn-xs mx-1 px-2 py-1"
+          style="font-size:0.8rem; min-width:48px;">생산완료 <span class="font-weight-bold ml-1">276</span></button>
+        <button type="button" class="btn btn-primary btn-xs mx-1 px-2 py-1"
+          style="font-size:0.8rem; min-width:48px;">납품완료 <span class="font-weight-bold ml-1">292</span></button>
+      </div>
+      <!-- End fixed bottom info bar -->
+
+      <footer class="footer text-center">© 2025 Harmony by HansolPNS</footer>
+    </div>
+    <!-- Fixed bottom info bar -->
+
+  </div> <!-- page-wrapper -->
+  </div> <!-- main-wrapper -->
+
+  <input type="hidden" id="spring_profile" value="dev" />
+  <input type="hidden" id="loginUserId" value="marusys" />
+  <input type="hidden" id="session_USER_ID" value="marusys" />
+  <input type="hidden" id="session_USER_NM" value="시스템관리" />
+  <input type="hidden" id="session_MANDT" value="100" />
+  <input type="hidden" id="session_MANDT_NM" value="지류유통" />
+  <input type="hidden" id="session_BUKRS" value="M200" />
+  <input type="hidden" id="session_BUKRS_NM" value="PNS지류유통" />
+  <input type="hidden" id="session_VKGRP" value="" />
+  <input type="hidden" id="session_VKGRP_NM" value="" />
+  <input type="hidden" id="session_MOBILE" value="" />
+  <input type="hidden" id="session_EMAIL" value="" />
+  <input type="hidden" id="session_KOSTL" value="" />
+  <input type="hidden" id="session_ADMIN_YN" value="N" />
+  <input type="hidden" id="session_LOGIN_DT" value="2025-07-15 19:30:24" />
+  <input type="hidden" id="session_SMART_ID" value="" />
+  <input type="hidden" id="session_SMART_PASSWORD" value="" />
+  <input type="hidden" id="session_USER_IP" value="0:0:0:0:0:0:0:1" />
+  <input type="hidden" id="session_SESSION_ID" value="" />
+  <input type="hidden" id="session_FIRST_TOPMENU" value="" />
+  <input type="hidden" id="session_MM" value="MM999" />
+  <input type="hidden" id="session_SD" value="SD999" />
+  <input type="hidden" id="session_CO" value="CO999" />
+  <input type="hidden" id="session_FI" value="FI999" />
+  <input type="hidden" id="session_CM" value="CM999" />
+  <input type="hidden" id="session_IN_IP_YN" value="N" />
+  <input type="hidden" id="session_UPPER_BU" value="" />
+  <input type="hidden" id="session_UPPER_NAME" value="" />
+
+  <input id="message" type="hidden" value="" />
+
+  <script>
+    $(document).ready(function () { });
+  </script>
+
+  <!-- 타임리프 사용을 위해서 th:inline="javascript" -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Debug: Check if agGrid is loaded
+      if (typeof agGrid === 'undefined') {
+        console.error('agGrid is not defined. Check if ag-Grid JS is loaded correctly.');
+        return;
+      }
+      // Debug: Check if mainGrid container exists
+      const eGridDiv = document.querySelector('#mainGrid');
+      if (!eGridDiv) {
+        console.error('mainGrid container not found!');
+        return;
+      } else {
+        console.log('mainGrid container found:', eGridDiv);
+      }
+      const columnDefs = [
+        { headerName: "생산 No", field: "prodNo" },
+        { headerName: "입고처", field: "inPlace" },
+        { headerName: "구분", field: "type" },
+        { headerName: "작업유형", field: "workType" },
+        { headerName: "쌍폭", field: "ssangPok" },
+        { headerName: "지종", field: "jiJong" },
+        { headerName: "평량", field: "pyeongRyang" },
+        { headerName: "지폭", field: "jiPok" },
+        { headerName: "계획폭", field: "planPok" },
+        { headerName: "계획가로", field: "planGaro" },
+        { headerName: "계획세로", field: "planSero" },
+        { headerName: "계획수량(R)", field: "planQtyR" },
+        { headerName: "계획 커트", field: "planCut" },
+        { headerName: "계획 중량 (Kg)", field: "planWeight" },
+        { headerName: "소요길이", field: "needLength" },
+        { headerName: "계획롤수", field: "planRoll" },
+        { headerName: "후공정", field: "afterProcess" }
+      ];
+      const rowData = [
+        {
+          prodNo: "P20240701-01",
+          inPlace: "미래엔조치원",
+          type: "A",
+          workType: "일반",
+          ssangPok: "Y",
+          jiJong: "아트지",
+          pyeongRyang: "80",
+          jiPok: "900",
+          planPok: "850",
+          planGaro: "400",
+          planSero: "900",
+          planQtyR: "10",
+          planCut: "2",
+          planWeight: "1200",
+          needLength: "15200",
+          planRoll: "3",
+          afterProcess: "코팅"
+        },
+        {
+          prodNo: "P20240701-02",
+          inPlace: "한솔PNS",
+          type: "B",
+          workType: "특수",
+          ssangPok: "N",
+          jiJong: "모조지",
+          pyeongRyang: "100",
+          jiPok: "1000",
+          planPok: "950",
+          planGaro: "500",
+          planSero: "1000",
+          planQtyR: "8",
+          planCut: "1",
+          planWeight: "1500",
+          needLength: "12000",
+          planRoll: "2",
+          afterProcess: "제본"
+        }
+      ];
+      const gridOptions = {
+        columnDefs: columnDefs,
+        rowData: rowData,
+        defaultColDef: {
+          resizable: true,
+          sortable: true,
+          filter: true
+        }
+      };
+      try {
+        new agGrid.Grid(eGridDiv, gridOptions);
+        console.log('ag-Grid mainGrid initialized successfully.');
+        // Force redraw in case of rendering issues
+        setTimeout(function () {
+          window.dispatchEvent(new Event('resize'));
+        }, 100);
+      } catch (err) {
+        console.error('Error initializing ag-Grid mainGrid:', err);
+      }
+      // 생산실적(Production Result) Grid
+      const prodResultColumnDefs = [
+        { headerName: "순번", field: "no", width: 70 },
+        { headerName: "PT 번호", field: "ptNo", width: 120 },
+        { headerName: "지종", field: "jiJong", width: 100 },
+        { headerName: "평량", field: "pyeongRyang", width: 80 },
+        { headerName: "가로", field: "garo", width: 80 },
+        { headerName: "세로", field: "sero", width: 80 },
+        { headerName: "수량(R)", field: "qtyR", width: 90 },
+        { headerName: "수량(매)", field: "qtyMae", width: 90 },
+        { headerName: "여분", field: "yeoBun", width: 80 },
+        { headerName: "매수합계", field: "maeSum", width: 100 },
+        { headerName: "중량(kg)", field: "weightKg", width: 100 },
+        { headerName: "재단폭", field: "jaedanPok", width: 90 },
+        { headerName: "Cut", field: "cut", width: 70 },
+        { headerName: "비고", field: "bigo", width: 120 },
+        { headerName: "생산삭제", field: "delete", width: 100, cellRenderer: function () { return '<button class="btn btn-danger btn-xs">삭제</button>'; } }
+      ];
+      const prodResultRowData = [
+        {
+          no: 1,
+          ptNo: "PT20240715-01",
+          jiJong: "아트지",
+          pyeongRyang: "80",
+          garo: "900",
+          sero: "1200",
+          qtyR: "10",
+          qtyMae: "5000",
+          yeoBun: "100",
+          maeSum: "5100",
+          weightKg: "1200",
+          jaedanPok: "850",
+          cut: "2",
+          bigo: "테스트",
+          delete: ""
+        }
+      ];
+      const prodResultGridOptions = {
+        columnDefs: prodResultColumnDefs,
+        rowData: prodResultRowData,
+        defaultColDef: {
+          resizable: true,
+          sortable: true,
+          filter: true
+        }
+      };
+      const prodResultGridDiv = document.querySelector('#prodResultGrid');
+      new agGrid.Grid(prodResultGridDiv, prodResultGridOptions);
+      // 상세정보(Detail Roll) Grid
+      const detailRollColumnDefs = [
+        { headerName: "선택", field: "select", width: 70, checkboxSelection: true },
+        { headerName: "롤번호", field: "rollNo", width: 120 },
+        { headerName: "FSC", field: "fsc", width: 80 },
+        { headerName: "지폭", field: "jiPok", width: 80 },
+        { headerName: "롤길이", field: "rollLength", width: 100 },
+        { headerName: "중량", field: "weight", width: 100 }
+      ];
+      const detailRollRowData = [
+        {
+          select: false,
+          rollNo: "R20240715-01",
+          fsc: "FSC1234",
+          jiPok: "900",
+          rollLength: "15200",
+          weight: "1200"
+        }
+      ];
+      const detailRollGridOptions = {
+        columnDefs: detailRollColumnDefs,
+        rowData: detailRollRowData,
+        defaultColDef: {
+          resizable: true,
+          sortable: true,
+          filter: true
+        }
+      };
+      const detailRollGridDiv = document.querySelector('#detailRollGrid');
+      if (detailRollGridDiv) {
+        new agGrid.Grid(detailRollGridDiv, detailRollGridOptions);
+      }
+    });
+  </script>
+
+
+  <script>
+    $(function () {
+      var path = window.location.pathname;
+      $('#sidebarnav a[href="' + path + '"]').each(function () {
+        $(this).parent('li').addClass('active');
+        $(this).closest('ul').addClass('in show').attr('aria-expanded', 'true');
+        $(this).closest('li').addClass('active');
+        $(this).attr('aria-expanded', 'true');
+      });
+    });
+  </script>
+</body>
+
+</html>

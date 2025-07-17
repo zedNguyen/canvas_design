@@ -1,0 +1,686 @@
+/**********************************************
+* AG-GRID Number Editor
+**********************************************/
+function ag_isKeyPressedNumeric(event) {
+     
+    let charCode = getCharCodeFromEvent(event);
+    let charStr = String.fromCharCode(charCode);
+    return pine.number_isCharNumeric(charStr);
+}
+function ag_getCharCodeFromEvent(event) {
+    event = event || window.event;
+    return (typeof event.which == 'undefined') ? event.keyCode : event.which;
+}
+// function to act as a class
+function ag_numberEditor() {
+}
+// gets called once before the renderer is used
+ag_numberEditor.prototype.init = function (params) {
+   
+    let api = params.api;
+    // create the cell
+    this.eInput = document.createElement('input');
+    this.eInput.type = 'number';
+/*    this.eInput.addEventListener("focusin", function(event){
+        let _this = this;
+        setTimeout(function() {
+            _this.select();
+        }, 0.5);
+    });*/
+    this.eInput.addEventListener('keydown', function(event) {
+
+        let key = event.which || event.keyCode;
+        if(key === 38){ //위
+
+            let currentCell = api.getFocusedCell();
+            
+        
+            let finalRowIndex = api.paginationGetRowCount()-1;
+            
+            // 첫번쨰 줄일떄는 안함
+            if (currentCell.rowIndex === 0) {
+                return;
+            }
+            
+            api.stopEditing();
+            api.clearFocusedCell();
+            
+            
+            api.setFocusedCell(currentCell.rowIndex -1, currentCell.column.colId);
+            api.startEditingCell({
+                rowIndex: currentCell.rowIndex -1 ,
+                colKey: currentCell.column.colId
+              });
+            
+        }else if(key === 40){// 아래
+            let currentCell = api.getFocusedCell();
+            let finalRowIndex = api.paginationGetRowCount()-1;
+
+            // 마지막 줄일떄는 안함
+            if (currentCell.rowIndex === finalRowIndex) {
+                return;
+            }
+            
+            api.stopEditing();
+            api.clearFocusedCell();
+
+            api.setFocusedCell(currentCell.rowIndex + 1, currentCell.column.colId);
+            api.startEditingCell({
+                rowIndex: currentCell.rowIndex + 1 ,
+                colKey: currentCell.column.colId
+              });
+        } 
+     });
+    
+    // edit mode로 전환
+    if (pine.number_isCharNumeric(params.charPress)) {
+        this.eInput.value = params.charPress;
+    }
+    else {
+        if (params.value !== undefined && params.value !== null) {
+            this.eInput.value = params.value;
+        }
+    }
+};
+// gets called once when grid ready to insert the element
+ag_numberEditor.prototype.getGui = function () {
+  
+    return this.eInput;
+};
+// focus and select can be done after the gui is attached
+ag_numberEditor.prototype.afterGuiAttached = function () {
+    this.eInput.focus();
+    this.eInput.select();
+};
+// returns the new value after editing
+ag_numberEditor.prototype.getValue = function () {
+     
+    // default string 형태로 return. number type으로 변환
+    return pine.number_digitToNumber(this.eInput.value);
+};
+// any cleanup we need to be done here
+ag_numberEditor.prototype.destroy = function () {
+    // but this example is simple, no cleanup, we could  even leave this method out as it's optional
+};
+
+//function to act as a class
+function ag_textEditor() {
+}
+// gets called once before the renderer is used
+ag_textEditor.prototype.init = function (params) {
+    let api = params.api;
+    console.log(params);
+    this.eInput = document.createElement('input');
+    this.eInput.type = 'text';
+    this.eInput.addEventListener("focusin", function(event){
+        let _this = this;
+        setTimeout(function() {
+            _this.select();
+        }, 1);
+    });
+    this.eInput.addEventListener('keydown', function(event) {
+
+        let key = event.which || event.keyCode;
+        if(key === 38){ //위
+
+            let currentCell = api.getFocusedCell();
+            let finalRowIndex = api.paginationGetRowCount()-1;
+            
+            // 첫번쨰 줄일떄는 안함
+            if (currentCell.rowIndex === 0) {
+                return;
+            }
+            
+            api.stopEditing();
+            api.clearFocusedCell();
+            
+            
+            api.setFocusedCell(currentCell.rowIndex -1, currentCell.column.colId);
+            api.startEditingCell({
+                rowIndex: currentCell.rowIndex -1 ,
+                colKey: currentCell.column.colId
+              });
+            
+        }else if(key === 40){// 아래
+            let currentCell = api.getFocusedCell();
+            let finalRowIndex = api.paginationGetRowCount()-1;
+            
+            // 마지막 줄일떄는 안함
+            if (currentCell.rowIndex === finalRowIndex) {
+                return;
+            }
+            
+            api.stopEditing();
+            api.clearFocusedCell();
+
+            api.setFocusedCell(currentCell.rowIndex + 1, currentCell.column.colId);
+            api.startEditingCell({
+                rowIndex: currentCell.rowIndex + 1 ,
+                colKey: currentCell.column.colId
+              });
+        } 
+     });
+    
+    // edit mode로 전환
+    if(params.keyPress === 46){   //delete시 내용 지우기
+        this.eInput.value = '';
+    }else {
+        let value1 = '';
+        let value2 = '';
+        if( !pine.isEmpty(params.value) ){
+            value1 = params.value;
+        }
+        if( !pine.isEmpty(params.charPress) ){
+            value2 = params.charPress
+        }
+        this.eInput.value =  value1 + value2;
+    }
+    
+};
+// gets called once when grid ready to insert the element
+ag_textEditor.prototype.getGui = function () {
+    return this.eInput;
+};
+// focus and select can be done after the gui is attached
+ag_textEditor.prototype.afterGuiAttached = function () {
+    this.eInput.focus();
+    this.eInput.select();
+};
+// returns the new value after editing
+ag_textEditor.prototype.getValue = function () {
+    return this.eInput.value;
+};
+// any cleanup we need to be done here
+ag_textEditor.prototype.destroy = function () {
+    // but this example is simple, no cleanup, we could  even leave this method out as it's optional
+};
+
+
+/**********************************************
+* AG-GRID Number Editor END
+**********************************************/
+
+/**
+ * NameValue Object
+ */
+let ag_NameValue = function(pname, pvalue) {
+    this.name = pname;
+    this.value = pvalue;
+}
+/**
+ * cellRenderer 등에서 사용하기 위한 것으로 배열로 코드를 받아서 node의 값과 일치하는 value를 반환한다.
+ */
+let ag_getCodeValue = function(codes, nodeData) {
+    if (!codes)
+        return ' - ';
+    for (let i = 0; i < codes.length; i++) {
+        if (nodeData.value == codes[i].name) {
+            return codes[i].value;
+        }
+    }
+    return ' - ';
+}
+
+/**
+ * 콤보박스 처리 
+ * 객체에서 key값 추출하는 함수
+ * let data = {
+ *  headerName : '월',
+ *  field : 'mon',
+ *  width : 100,
+ *  editable : true,
+ *  cellEditor : 'agSelectCellEditor',
+ *  cellStyle : {
+ *      'textAlign' : 'center'
+ *  },
+ *  cellRenderer : CommonGrid.convertLeadTime,
+ *  cellEditorParams : {
+ *      values : extractValues(CommonCode.leadTimeCodes())
+ *  },
+ *  valueFormatter : function(params) {
+ *      return lookupValue(CommonCode.leadTimeCodes(), params.value);
+ *  },
+ *  valueParser : function(params) {
+ *      return lookupKey(CommonCode.leadTimeCodes(), params.newValue);
+ *  }
+ * }
+ */
+function ag_extractValues(mappings) {
+    let params = new Array();
+    for (let i = 0; i < mappings.length; i++) {
+        params.push(mappings[i].name);
+    }
+    return params;
+}
+
+/**
+ * 객체에서 key로 value을 반환하는 함수, 콤보박스에서 사용
+ */
+function ag_lookupValue(mappings, key) {
+    for (let i = 0; i < mappings.length; i++) {
+        if (mappings[i].name == key) {
+            return mappings[i].value;
+        }
+    }
+    return '';
+}
+
+/**
+ * 객체에서 vaue로 key를 반환하는 함수, 콤보박스에서 사용
+ */
+function ag_lookupKey(mappings, name) {
+    for (let i = 0; i < mappings.length; i++) {
+        if (mappings[i].value == name) {
+            return mappings[i].name;
+        }
+    }
+    return '';
+}
+
+function ag_isKeyPressedNumeric(event) {
+    
+    let charCode = getCharCodeFromEvent(event);
+    let charStr = String.fromCharCode(charCode);
+    return pine.number_isCharNumeric(charStr);
+}
+function ag_getCharCodeFromEvent(event) {
+    event = event || window.event;
+    return (typeof event.which == 'undefined') ? event.keyCode : event.which;
+}
+
+
+
+
+/**
+ * <b>ag_maskEditor</b></br>
+ * <b>ag_maskEditor사용법</b> </br>
+ * cellEditor : 'ag_maskEditor({mask : '0000-00-00'})</br>
+ * <b>파라미터</b></br>
+ * {mask : '0000-00-00'} </br>
+ * <a href='https://igorescobar.github.io/jQuery-Mask-Plugin/docs.html'>도큐먼트 링크</a>  </br>
+ * <b>columnDefs</b></br>
+ * {  headerName : 'DATE_EDIT', </br>
+ *  field : 'DATE_EDIT',</br>
+ *  editable: true,</br>
+ * cellEditor : ag_maskEditor({ mask : '0000-00-00' }),</br>
+ * @return {CellEditor} AG_MASKEditor 
+ */
+function ag_maskEditor(options) {
+//options.inputFormat (single or Array)
+//options.outputFormat (결과적으로 받고 싶은 Format)
+//options.keyRegex(키입력을 받고 싶은 정규식 single or Array);
+function AG_MASKEditor() {}
+// gets called once before the renderer is used
+AG_MASKEditor.prototype.init = function (params) {
+    // create the cell
+    this.eInput = document.createElement('input');
+    this.eInput.type = 'text';
+    $(this.eInput).mask(options.mask);
+    
+    if (pine.number_isCharNumeric(params.charPress)) {
+        this.eInput.value = params.charPress;
+    }
+    else {
+        if (params.value !== undefined && params.value !== null) {
+            this.eInput.value = params.value;
+        }
+    }
+};
+// gets called once when grid ready to insert the element
+AG_MASKEditor.prototype.getGui = function () {
+    return this.eInput;
+};
+// focus and select can be done after the gui is attached
+AG_MASKEditor.prototype.afterGuiAttached = function () {
+    this.eInput.focus();
+};
+// returns the new value after editing
+AG_MASKEditor.prototype.getValue = function () {
+      return this.eInput.value;
+};
+// any cleanup we need to be done here
+AG_MASKEditor.prototype.destroy = function () {
+    // but this example is simple, no cleanup, we could  even leave this method out as it's optional
+};
+
+
+/*function onKeyPress(event) {
+
+}*/
+
+return AG_MASKEditor;
+}
+
+/**
+ * <b>ag_datePicker</b></br>
+ * <b>grid에서 Date Picker 사용법</b> </br>
+ * cellEditor : 'AG_EDITOR.DATE' or ag_datePicker(options) // options 는 jqueryui 의 datepicker 문법 참조 <br>
+ * <b>파라미터</b></br>
+ * <b>columnDefs</b></br>
+ * {   headerName : '주문일자', </br>
+ * field : 'ORDAT',</br>
+ * width : 100,</br>
+ * editable: true,</br>
+ * cellEditor: 'ag_datePicker' }</br>
+ * @return {CellEditor} Datepicker 
+ */
+function ag_datePicker(options) {
+    // function to act as a class
+    function Datepicker() {}
+
+    // gets called once before the renderer is used
+    Datepicker.prototype.init = function(params) {
+         
+        // create the cell
+        this.eDiv = document.createElement('div');
+        this.eInput = document.createElement('input');
+        
+        this.eDiv.appendChild(this.eInput);
+        this.eInput.value = params.value;
+        // parameter null일 경우 객체 생성
+        if(pine.isEmpty(options)) {
+            options = new Object();
+        }
+        options.beforeShow = function(input, inst) {
+            // aggrid stopEditingWhenGridLosesFocus option을 사용하기 위해 datepicker isPopup true 사용 & class 추가 필수
+            $('#ui-datepicker-div').addClass('ag-custom-component-popup');
+        }
+        options.onSelect = function() {
+            params.stopEditing();
+        }
+
+        // daterangepicker 생성
+        pine.datepicker($(this.eInput), options);
+        //$(this.eInput).data('daterangepicker').setStartDate(params.value);
+        //$(this.eInput).data('daterangepicker').setEndDate(params.value);
+
+        // edit mode로 전환 시 바로 수정2
+        if (pine.number_isCharNumeric(params.charPress)) {
+            this.eInput.value = params.charPress;
+        }
+        else {
+            if (!pine.isEmpty(params.value)) {
+                this.eInput.value = params.value
+            } else {
+                this.eInput.value = ''
+            }
+        }
+    };
+
+    // gets called once when grid ready to insert the element
+    Datepicker.prototype.getGui = function() {
+        return this.eDiv;
+    };
+    // focus and select can be done after the gui is attached
+    Datepicker.prototype.afterGuiAttached = function() {
+        this.eInput.focus();
+    };
+    // returns the new value after editing
+    Datepicker.prototype.getValue = function() {
+        if(!pine.isEmpty(this.eInput.value)){
+           return this.eInput.value;
+        }
+       
+    };
+    // any cleanup we need to be done here
+    Datepicker.prototype.destroy = function() {
+        $('#ui-datepicker-div').remove();
+        //cellEditor 모드가 종료될때 datePicker끄기
+        // but this example is simple, no cleanup, we could
+        // even leave this method out as it's optional
+    };
+    // if true, then this editor will appear in a popup
+    Datepicker.prototype.isPopup = function() {
+        // aggrid stopEditingWhenGridLosesFocus option을 사용하기 위해 datepicker isPopup true 사용 & class 추가 필수
+        return true;
+    };
+    return Datepicker;
+}
+/***************************************************************
+ * Aggrid Date Picker END
+ ***************************************************************/
+/**
+ * <b>Aggrid 셀 콤보박스 에디터</b></br>
+ * <b>사용법</b></br>
+ * 1. cellRenderer : ag_comboEditor(comboList)</br>
+ * 2.TEXT : '전체' ,VALUE : 'ALL' 을 가지는 옵션 활성화 (기본값 true) </br>
+ * combo_options = { makeAllOption : true };  </br>
+ * cellEditor : ag_comboEditor(comboList,combo_options) </br>
+ */
+function ag_comboEditor (comboList,options) {
+    function CellRenderer() {}
+    CellRenderer.prototype.createGui  = function(){
+        //options가 없을 경우에 초기화
+       let _makeAllOption = true;
+
+      if(!pine.isEmpty(options)){
+            //makeAllOption의 기본값은 true로 한다.    
+            _makeAllOption =  pine.isEmpty(options.makeAllOption) ? true : options.makeAllOption;
+        }
+       
+          let template =  '<select class="form-control form-control-sm" id="aggrid_combo" align="center" name="ag_combo" ></select>';
+          let tempDiv = document.createElement('div'); 
+          tempDiv.innerHTML = template; //템플릿으로 객체 생성 
+          //기본값 : [전체] 생성
+          if( _makeAllOption  === true){
+          $(tempDiv).find('select').append($('<option>', {
+                  value: 'ALL',
+                  text:  '전체'
+              }).attr('align','center'));
+          }
+        for(let i = 0 ;  i<comboList.length; i++){
+            ag_combo_option_append(tempDiv,comboList[i].CODE_CD,comboList[i].CODE_NM);
+        }
+        
+        this.eGui = tempDiv.firstElementChild;
+    };
+
+    CellRenderer.prototype.init = function(params) {
+        // create the gui
+        this.createGui();
+        this.params = params;
+        $(this.eGui).val(params.value).prop('selected', true);
+        $(this.eGui).selectIndex = 0;
+        $(this.eGui)[0].focus();
+        //$(this.eGui).val(params.value)
+        //console.log( this.eGui);
+        //$(this.eGui).focus();
+
+
+    };
+    // returns the new value after editing
+    CellRenderer.prototype.getValue = function() {
+        return $(this.eGui).find('option:selected').val();  //text 한글() val() 값
+    };
+      CellRenderer.prototype.getGui = function() {
+        // returns our gui to the grid for this cell
+        return this.eGui;
+      };
+      CellRenderer.prototype.destroy = function() {
+        // be good, clean up the listener
+          //CellRenderer.remove();
+      };
+      return CellRenderer;
+}
+/***************************************************************
+ * Ag ComboEditor END
+ ***************************************************************/
+
+/***************************************************************
+ * Ag CheckEditor START
+ ***************************************************************/
+function ag_checkboxRendererEditor(params) {
+    let input = document.createElement('input');
+    let checkValue = pine.isEmpty(params.colDef.checkValue) ? 'Y' : params.colDef.checkValue;
+    let uncheckValue = pine.isEmpty(params.colDef.uncheckValue) ? 'N' : params.colDef.uncheckValue;
+
+    input.type = 'checkbox';
+    input.checked = params.value === checkValue ? true : false;
+    
+    if(typeof params.colDef.isDisabled === 'function' && params.colDef.isDisabled(params.data)) {
+        $(input).attr('disabled', true);
+    }
+
+    input.onclick = function() {
+        params.setValue(this.checked === true ? checkValue : uncheckValue);
+        params.node.setSelected(true);
+        params.api.setFocusedCell(params.node.rowIndex,  params.colDef.field, null);
+    }
+    
+   
+    return input;
+}
+
+function ag_checkEditor() {
+    // function to act as a class
+    function ag_checkEditor() {}
+    
+    ag_checkEditor.prototype.createGui  = function(){
+        let template ='<input type="checkbox" id="ag_check" name="checkbox" value="Y" uncheckValue="N" />';
+        let tempDiv = document.createElement('div'); 
+        tempDiv.innerHTML = template; //템플릿으로 객체 생성 
+        this.eGui = tempDiv.firstElementChild;
+        this.tempDiv = tempDiv;
+    };
+    
+    // gets called once before the renderer is used
+    ag_checkEditor.prototype.init = function(params) {
+        // create the cell
+        let value = params.value;
+      
+        this.createGui();
+        
+        this.params = params;
+        let eCheck = this.eGui;
+
+        let checkValue = params.colDef.checkValue; //checkvalue
+        let uncheckValue = params.colDef.uncheckValue;//uncheckvalue
+        
+        this.onCheckChangeListener = this.onCheckChangeListener.bind(this);
+        //this.onCellClickListener = this.onCellClickListener.bind(this);
+        eCheck.addEventListener('change', this.onCheckChangeListener);
+        //this.tempDiv.addEventListener('click', this.onCellClickListener);
+        //check ,uncheck 기준 Value 확인
+        if(pine.isEmpty(checkValue)){
+            checkValue = 'Y';
+        }
+        
+        if(pine.isEmpty(uncheckValue)){
+            uncheckValue = 'N';
+        }
+        
+
+        let chk_bool = false;
+
+        if(pine.isEmpty(params.value) || (checkValue === params.value) ){
+            chk_bool = true;
+        }else{
+            chk_bool = false;
+        }
+        
+        $(eCheck).prop('checked',chk_bool);
+        //editable이 false일때는 수정 안되게
+        /*
+        if(this.params.colDef.editable){
+            $(eCheck).prop('disabled',false);
+        }else{
+            $(eCheck).prop('disabled',true);
+        }
+       */
+
+
+    };
+
+    // gets called once when grid ready to insert the element
+    ag_checkEditor.prototype.getGui = function() {
+        return this.eGui;
+    };
+
+    // focus and select can be done after the gui is attached
+    ag_checkEditor.prototype.afterGuiAttached = function() {
+        this.eGui.focus();
+        this.eGui.select();
+    };
+
+    // returns the new value after editing
+    ag_checkEditor.prototype.getValue = function() {
+        //console.log(this);
+        let chk_bool = false;
+        
+        let checkValue = this.params.colDef.checkValue; //checkvalue
+        let uncheckValue = this.params.colDef.uncheckValue;//uncheckvalue
+        
+        let current_check_value = $(this.eGui).prop('checked');
+
+        if(current_check_value){
+            return checkValue;
+        }else{
+            return uncheckValue;
+        }
+        
+    };
+    
+    ag_checkEditor.prototype.onCheckChangeListener = function(){
+       
+        let checkValue = this.params.colDef.checkValue; //checkvalue
+        let uncheckValue = this.params.colDef.uncheckValue;//uncheckvalue
+        
+        //check ,uncheck 기준 Value 확인
+        if(pine.isEmpty(checkValue)){
+            checkValue = 'Y';
+        }
+        
+        if(pine.isEmpty(uncheckValue)){
+            uncheckValue = 'N';
+        }
+        
+        if(this.eGui.checked){
+            this.params.value = checkValue;
+        }else{
+            this.params.value = uncheckValue;
+        }
+        
+    };
+    /*
+    ag_checkEditor.prototype.onCellClickListener = function(){
+
+        let checkValue = this.params.colDef.checkValue; //checkvalue
+        let uncheckValue = this.params.colDef.uncheckValue;//uncheckvalue
+        
+        //check ,uncheck 기준 Value 확인
+        if(pine.isEmpty(checkValue)){
+            checkValue = 'Y';
+        }
+        
+        if(pine.isEmpty(uncheckValue)){
+            uncheckValue = 'N';
+        }
+        
+        $(this.eGui).prop('checked',!this.eGui.checked);
+        
+        if(this.eGui.checked){
+            this.params.value = checkValue;
+        }else{
+            this.params.value = uncheckValue;
+        }
+        
+    };
+    */
+    
+    // any cleanup we need to be done here
+    ag_checkEditor.prototype.destroy = function() {
+        // but this example is simple, no cleanup, we could
+        // even leave this method out as it's optional
+    };
+
+    // if true, then this editor will appear in a popup
+    ag_checkEditor.prototype.isPopup = function() {
+        // and we could leave this method out also, false is the default
+        return false;
+    };
+
+    return ag_checkEditor;
+}
+/***************************************************************
+ * Ag CheckEditor END
+ ***************************************************************/

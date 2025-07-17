@@ -1,0 +1,138 @@
+
+Grid.prototype.excelS2ab = function(s){
+    let buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+    let view = new Uint8Array(buf);  //create uint8array as viewer
+    for (let i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+    return buf;    
+}
+
+Grid.prototype.getWorksheet = function(data,m_columnDefs){
+
+    let columnStates = this.gridOptions.columnApi.getColumnState();
+    
+    let columnDefs = m_columnDefs;
+    let useColumnDef = true;
+    //m_columnDefs 값이 비었을경우 그리드 레이아웃의 columnDefs을 사용
+    if(m_columnDefs == undefined || pine.isEmpty(m_columnDefs)){
+        useColumnDef = false;
+        columnDefs = this.gridOptions.columnDefs;
+    }
+    //현재 선택된 그리드 레이아웃 정보 
+    //전체 컬럼 레아아웃
+    ///maingrid.gridOptions.columnApi.getColumnState() 을 기준으로 hide가 FALSE 되어있는 항목으로 헤더를 만든다.
+    //let excel_data = [];
+    let tmp_data = [];
+    if(useColumnDef == false){
+        
+            for(let i = 0  ; i< columnStates.length ; i++){
+               if(columnStates[i].hide == false){
+                   for(let j = 0 ; j < columnDefs.length; j++ ){
+                       if(columnStates[i].colId == columnDefs[j].field){
+                           for(let k = 0 ; k < data.length ; k++){
+                               if(tmp_data[k] == undefined){
+                                  tmp_data[k] = {};
+                                  tmp_data[k][columnDefs[j].headerName + ''] =  '';
+                                  tmp_data[k][columnDefs[j].headerName + ''] =  data[k][columnDefs[j].field];
+                               }else{
+                                tmp_data[k][columnDefs[j].headerName + ''] =  data[k][columnDefs[j].field];
+                               }
+                           }
+                               break;
+                       }
+                   }
+               }
+            }
+    
+    }else{
+            for(let j = 0 ; j<columnDefs.length; j++){
+                for(let k = 0 ; k <data.length; k++){
+                    if(tmp_data[k] == undefined){
+                        tmp_data[k] = {};
+                        tmp_data[k][columnDefs[j].headerName + ''] =  '';
+                        tmp_data[k][columnDefs[j].headerName + ''] =  data[k][columnDefs[j].field];
+                     }else{
+                      tmp_data[k][columnDefs[j].headerName + ''] =  data[k][columnDefs[j].field];
+                     }
+                }
+            } 
+    }
+
+    return  tmp_data;
+}
+/**
+ * 그리드에 출력하지 않고 리스트를 받아서 엑셀 다운로드</br>
+ * <b>사용법</b></br>
+ * ajax로 데이터 리스트를 가져온 후 엑셀파일로 다운로드 기능 수행</br>
+ * 파라미터 {JsonObject} Options</br> 
+ * Options.data = > 출력할 데이터 (없으면 alert 호출됨) </br>
+ * Options.columnDefs => columnDefs을 넣어주면 해당 headerName과 field로만 가져온다.</br>
+ * 없으면 그리드 레이아웃 this.gridOptions.columnApi.getColumnState()을 기준으로 동작</br>
+ * Options.fileName => 파일 이름 (없으면 grid Excel타이틀 가져옴 .xlsx는 자동으로 붙여줌)</br>
+ * Options.sheetName => 시트 이름 (없으면 sheet1로  세팅)</br>
+ * 1. maingrid.excelDownloadNotAppendGrid({data : result.data });</br>
+ * 2. maingrid.excelDownloadNotAppendGrid({data : result.data, fileName : '매출현황목록'});</br>
+ * 3. maingrid.excelDownloadNotAppendGrid({data : result.data, fileName : '매출현황목록', sheetName : 'sheet1' });</br>
+ * 4. let m_columnDefs = [</br>
+ * { headerName:"클라이언트"     ,  field:"MANDT"       ,   width:  90 }, </br>
+ * { headerName:"회사코드"     ,  field:"BUKRS"       ,   width:  90 },</br>
+ * { headerName : "매출일자"     , field : "FKDAT"       , width: 95 }</br>
+ * ];</br>
+ * maingrid.excelDownloadNotAppendGrid({data : result.data, columnDefs : m_columnDefs });</br>
+**/
+
+Grid.prototype.excelDownloadNotAppendGrid = function(options){
+    let fileName = options.fileName;
+    let sheetName = options.sheetName;
+    let columnDefs = options.columnDefs;
+    let useColumnDef = true;
+    if(fileName == undefined || pine.isEmpty(fileName)){
+        if(this.gridOptions.excelTitle == undefined){ 
+            fileName = document.title; //화면 명 따라가게
+        }else{
+            //그리드에 엑셀 타이틀 명을 지정해놓았을 경우 그걸 따라감
+            fileName = this.gridOptions.excelTitle;
+        }
+    }
+    
+    if(sheetName == undefined || pine.isEmpty(sheetName)){
+        sheetName = 'sheet1';
+    }
+    
+    //columnDef가 isEmpty이면 useColumnDef를 false로 아니면 true로
+    if(columnDefs == undefined || pine.isEmpty(columnDefs)){
+        useColumnDef = false;
+    }
+    
+    
+    if(options.data == undefined || pine.isEmpty(options.data)){
+        alert("데이터가 비어있습니다.");
+        return;
+    }
+    //options의 fileName이 없으면 1. grid Config에 있는 excelDownload를 이름을 가져와서 붙여준다.
+    //sheetName이 없으면 무조건 sheet1;
+    // step 1. workbook 생성
+    let wb = XLSX.utils.book_new();
+
+    //excelHandler.getExcelData(result.data);
+    // step 2. 시트 만들기 
+    let newWorksheet = null;
+    
+    if(useColumnDef == true){
+        newWorksheet = XLSX.utils.json_to_sheet(this.getWorksheet(options.data, columnDefs));
+    }else{
+        newWorksheet = XLSX.utils.json_to_sheet(this.getWorksheet(options.data, undefined)); 
+    }
+  
+    // step 3. workbook에 새로만든 워크시트에 이름을 주고 붙인다.  
+    XLSX.utils.book_append_sheet(wb, newWorksheet, sheetName);
+
+    // step 4. 엑셀 파일 만들기 
+    let wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+
+    // step 5. 엑셀 파일 내보내기 
+    saveAs(new Blob([this.excelS2ab(wbout)],{type:"application/octet-stream"}), fileName+'.xlsx');
+}
+
+
+
+

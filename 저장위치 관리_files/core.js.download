@@ -1,0 +1,1383 @@
+/**
+ * 최종수정일 : 1.0.0.0-2020-04-21
+ * PineJs object class.
+ * @id Pine
+ * @class Pine
+ * @constructor
+ * @alias pine.prototype
+ * @return {Pine}
+ * 
+ */
+function Pine() {
+    
+    // delfault config
+    this.g_config = {
+        paramMode : 'map', // map과 vo 를 선택하여 사용
+        pageLoadMode: '_self', // tab self
+    };
+    
+    /* form validation 메시지 alert 처리 */
+    $.validator.setDefaults({
+        errorPlacement: function (error, element) {
+            // 에러 발생 시 alert 창으로 띄우고 element나 tooltip으로 표시 안함
+            // 
+        },
+        /*
+        errorClass: 'is-invalid',
+        validClass: 'is-valid',
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass(errorClass);
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass(errorClass);
+//            $(element).addClass(validClass);      // valid border 표시
+        },*/
+        invalidHandler: function(form, validator) {
+            let obj = validator.errorList[0].element;
+            // focus invalid input
+            let errors = validator.numberOfInvalids();
+            if (errors) {
+                alert(validator.errorList[0].message);  // 경고창으로 띄움
+                validator.errorList[0].element.focus();
+            }
+        }
+    });
+    
+    $.validator.addMethod('time', function(value, element) {
+        if (value == '') return true;
+        return /^(?:2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$/.test(value);
+    }, '형식에 맞춰 시간을 입력해 주세요 (HH:MM:SS)');
+
+    $.validator.addMethod('mobile', function(value, element) {
+        if (value == '') return true;
+        return /(01[016789])-([1-9]{1}[0-9]{2,3})-([0-9]{4})$/.test(value);
+    }, '형식에 맞춰 휴대폰 번호를 입력해 주세요');
+
+    $.validator.addMethod('officeTel', function(value, element) {
+        if (value == '') return true;
+        return /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))-(\d{3,4})-(\d{4})$/.test(value);
+    }, '형식에 맞춰 전화번호를 입력해 주세요');
+    
+    $.validator.addMethod('userId', function(value, element) {
+        if (value == '') return true;
+        return /^[a-z0-9._-]{4,32}$/.test(value);
+    }, '영어 + 숫자 + 특수문자(-_.) 조합으로 입력해 주세요');
+
+    $.validator.addMethod('passwordRules', function(value, element) {
+        return $('.passwordRules:checkbox:checked').length > 1;
+     },'문자조합을 2가지 이상 선택해 주세요');
+
+    /* jquery ui datepicker 초기화 버튼 추가 */
+    let old_fn = $.datepicker._updateDatepicker;
+    $.datepicker._updateDatepicker = function(inst) {
+       old_fn.call(this, inst);
+       let buttonPane = $(this).datepicker('widget').find('.ui-datepicker-buttonpane');
+       $('<button type="button" class="ui-datepicker-clean ui-state-default ui-corner-all">초기화</button>').appendTo(buttonPane).click(function(ev) {
+           $.datepicker._clearDate(inst.input);
+       });
+    }
+
+    /* jquery ui datepicker 공통 옵션 정의 */
+    $.datepicker.setDefaults({
+          dateFormat: 'yy-mm-dd' //Input Display Format 변경
+        , showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
+        , showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
+        , changeYear: true //콤보박스에서 년 선택 가능
+        , changeMonth: true //콤보박스에서 월 선택 가능
+        , yearSuffix: '년' //달력의 년도 부분 뒤에 붙는 텍스트
+        , monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
+        , monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
+        , dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
+        , dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
+        , showButtonPanel: true
+        , currentText: '오늘'
+        , closeText: '닫기'
+        , nextText: '다음달'
+        , prevText: '이전달'
+//        , showOn: 'button'
+//        , buttonImage: '/img/icon/calendar.gif'
+        , beforeShow: function (i) {
+            if ($(i).attr('readonly')) { return false; }
+            if ($(i).attr('disabled')) { return false; }
+          }
+    });
+};
+
+
+/**
+ * Pine 사용제 관한 설정값 get/set
+ *   // delfault config
+    pine.g_config = {
+        paramMode : 'vo', // map과 vo 를 선택하여 사용
+        pageLoadMode: '_self', // tab self
+    };
+ */
+Pine.prototype.getConfig = function() {
+    return this.g_config;
+}
+Pine.prototype.setConfig = function(config) {
+    $.extend(this.g_config, config);
+}
+
+
+/*
+*******************************************************
+* 날짜 관련 function
+* MomentJs기반으로 되어있으며 한번 wraping함
+*******************************************************
+*/
+/**
+ * <b>현재날짜 구하는 Function</b></br>
+ * <b>사용법</b> </br>
+ * 1) $('#DATE').val(pine.date_getTodayStr()) </br>
+ * 2) $('#DATE').val(pine.date_getTodayStr('YYYY-MM-DD')) </br>
+ * 날짜가 없으면 YYYY-MM-DD </br>
+ * @param {string} format default'YYYY-MM-DD'  </br>
+ */
+Pine.prototype.date_getTodayStr = function(format) {
+    if(this.isEmpty(format)){
+        //기본값 YYYY-MM-DD
+        return moment().format('YYYY-MM-DD')
+    }else{
+        return moment().format(format);
+    }
+}
+
+/*
+*******************************************************
+* 숫자 관련 function
+*******************************************************
+*/
+// add 숫자 comma
+Pine.prototype.number_setDigitComma = function(obj) {
+    let _this = this;
+    
+    let num_str = $(obj).val();
+    //1. -가 되었을때 -는 표시되어야함 전처리
+    //전처리
+    
+    //공백이면 0으로 초기화
+    if(this.isEmpty(num_str)){
+        num_str = '0';
+    }else if(num_str === '0-' || num_str === '-0'){ //0- -0일떄는 -로 붙여줌
+        num_str = '-';
+    }else{
+        //..은 .으로 값을 변경해줌
+        num_str = num_str.replace('/.{*}/', '.'); 
+    }
+   
+    
+    //검사
+    if(num_str  === '0' || num_str === '-' || num_str.charAt(num_str.length-1)  === '.'){
+        //아무것도 안함
+    }
+    //0이 나왔다는건 숫자형이 아니라는 의미
+    else if(this.number_getDigitComma(num_str) ==='0'){ 
+      //0.1.1 이런식으로나왔을때 뒤에 마지막 .뒤의 숫자를 자동으로 지워줌
+        num_str = num_str.substr(0, num_str.lastIndexOf('.'));  
+        //$(obj).val(this.number_getDigitComma(num_str));
+    }else{
+        //이상이 없으므로 numeralJS를 이용해서 변환 수행
+        //$(obj).val(this.number_getDigitComma(num_str));
+        num_str = this.number_getDigitComma(num_str);
+    }
+    
+    $(obj).val(num_str);
+    
+}
+
+Pine.prototype.number_getDigitComma = function(str) {
+    //str = str.replace(/[^0-9]/g,'').replace(/,/g,'');   // 입력값이 숫자가 아니면 공백
+    //값이 -일떄는 그대로 출력
+     return numeral(str).format('0,0,0,0,0,0.[000000]');
+}
+//str => number 변환 및 콤마풀기
+Pine.prototype.number_digitToNumber = function(str) {
+    return numeral(str).value();
+}
+// is Number?
+Pine.prototype.number_isCharNumeric = function(charStr) {
+    return !!/\d/.test(charStr);
+}
+
+/**
+ * USAGE  : isEmpty(obj);
+ * PARAMS :
+ *   => obj : anything
+ * RETURN : true => empty String / object / array, null parameter
+ */
+Pine.prototype.isEmpty  = function(obj) {
+    if(obj == undefined){
+        return true;
+    }
+    else if (typeof obj === 'undefined'){
+        return true;
+    }
+    else if(typeof obj === '[undefined]'){
+        return true;
+    //else
+/*    if(!obj){
+        return true;
+    }*/
+    }else if (obj === null){
+        return true;
+    }
+    else if (obj === ''){
+        return true;
+    } 
+    else if (typeof obj === 'object' && Object.keys(obj).length < 1)
+        return true;
+    else if('x'+obj === 'xNaN'){
+        return true;
+    }
+    else if (obj.length < 1){
+        return true;
+    }   
+   
+
+    return false;
+}
+
+
+
+
+/**
+ * 입력 값을 체크하여 Null인경우 지정한 값 리턴 </br> 
+ * @param 입력 값을 체크하여 Null인경우 지정한 값 리턴
+ * @example
+ * pine.nvl(value,A);
+ */
+Pine.prototype.nvl = function(sValue, sNullVal)
+{
+    return this.isEmpty(sValue) ? sNullVal : sValue;
+}
+
+/**
+ * <b>javascript file 동적 inlucde</b></br>
+ * <b>사용법</b>  : pine.include_js(js_file_path)</br>
+ * @param {string} js_file_path
+ */
+Pine.prototype.include_js = function(js_file_path) {
+    let includejs = document.createElement('script');
+    includejs.type = 'text/javascript';
+    includejs.src = js_file_path;
+    document.head.appendChild(includejs);
+}
+
+
+/**
+ * <b>Ajax Call용 공통 함수</b></br>
+ * <b>사용법</b>  : new Ajax(config)</br>
+ * <b>파라미터</b></br>
+ * config.url : string -> 호출 url</br>
+ * config.params : jsonData -> 전송 parameter </br>
+ * config.success : function -> 성공 function</br>
+ * config.error : function 에러 -> funciton</br>
+ * config.compleate : function -> 완료 function</br>
+ * config.showLoadmask : [default = true] -> 로딩 표시</br>
+ * config.async : [default=true] -> 동기방식 </br>
+ * config.paramMode: [default='map'] -> 'map,vo' 방식 지원 </br>
+ * <b>Example 1</b></br>
+ * pine.ajax({ </br>
+ * url: '/api/hplsd/combo/select_SPART', </br>
+ * params: params, </br>
+ * success: function(){ </br>
+ * }, </br>
+ * error: function() { </br>
+ * } </br>
+ * }); </br>
+ * <b>Example 2</b> </br>
+ * pine.ajax({ </br>
+ * url: '/api/hplsd/combo/select_SPART', </br>
+ * params: params, </br>
+ * success: cb_success, </br>
+ * error: cb_error, </br>
+ * complete: cb </br>
+ * }); </br>
+ * function cb_success(responseData) { </br>
+ * console.log('cb_success', arguments); </br>
+ * } </br>
+ * function cb_error(responseData) { </br>
+ * console.log('cb_error', arguments); </br>
+ * } </br>
+ * function cb() { </br>
+ * console.log('always call after ajax call'); </br>
+ * } </br>
+ */
+Pine.prototype.ajax = function(config) {
+    let _this = this;
+    let parameter = {}; // 서버에 전송될 파라미터
+    
+    //globalConfig에서 우선 찾음
+    
+    //paramMode config가 비어있으면 우선 글로벌 변수를 넣어준다.   
+    config.paramMode = (this.isEmpty(config.paramMode)) ? this.g_config.paramMode : config.paramMode;
+    
+    config.showLoadmask = (this.isEmpty(config.showLoadmask)) ? true : config.showLoadmask;
+    config.async = (this.isEmpty(config.async)) ? true : config.async;
+    config.timeout = (this.isEmpty(config.timeout)) ? 300000 : config.timeout;  //5분으로 timeout세팅
+    if (config.paramMode === 'map') { //map 모드일떄
+        // 서버에 전송될 parameter 생성 (data 안에 담는다.)
+        if (this.isEmpty(config.params)) {
+            parameter.data = {};
+        }
+        else {
+            parameter.data = JSON.stringify(config.params); //Map일때
+        }
+    }
+    else { //VO 등 파라미터 직접받는 모드
+        // parameter에 바로 들어간다.)
+        if (this.isEmpty(config.params)) {
+            parameter = {};
+        }
+        else {
+            parameter = config.params; // Vo 일때
+        }
+        
+    }
+
+    // 새창으로 연 사용자와 현재 session 사용자 정보를 체크
+    parameter.loginUserId = $('input#loginUserId').val();
+    
+    // show loadmask
+    if (config.showLoadmask) {
+        $('.preloader-ajax').fadeIn();
+    }
+
+    $.ajax({
+        url: config.url,
+        data : parameter,
+        method: 'POST',
+        dataType: config.responseType === 'blob' ? undefined : 'json',
+        xhrFields: config.responseType === 'blob' ? { responseType: 'blob' } : undefined,
+        async: config.async,
+        timeout : config.timeout,
+        success: function(result, statusText, response) {
+
+            // callback
+            if (config.responseType === 'blob') {
+                if (typeof config.success === 'function') {
+                    config.success(result, statusText, response);
+                }
+                return;
+            }
+            else if (result.status === false) {
+                if (!(_this.isEmpty(result.message)))
+                    alert(result.message);
+                else {
+                    _this.log_error('ajax success but status fail : ', arguments);
+                    alert('에러가 발생했습니다');
+                }
+                
+                if (typeof config.error === 'function') {
+                    config.error(result);
+                }
+            }
+            else {
+                if (!(_this.isEmpty(result.message)))
+                    alert(result.message);
+                
+                if (typeof config.success === 'function') {
+                    config.success(result);
+                }
+            }
+        },
+        error: function(response, statusText, err) {
+            // http error check
+            switch(response.status) {
+                // user session handling error
+                case 401:
+                    alert(response.responseJSON.message);
+                    $('#sessionLoginModal').modal('show');
+                    break;
+                // others
+
+                default:
+                    _this.log_error('ajax failure : ', arguments);
+                    if(statusText == 'timeout'){
+                        alert('작업시간이 '+ ( Math.round( config.timeout / 60000 ) ) + '분을 초과하여 데이터를 수신받지 못했습니다.\n 관리자에게 문의하세요 \n');
+                    }
+                    else if(_this.isEmpty(response.responseJSON) && _this.isEmpty(response.responseJSON.message)) {
+                        alert(response.responseJSON.message);
+                    }
+                    else {
+                        alert('에러가 발생했습니다.');
+                    }
+            }
+
+            // callback
+            if (typeof config.error === 'function') {
+                config.error(response.responseJSON);
+            }
+        },
+        complete: function(response) {
+            // hide loadmask
+            if (config.showLoadmask) {
+                $('.preloader-ajax').fadeOut();
+            }
+            
+            // callback
+            if (typeof config.complete === 'function') {
+                config.complete(response.responseJSON);
+            }
+        }
+    });
+}
+
+/**
+ * check ENTER KEY event </br>
+ */
+Pine.prototype.isKey_enter = function() {
+    if (event.keyCode === KEY_ENTER) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 해당 element 근처의 input의 value를 ''로 초기화 해줌 </br> 
+ * @param {_this} element
+ * @example
+ * onClick='pine.form_sibling_input_clear(this)'
+ */
+Pine.prototype.form_sibling_input_clear = function(_this) {
+    $(_this).siblings('input').val('').change(); 
+}
+
+
+/**
+ * 해당 Form의 input 및 체크박스를 Reset 해준다.</br> 
+ * jquery의 reset을 그냥 Wraping 함
+ * @param {formSelector} selector
+ * @example
+ * pine.form_reset('#myform');
+ */
+Pine.prototype.form_reset = function(formSelctor) {
+    $(formSelctor)[0].reset(); 
+    //$(formSelctor + ' input ').val('').change();
+}
+
+/**
+ * code성 input 데이터 (class=code_input_nm & code_input_cd) 핸들링 </br>
+ * name 필드 change 시 code 데이터를 reset
+ * @param {_this} element
+ * @example
+ * onClick='form_code_inputcd_clear(this)'
+ */
+
+Pine.prototype.form_code_inputcd_clear = function(_this) {
+    $(_this).siblings('.code_input_cd').val('').change(); 
+}
+
+/**
+ * JsonObject를 받아서 해당 input[name='key']로 setValue를 해줌
+ * @param {selector} string
+ * @param {jsonObject} object
+ * @example
+ * pine.form_setValues('#formId', object);
+ */
+Pine.prototype.form_setValues = function(formSelctor, jsonObject) {
+    
+    $.each(jsonObject, function(key, value) {
+        let field = $(formSelctor + ' [name="' + key + '"]');
+        if(pine.isEmpty(field)) return; // continue
+        
+        // set checkbox & radio
+        if(field[0].type === 'checkbox' || field[0].type === 'radio') {
+            field.each(function(idx, f) {
+                
+                // value에 number를 넣을 수 없음. checkbox 경우 db에 숫자가 세팅됨. type 무시
+                if(f.value == value) {
+                    f.checked = true;
+                }
+                else if(f.uncheckValue == value) {
+                    f.checked = false;
+                }
+            });
+        }
+        else {
+            field.val(value);
+            
+            //폼 셀럭터에서 inputStyle에 numberComma가 있는지 확인
+            if(($(formSelctor + ' [name="' + key + '"]').attr('inputStyle')) === 'numberComma'){
+                pine.number_setDigitComma($(formSelctor + ' [name="' + key + '"]'));
+            }
+        }
+    });
+}
+
+/**
+ * 해당 id나 class에 있는 form의 input Serializable하는 Function. 
+ * 기본제외 조건은 form안의 하위 modal class을 제외함 
+ * exclude_selector를 통해 추가적인 조건을 제외 할수 있음 
+ * checkbox는 unchcekdvalue 를 추가하셔야 합니다.
+ * @param {string} selector
+ * @param {string} [exclude_selector] 
+ * @return {JsonArray} jsonArray
+ *
+ * @example
+ * form id = 'searchForm'
+ * pine.form_Serializable('#searchForm','.modal');
+ */
+Pine.prototype.form_Serializable = function(selector, exclude_selector) {
+    let formData = {};
+    let _this = this;
+    let disabled;
+    if (exclude_selector) {  //exclude_selector를 넣었을때
+    	 disabled = $(selector).not(exclude_selector).find(':input:disabled').removeAttr('disabled'); //disable 제거 및 목록가져오기
+         formData = $(selector+' :input').not(exclude_selector+ ' :input').not('input[ref="eInput"]').serializeObject();
+         $.each($(selector+' :input[type=checkbox]')
+                 .not(selector+ '.modal :input')
+                 .not('input[ref="eInput"]')
+                 .filter(function(idx){
+                     return $(this).prop('checked') === false 
+                     }),   
+                 function(idx, el){
+                     this.log(idx);
+                     this.log(el);
+                     let uncheckedvalue = $(el).attr('uncheckvalue');
+                
+                     if(!_this.isEmpty(uncheckedvalue)){
+                         formData[$(el).attr('name')]=uncheckedvalue;
+                     }else{
+                         _this.log_error('checkbox는 uncheckvalue 속성을 지정해야합니다.');
+                         formData[$(el).attr('name')]=0;
+                     }
+                     
+                 }
+          );
+         //inputStyle numberComma일때 숫자만 추출하는 부분
+         $.each(
+                 $(selector+' :input[type=text]').not(selector+ '.modal :input').not('input[ref="eInput"]').filter(
+                     function(idx) {
+                         if($(this).attr('inputStyle') === undefined){
+                            return false;
+                         }else if($(this).attr('inputStyle') === 'numberComma'){
+                            //numberComma 있음
+                            return true;
+                         }else{
+                             return false;
+                         }
+                     }
+                 ),
+                 function(idx, el) {
+                     formData[$(el).attr('name')] = pine.number_digitToNumber($(el).val());
+                 }
+             ); 
+    }
+    else {
+    	 disabled = $(selector).find(':input:disabled').removeAttr('disabled'); //disable 제거 및 목록가져오기
+        formData = $(selector+' :input').not(selector+' .modal :input').not('input[ref="eInput"]').serializeObject();
+       
+        $.each(
+            $(selector+' :input[type=checkbox]').not(selector+ '.modal :input').not('input[ref="eInput"]').filter(
+                function(idx) {
+                    return $(this).prop('checked') === false;
+                }
+            ),
+            function(idx, el) {
+                let uncheckedvalue = $(el).attr('uncheckvalue');
+    
+                if (!_this.isEmpty(uncheckedvalue)) {
+                    formData[$(el).attr('name')] = uncheckedvalue;
+                } else {
+                    _this.log_error('checkbox는 uncheckvalue 속성을 지정해야합니다.');
+                    formData[$(el).attr('name')] = 0;
+                }
+            }
+        ); 
+        //inputStyle numberComma일때 숫자만 추출하는 부분
+        $.each(
+                $(selector+' :input[type=text]').not(selector+ '.modal :input').not('input[ref="eInput"]').filter(
+                    function(idx) {
+                        if($(this).attr('inputStyle')=== undefined){
+                           return false;
+                        }else if($(this).attr('inputStyle') === 'numberComma'){
+                           //numberComma 있음
+                           return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                ),
+                function(idx, el) {
+                    formData[$(el).attr('name')] = pine.number_digitToNumber($(el).val());
+                }
+            ); 
+    }
+    disabled.attr('disabled','disabled'); //다시 disabled 추가
+    return formData;
+}
+
+
+/*
+ * ******************************************************
+ * WINDOW POPUP
+ * ******************************************************
+ */
+/**
+ * <b>win_open(srcId,url,title,specs,param)</b></br>
+ * 윈도우 팝업을 호출하는 Function
+ * POST방식으로 파라미터를 보낸다.
+ * <b>파라미터</b>
+ * srcId : string  팝업 호출 후 리턴 받을 이벤트를 구분하기위한 sourceId 보통 function 이름을 넣는다</br>
+ * url :  string   실행할 팝업 url </br>
+ * title : string 팝업에 표시될 타이틀  </br> 
+ * spec : string 팝업 속성  'width=1200, height=700, menubar=no, status=no, toolbar=no'
+ * param : jsonObject 팝업으로 보낼 파라미터
+ */
+Pine.prototype.win_open = function(callbackId, url, title, specs, param) {
+    let m_callbackId = callbackId;
+    let m_url = url;
+    let m_title = title;
+    let m_spec = specs;
+    let m_param = param;
+    
+    if (this.isEmpty(m_spec)) {
+        m_spec = 'width=1200, height=700, menubar=no, status=no, toolbar=no';
+    }
+    if (this.isEmpty(m_param)) {
+        m_param = {};
+    }
+    if (this.isEmpty(m_title)) {
+        m_title = '팝업';
+    }
+    
+    m_param.srcTitle = m_title;
+    m_param.callbackId = m_callbackId;
+   
+    let win = window.open('', m_title, m_spec);
+    
+    let frmObj = $('<form >', {'action': m_url, 'method':'POST', 'target':m_title});
+    
+    $.each(m_param, function(key, value){
+        frmObj.append($('<input>', {'name': key , 'value' : value, 'type': 'hidden' }));
+    });
+
+    $(document.body).append(frmObj);
+    frmObj.submit();
+    $(frmObj).remove();
+}
+
+/**
+ * <b>win_close()</b></br>
+ * 윈도우 팝업을 종료하는 펑션
+ */
+Pine.prototype.win_close = function() {
+    window.open('','_self').close(); // 같은 창에서 화면이 변경되었을 경우 close 안됨
+    history.back(); // close 안될 경우, 이전 화면으로 이동
+}
+
+/*
+*******************************************************
+* USAGE  : Page 이동 (open tab)
+*******************************************************
+*/
+/**
+ * <b>loadPage(url, param)</b></br>
+ * 페이지 변경 Function
+ * pageLoadMode = '_self' (현재 페이지에서 변경-default), '_blank' (새탭으로 열기), '_parent', '_top', name
+ * POST방식으로 파라미터를 보낸다.
+ * <b>파라미터</b>
+ * url :  string   실행할 팝업 url </br>
+ * param : jsonObject 팝업으로 보낼 파라미터
+ */
+Pine.prototype.loadPage = function(url, param) {
+    
+    let pageLoadMode = this.g_config.pageLoadMode;
+    let frmObj = $('<form >', {'action': url, 'method':'POST', target: pageLoadMode } );
+    
+    $.each(param, function(key, value){
+        frmObj.append($('<input>', {'name': key , 'value' : value, 'type': 'hidden' }));
+    });
+    $(document.body).append(frmObj);
+    frmObj.submit();
+    $(frmObj).remove();
+}
+
+/*
+*******************************************************
+* USAGE  : TAB 관련
+*******************************************************
+*/
+/**
+ * <b>tab_getActiveOne(tab ul selector)</b></br>
+ * 현재 선택되어져 있는 tab id 가져오기</br></br>
+ * example<br>
+ * ul class='nav nav-tabs customtab2' role='tablist' </br>
+ * pine.tab_getActiveOne('.nav-tabs');</br></br>
+ * 
+ * @param {string} tab object selector </br>
+ * @return {string} active tab id</br>
+ */
+Pine.prototype.tab_getActiveOne = function(selector) {
+    let activeTab = $(selector + ' a[data-toggle="tab"].active');
+    let activeTabUrl = activeTab[0].href;
+    if(activeTab.length > 0)
+        return activeTabUrl.substr(activeTabUrl.indexOf('#')+1, activeTabUrl.length);
+    else return null;
+}
+
+/*
+*******************************************************
+* DATE PICKER
+*******************************************************
+*/
+/**
+ * <b>datepicker(obj,options)</b></br>
+ * input을 datepicker로 받을 수 있다. </br>
+ * 날짜 포맷은 jqueyrui.com 참조 <a href='https://api.jqueryui.com/datepicker/#utility-formatDate'>jqueryui datepicker formatdate/</a></br>
+ * pine.datepicker($('#date1'), options); </br>
+ * <b>파라미터</b> options </br>
+ * options = {
+ *           dateFormat : 'yy-mm-dd', (날짜 포맷) </br>
+ *           setDate : 'today' '-1D' '-1M' '+1D' .... </br>
+ *           minDate: '-1M' // 최소 선택일자 (-1D:하루전, -1M:한달전, -1Y:일년전) </br>
+ *           maxDate: '+1M' // 최대 선택일자 (+1D:하루후, -1M:한달후, -1Y:일년후) </br>
+ * } </br>
+ * option 정보 : https://api.jqueryui.com/1.12/datepicker/ </br>
+ * 사용샘플 주소 : http://localhost:8080/view/guide/sample/sample-searchgrid </br>
+ */
+Pine.prototype.datepicker = function(obj, options) {
+    let _this = this;
+
+    // 엔터키 이벤트 제거 (엔터 시 today 값이 자동으로 들어감)
+    $(obj).on('keydown', function(e) {
+    	
+        if(e.which === KEY_ENTER) {
+        	$(this).blur();
+        }
+    });
+    
+    // datepicker 생성
+    _this.isEmpty(options) ? obj.datepicker() : obj.datepicker(options);
+    
+    // 오늘 버튼 클릭 시 오늘 날짜로 변경
+    $.datepicker._gotoToday = function(id) {
+        $(id).datepicker('setDate', new Date()).datepicker('hide').blur().change();
+    }
+    
+    // 키보드 입력 처리 - 숫자 외 입력 금지
+/*    $(obj).on('propertychange change keyup paste input', function(e) {
+        let numRegExp = /^[12]\d{0,7}$/;
+        let input = this.value;
+        let length = input.length;
+        if (length != 10) {
+            if (false == numRegExp.test(input)) {
+                this.value = input.substr(0, input.length-1);
+                return;
+            }
+        }
+     });
+*/
+    // 키보드 입력 완료 후 date format 적용
+    $(obj).on('blur', function() {
+        _this.check_date(this);
+    });
+}
+
+
+/* 
+ * 달력 input 입력 형식 체크
+ * 키보드 입력 시 숫자 8자리(YYYYMMDD)만 입력 허용
+ *   - 형식이 맞지 않을 경우 입력값 초기화
+ *   - 형식에 맞는 경우 포맷에 맞춰 입력값 변경(구분자 추가) 
+ *   - 달력에서 직접 선택 시 구분자 추가된 상태로 체크(10자리)
+ */
+Pine.prototype.check_date = function(obj) {
+    let dateInputRegExp = /^(19|20)\d{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[0-1])$/;
+    let text = obj.value;
+    let textLength = text.length;
+    let pickerFormat = $(obj).datepicker('option', 'dateFormat');
+
+    if (textLength == 8) {
+        if (false == dateInputRegExp.test(text)) {
+            obj.value = '';
+            return;
+        }
+        else {
+            try {
+                let result = $.datepicker.parseDate('yymmdd', text);
+                obj.value = $.datepicker.formatDate(pickerFormat, result);
+                return;
+            }
+            catch (e) {  // 포맷에 맞게 날짜 변환 시 에러 발생하는 경우 처리(ex:20200431)
+                obj.value = '';
+                return;
+            }
+        }
+    }
+    else if (textLength == 10) {    // datepicker에서 직접 선택하는 경우 input에 바로 10자리 입력됨
+        try {
+            $.datepicker.parseDate(pickerFormat, text);
+        }
+        catch(e) {
+            obj.value = '';
+            return;
+        }
+    }
+    else {
+        obj.value = '';
+        return;
+    }
+}
+
+/**
+ * <b>time 입력 형식 체크</b></br>
+ * - HHMMSS 입력 (숫자 외 입력 금지)</br>
+ */
+Pine.prototype.timeChecker = function(obj) {
+    $(obj).on('propertychange change keyup paste input', this.check_time);
+    $(obj).on('blur', this.change_time_format);
+}
+Pine.prototype.check_time = function() {
+    let numRegExp = /^[012][\d:]{0,7}$/;
+    let input = this.value;
+    let length = input.length;
+    
+    if (length > 8) {
+        this.value = input.substr(0, input.length-1);
+    }
+    else {
+        if (false == numRegExp.test(input)) {
+            this.value = input.substr(0, input.length-1);
+            return;
+        }
+    }
+}
+
+/**
+ * <b>시간형식 변경</b></br>
+ * HHMMSS > HH:MM:SS</br>
+ */
+Pine.prototype.change_time_format = function() {
+    let timeInputRegExp = /^(2[0-3]|[01][0-9])[0-5][0-9][0-5][0-9]$/;
+    let timeRegExp = /^(2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$/;
+    let input = this.value; 
+    if (timeRegExp.test(input)) {
+        return;
+    }
+    else if (false == timeInputRegExp.test(input)) {
+        this.value = '';
+        return;
+    }
+
+    this.value = moment(this.value, 'HHmmss').format('HH:mm:ss');
+}
+
+
+
+/**
+ * <b>time HHmm입력 형식 체크</b></br>
+ * - HHmm 입력 (숫자 외 입력 금지)</br>
+ */
+Pine.prototype.timeChecker_HHmm = function(obj) {
+    $(obj).on('propertychange change keyup paste input', this.change_time_HHMM);
+    $(obj).on('blur', this.change_time_format_HHMM);
+}
+Pine.prototype.change_time_HHMM = function(obj){
+	 let numRegExp = /^[012][\d:]{0,7}$/;
+	    let input = this.value;
+	    let length = input.length;
+	    
+	    if (length > 6) {
+	        this.value = input.substr(0, input.length-1);
+	    }
+	    else {
+	        if (false == numRegExp.test(input)) {
+	            this.value = input.substr(0, input.length-1);
+	            return;
+	        }
+	   }
+ }
+Pine.prototype.change_time_format_HHMM = function() {
+    let timeInputRegExp = /^(2[0-3]|[01][0-9])[0-5][0-9]$/;
+    let timeRegExp = /^(2[0-3]|[01][0-9]):[0-5][0-9]$/;
+    let input = this.value; 
+    if (timeRegExp.test(input)) {
+        return;
+    }
+    else if (false == timeInputRegExp.test(input)) {
+        this.value = '';
+        return;
+    }
+    this.value = moment(this.value, 'HHmm').format('HH:mm');
+}
+
+
+/**
+ * <b>사업자번호 하이픈 포맷팅 함수</b></br>
+ * <b>사용법</b>  : bizNo_autoHypen(bizNo)</br>
+ * @param {string} bizNo
+ * @return {string} bizNo with hypen
+ */
+Pine.prototype.bizNo_autoHypen = function(bizNo) {
+
+    bizNo = bizNo.replace(/[^0-9]/g, '');
+    let tempNum = '';
+
+    if (bizNo.length < 4) {
+        return bizNo;
+    } else if (bizNo.length < 6) {
+        tempNum += bizNo.substr(0, 3);
+        tempNum += '-';
+        tempNum += bizNo.substr(3, 2);
+    } else if (bizNo.length < 11) {
+        tempNum += bizNo.substr(0, 3);
+        tempNum += '-';
+        tempNum += bizNo.substr(3, 2);
+        tempNum += '-';
+        tempNum += bizNo.substr(5);
+    } else {
+        tempNum += bizNo.substr(0, 3);
+        tempNum += '-';
+        tempNum += bizNo.substr(3, 2);
+        tempNum += '-';
+        tempNum += bizNo.substr(5);
+    }
+    
+    if (tempNum.length > 12) {
+        tempNum = tempNum.substr(0, 12);
+    }
+    
+    return tempNum;
+}
+
+/**
+ * <b>yyyymm 하이픈 포맷팅 함수</b></br>
+ * <b>사용법</b>  : ym_autoHypen(yyyymm)</br>
+ * @param {string} yyyymm
+ * @return {string} yyyymm with hypen
+ */
+Pine.prototype.ym_autoHypen = function(yyyymm) {
+
+    yyyymm = yyyymm.replace(/[^0-9]/g, '');
+    let tempNum = '';
+    
+    if (yyyymm.length < 4) {
+        return yyyymm;
+    } else if (yyyymm.length < 7) {
+        tempNum += yyyymm.substr(0, 4);
+        tempNum += '-';
+        tempNum += yyyymm.substr(4, 2) > 12 ? '12' :  yyyymm.substr(4, 2);
+    } else {
+        tempNum += yyyymm.substr(0, 4);
+        tempNum += '-';
+        tempNum += yyyymm.substr(4, 2) > 12 ? '12' :  yyyymm.substr(4, 2);
+    }
+    
+    if (tempNum.length > 7) {
+        tempNum = tempNum.substr(0, 7);
+    }
+    
+    return tempNum;
+}
+
+/* ============================================================== */
+/* 콤보박스
+/* ============================================================== */
+//code_cd,code_nm 값을 넣으면 option으로 만들어 준다.
+
+/**
+ * <b>콤보박스에 옵션을 추가하는 Function</b></br>
+ * 참고하면 좋은 함수 : pine.comboGenerator </br>
+ * <b>사용법</b>  : pine.comboAppend (bizNo)</br>
+ * {string} selector(필수) 셀렉터 '#id', '.class' </br>
+ * {string} code_cd(필수)  value값 </br>
+ * {string} code_nm(필수)  화면에 표시될 Text값 </br>
+ * {string} optionStyle(옵션) css style부분을 추가할수있다. </br>
+ * <b>Example-1</b> </br>
+ * pine.comboOptionAppend('#BUPLA',item.CODE_CD,item.CODE_NM);  </br>
+ * <b>Example-2 with Ajax</b> </br>
+ * $.each(responseData.data, function(index,item){ </br>
+ * pine.comboOptionAppend('#BUPLA',item.CODE_CD,item.CODE_NM); </br>
+ * });  </br>
+ */
+Pine.prototype.comboAppend = function(selector,code_cd,code_nm,optionStyle){
+    m_optionStyle = optionStyle;
+        //0이거나 null일때 바로 아래에 붙임
+        if(this.isEmpty(m_optionStyle)){
+            //스타일 미적용 가운데 정렬만 적용
+            $(selector).append($('<option>', {
+                value: code_cd,
+                text: code_nm
+            }).attr('align','center'));
+        }else{
+            //파라미터로 받은 스타일 적용
+            $(selector).append($('<option>', {
+                value: code_cd,
+                text: code_nm
+            }).attr('style', m_optionStyle));
+        }
+    
+}
+/**
+ * <b>Array를 받아 콤보박스에 옵션을 생성해주는 Function</b></br>
+ * 참고하면 좋은 함수 : pine.comboAppend </br>
+ * <b>사용법</b>pine.comboGenerator('#BUPLA','CODE_CD','CODE_NM',responseData.data);</br>
+ * <b>파라미터</b></br>
+ * {string} selector(필수) 셀렉터 '#id', '.class' </br>
+ * {string} code_cd(필수)  value 키값 -> data['CODE_CD'] 에서 CODE_CD로 JSON의 키정보  </br>
+ * {string} code_nm(필수)   화면에 표시될 Text 키값  -> data['CODE_NM'] 에서 CODE_NM  JSON의 키정보 </br>
+ * {boolean} keepFirstOption(옵션 : 기본값 true) 첫행 유지 옵션 (전체,선택 등)</br>
+ * {string} optionStyle(옵션) css style부분을 추가할수있다. EX)'color:yellow' </br>
+ * <b>Example-1</b> </br>
+ * pine.comboGenerator('#BUPLA','CODE_CD','CODE_NM',responseData.data); </br>
+ * <b>Example-2 첫행삭제</b> </br>
+ * pine.comboGenerator('#BUPLA','CODE_CD','CODE_NM',responseData.data,false); </br>
+ */
+Pine.prototype.comboGenerator = function(selector,code_cd,code_nm,jsonArray,keepFirstOption,optionStyle){
+      _this = this;
+      m_optionStyle = optionStyle;
+      m_jsonArray = jsonArray;
+      m_keepFirstOption = keepFirstOption;
+      
+      //기본값은 첫행 유지
+      if(_this.isEmpty(m_keepFirstOption)){
+          m_keepFirstOption = true;
+      }
+
+      if(m_keepFirstOption == true){
+          $(selector).find('option').not(':first').remove();
+      }else{
+          $(selector).empty();
+      }
+     //2. loop를 돌면서 comboOptionAppend 실행 
+      $.each(jsonArray, function(index,item){
+          _this.comboAppend(selector,item[code_cd],item[code_nm],optionStyle);
+        });
+}
+
+/**
+ * <b>form rules > form message 추출</b></br>
+ * @param {object} form, {object} form rules
+ * @return {object} form message
+ */
+Pine.prototype.getValidateMsg = function(form, rules) {
+    
+    if (form == undefined || form == null) {
+        return true;
+    }
+    
+    let messages = {};
+    
+    $.each(rules, function (key, item) {
+        
+        let itemTitle = form.find('[name="' + key + '"]').attr('title');
+        messages[key] = {};
+        
+        $.each(item, function (mKey, mItem) {
+            if(mKey == 'required'){
+                (messages[key])[mKey] = itemTitle + '을(를) 필수로 입력주세요';
+            }
+            if(mKey == 'mobile'){
+                (messages[key])[mKey] = itemTitle + '을(를) 휴대폰 형식에 맞게 입력해주세요';
+            }
+            if(mKey == 'email'){
+                (messages[key])[mKey] = itemTitle + '을(를) 이메일 형식에 맞게 입력해주세요';
+            }
+            if(mKey == 'maxlength'){
+                (messages[key])[mKey] = itemTitle + '는 최대 ' + mItem + ' 자리까지 입력 가능합니다';
+            }
+            if(mKey == 'minlength'){
+                (messages[key])[mKey] = itemTitle + '는 최소 ' + mItem + ' 자리까지 입력하셔야 합니다';
+            }
+        });
+    });
+    return messages;
+}
+
+
+/**
+ * <b>byte 계산</b></br>
+ * @param {String} ch
+ * @return {Number} byte size
+ */
+Pine.prototype.charByteSize = function(ch) {
+    
+    let codeByte = 0;
+    
+    for (let idx = 0; idx < ch.val().length; idx++){
+        let oneChar = escape(ch.val().charAt(idx));
+        if (oneChar.length == 1){
+            codeByte ++;
+        }else if (oneChar.indexOf('%u') != -1){
+            codeByte += 2;
+        }else if (oneChar.indexOf('%') != -1){
+            codeByte ++;
+        }
+    }
+    return codeByte;
+
+}
+
+/**
+ * <b>byte 자르기</b></br>
+ * @param {String} s, {Number} len
+ * @return {String} string
+ */
+Pine.prototype.cutByteLength = function(s, len) {
+    
+    let size = 0;
+    let rIndex = s.length;
+
+    if(s == null || s.length == 0){
+        return 0;
+    }
+    
+    for(let i = 0; i < s.length; i++){
+        size += this.charByteSize(s.charAt(i));
+        if(size == len){
+            rIndex = i + 1;
+            break;
+        }else if(size > len){
+            rIndex = i;
+            break;
+        }
+    }
+    return s.substring(0, rIndex);
+}
+
+/*
+*******************************************************
+* 우편번호 (주소찾기) - 다음API
+*******************************************************
+*/
+/**
+ * 본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.<br>
+ */
+Pine.prototype.postCode = function() {
+
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+            // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+            let roadAddr = data.roadAddress; // 도로명 주소 변수
+            let extraRoadAddr = ''; // 참고 항목 변수
+
+            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+            // 법정동의 경우 마지막 문자가 '동/로/가'로 끝난다.
+            if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                extraRoadAddr += data.bname;
+            }
+            // 건물명이 있고, 공동주택일 경우 추가한다.
+            if(data.buildingName !== '' && data.apartment === 'Y'){
+               extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+            }
+            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+            if(extraRoadAddr !== ''){
+                extraRoadAddr = ' (' + extraRoadAddr + ')';
+            }
+
+            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            document.getElementById('daum_postcode').value = data.zonecode;
+            document.getElementById('daum_roadAddress').value = roadAddr;
+            document.getElementById('daum_jibunAddress').value = data.jibunAddress;
+            
+            // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+            if(roadAddr !== ''){
+                document.getElementById('daum_roadAddress').value += extraRoadAddr;
+            } else {
+                document.getElementById('daum_extraAddress').value = '';
+            }
+
+            let guideTextBox = document.getElementById('guide');
+            // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+            if(data.autoRoadAddress) {
+                let expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                guideTextBox.style.display = 'block';
+
+            } else if(data.autoJibunAddress) {
+                let expJibunAddr = data.autoJibunAddress;
+                guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                guideTextBox.style.display = 'block';
+            } else {
+                guideTextBox.innerHTML = '';
+                guideTextBox.style.display = 'none';
+            }
+        }
+    }).open();
+}
+/**
+ * <b>브라우저 이름을 반환해준다.</b></br>
+ */
+Pine.prototype.getBrowserName = function (){ 
+    let _ua = navigator.userAgent; var rv = -1; //IE 11,10,9,8
+    let trident = _ua.match(/Trident\/(\d.\d)/i);
+    if( trident != null ){ 
+        if( trident[1] == "7.0" ) 
+            return rv = "IE" + 11; 
+        if( trident[1] == "6.0" ) 
+            return rv = "IE" + 10; 
+        if( trident[1] == "5.0" ) 
+            return rv = "IE" + 9; 
+        if( trident[1] == "4.0" ) 
+            return rv = "IE" + 8; 
+        } //IE 7... 
+        if( navigator.appName == 'Microsoft Internet Explorer' ) return rv = "IE" + 7; 
+        //other 
+        let agt = _ua.toLowerCase();
+        if (agt.indexOf("chrome") != -1) return 'Chrome'; 
+        if (agt.indexOf("opera") != -1) return 'Opera'; 
+        if (agt.indexOf("staroffice") != -1) return 'Star Office';
+        if (agt.indexOf("webtv") != -1) return 'WebTV'; 
+        if (agt.indexOf("beonex") != -1) return 'Beonex'; 
+        if (agt.indexOf("chimera") != -1) return 'Chimera';
+        if (agt.indexOf("netpositive") != -1) return 'NetPositive'; 
+        if (agt.indexOf("phoenix") != -1) return 'Phoenix'; 
+        if (agt.indexOf("firefox") != -1) return 'Firefox'; 
+        if (agt.indexOf("safari") != -1) return 'Safari';
+        if (agt.indexOf("skipstone") != -1) return 'SkipStone'; 
+        if (agt.indexOf("netscape") != -1) return 'Netscape'; 
+        if (agt.indexOf("mozilla/5.0") != -1) return 'Mozilla';
+}
+
+
+
+/**
+ * <b>pine.log(msg)</b> </br>
+ * 기본로그 함수 </br>
+ * 운영에서는 출력하지 않는다.</br>
+ * <h3>사용법</h3>
+ * pine.log('로그메시지')
+ */
+Pine.prototype.log = function(msg) {
+    let mode =  document.getElementById('spring_profile').value;
+    if (mode !== 'PRODUCT') {
+        console.log(msg);
+    }
+    if (msg === 'lion') {
+        console.log(
+                '......................:=##*................:+:.............\n'+
+                '....................:@****=@@@##===##@@#*@=****@*..........\n'+
+                '....................#*=@#*****************=@#***#+.........\n'+
+                '....................##************************@=@:.........\n'+
+                '..................*#****************************@:.........\n'+
+                '.................#***=######=********#####@#*****==........\n'+
+                '................#*********************************==.......\n'+
+                '...............*=*******#W#************WW**********#:......\n'+
+                '...............@***************##******************==......\n'+
+                '..............:@**********=#-.+W@:.:@***************#......\n'+
+                '..............:@**********@....-....:#**************@......\n'+
+                '..............-@***********@#=@#@#*##***************=......\n'+
+                '...............==**********************************#:......\n'+
+                '...............-@*********************************==.......\n'+
+                '........*@#-....-@*******************************==........\n'+
+                '.......:#+*#......#=****************************@+.........\n'+
+                '.....:@=**=@*-.....-##************************@+...........\n'+
+                '....:#******#=**==####@@@=****************#@#@#-...........\n'+
+                '....*#******#=*************=#@@@@@@@@@#=********@:.........\n'+
+                '....-@*****=@************************************@:........\n'+
+                '......=@=*******************:.:**+--+*+--+*#=****==........\n'+
+                '.........--::::::::---#***:....-....-....+##****==.........\n'+
+                '.......................=**+...............-#=****@-........\n'+
+                '.......................==*:...............-#=**@=..........\n'+
+                '.......................*=*:...............-#*-.............\n'+
+                '.......................:#*+...............:#:..............\n'+
+                '...........................................................\n'+
+                '...........................................................'
+                );     
+    }
+ }
+/**
+ * <b>pine.log_info(msg)</b> </br>
+ * info 로그 함수 </br>
+ * 운영에서는 출력하지 않는다.</br>
+ * <h3>사용법</h3>
+ * pine.info('로그메시지')
+ */
+Pine.prototype.log_info = function(msg){
+    let mode =  document.getElementById('spring_profile').value;
+    if (mode !== 'PRODUCT') {
+        console.warn(msg);
+    }
+}
+/**
+ * <b>pine.log_warn(msg)</b> </br>
+ * warn 로그 함수 </br>
+ * 운영에서는 출력하지 않는다.</br>
+ * <h3>사용법</h3>
+ * pine.warn('로그메시지')
+ */
+Pine.prototype.log_warn = function(msg){
+    let mode =  document.getElementById('spring_profile').value;
+    if (mode !== 'PRODUCT') {
+        console.warn(msg);
+    }
+}
+/**
+ * <b>pine.log_error(msg)</b> </br>
+ * 에러로그 함수 </br>
+ * 운영에서도 출력</br>
+ * <h3>사용법</h3>
+ * pine.error('로그메시지')
+ */
+Pine.prototype.log_error = function(msg){
+    console.error(msg);
+    //에러라서 응원의 라이언 메시지로 경고한다.
+    console.log(
+            '......................:=##*................:+:.............\n'+
+            '....................:@****=@@@##===##@@#*@=****@*..........\n'+
+            '....................#*=@#*****************=@#***#+.........\n'+
+            '....................##************************@=@:.........\n'+
+            '..................*#****************************@:.........\n'+
+            '.................#***=######=********#####@#*****==........\n'+
+            '................#*********************************==.......\n'+
+            '...............*=*******#W#************WW**********#:......\n'+
+            '...............@***************##******************==......\n'+
+            '..............:@**********=#-.+W@:.:@***************#......\n'+
+            '..............:@**********@....-....:#**************@......\n'+
+            '..............-@***********@#=@#@#*##***************=......\n'+
+            '...............==**********************************#:......\n'+
+            '...............-@*********************************==.......\n'+
+            '........*@#-....-@*******************************==........\n'+
+            '.......:#+*#......#=****************************@+.........\n'+
+            '.....:@=**=@*-.....-##************************@+...........\n'+
+            '....:#******#=**==####@@@=****************#@#@#-...........\n'+
+            '....*#******#=*************=#@@@@@@@@@#=********@:.........\n'+
+            '....-@*****=@************************************@:........\n'+
+            '......=@=*******************:.:**+--+*+--+*#=****==........\n'+
+            '.........--::::::::---#***:....-....-....+##****==.........\n'+
+            '.......................=**+...............-#=****@-........\n'+
+            '.......................==*:...............-#=**@=..........\n'+
+            '.......................*=*:...............-#*-.............\n'+
+            '.......................:#*+...............:#:..............\n'+
+            '...........................................................\n'+
+            '...........................................................'
+            );
+}
+
+/**
+ * <b>pine.getParameterByName(name)</b> </br>
+ * URL 파라미터 가져오는 함수</br>
+ * 운영에서도 출력</br>
+ * <h3>사용법</h3>
+ * pine.prototype.getParameterByName('rownum')
+ */
+Pine.prototype.getParameterByName = function(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    let regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
+            results = regex.exec(location.search);
+    return results == null ? null : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+/**
+ * 타임리프 -> javascript 변수로 변수 대입시에 사용하는 펑션
+ * @method
+ * @name Pine#paramToObject
+ */
+Pine.prototype.paramToObject = function(param){
+    let c_param = {};
+    for(key in param) {
+        c_param[key]= param[key][0];
+    }
+    return c_param;
+}
+
+
+//Global 선언
+let pine = new Pine();
+

@@ -1,0 +1,1893 @@
+/* ==============================================================
+ * JSIT 에서 만든 자바스크립트 입니다. 
+ * 여기 정의된 펑션은 공통팀에서 확인후 공통사용 필요시 func.js로 옮겨 주세요.
+ * 문의 : 곽인한 (010-9021-8434)
+/* ============================================================== */
+
+/************************************************************************************************
+ * Function : Null 여부 확인
+ * @param   : sValue - Null 여부 확인 값
+ * Return   : boolean
+************************************************************************************************/
+function fn_isNull(sValue)
+{
+    if(sValue == null) return true;
+    
+    let _val = sValue+""; //강제문자형
+    
+    if( _val == undefined || _val == 'undefined'
+     || new String(_val).valueOf() == undefined || new String(_val).valueOf() == "undefined" || new String(_val).valueOf() == "[Undefined]"){
+        return true;
+    }
+    
+    if(("x"+_val == "xNaN") && (String(_val.length).valueOf() == "undefined"))
+        return true;
+    if(String(_val).length == 0) return true;
+  
+    //Trim 기능 추가  
+    var sArg = new String(_val);
+    if (sArg.replace(/(^\s*)|(\s*$)/g, "").length == 0 ) return true;
+    
+    return false;
+}
+
+/************************************************************************************************
+ * Function : 입력 값을 체크하여 Null인경우 지정한 값 리턴
+              Null이 아니면 입력 값 리턴
+ * @param   : sValue   - 문자열 값
+              sNullVal - Null인 경우 대치값
+ * Return   : 입력 값이 Null인 경우 지정한 값
+              Null이 아닌 경우 입력 값
+************************************************************************************************/
+function fn_nvl(sValue, sNullVal)
+{
+    return fn_isNull(sValue) ? sNullVal : sValue;
+}
+
+
+function isNumeric(num, opt){
+  // 좌우 trim(공백제거)을 해준다.
+  num = String(num).replace(/^\s+|\s+$/g, "");
+ 
+  if(typeof opt == "undefined" || opt == "1"){
+    // 모든 10진수 (부호 선택, 자릿수구분기호 선택, 소수점 선택)
+    var regex = /^[+\-]?(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
+  }else if(opt == "2"){
+    // 부호 미사용, 자릿수구분기호 선택, 소수점 선택
+    var regex = /^(([1-9][0-9]{0,2}(,[0-9]{3})*)|[0-9]+){1}(\.[0-9]+)?$/g;
+  }else if(opt == "3"){
+    // 부호 미사용, 자릿수구분기호 미사용, 소수점 선택
+    var regex = /^[0-9]+(\.[0-9]+)?$/g;
+  }else{
+    // only 숫자만(부호 미사용, 자릿수구분기호 미사용, 소수점 미사용)
+    var regex = /^[0-9]$/g;
+  }
+ 
+  if( regex.test(num) ){
+    num = num.replace(/,/g, "");
+    return isNaN(num) ? false : true;
+  }else{ return false;  }
+}
+
+/************************************************************************************************
+ * Function : String에 포함된 문자열을 다른 문자열로 치환
+ * @param   : sText     - 스트링 문자열
+              sValue1   - 변경전 문자
+              sValue2   - 변경후 문자
+ * Return   : 변경된 String
+************************************************************************************************/
+function fn_replace(sText, sValue1, sValue2)
+{
+    if(fn_isNull(sText)) return sText;
+
+    return String(sText).replace(sValue1, sValue2);
+}
+
+function fn_replaceAll(sText, sValue1, sValue2)
+{
+    if(fn_isNull(sText)) return sText;
+
+    let _repStr = String(sText).replace(sValue1, sValue2);
+    
+    if(_repStr.indexOf(",") > -1){
+        return fn_replaceAll(_repStr, sValue1, sValue2);
+    }else{
+        return _repStr;
+    }
+}
+
+
+
+/************************************************************************************************
+ * Function : 특수문자를 제거
+ * @param   : sValue - 특수문자를 제거할 String
+ * Return   : 특수문자를 제거한 String
+************************************************************************************************/
+function fn_removeSpecialChar(sValue)
+{
+    if(fn_isNull(sValue)) return "";
+
+    //var sSpecial = "~!@#$%^&*-+:;,./=_`{|}()[]\\?<>'";
+    var sSpecial = "~!@#$%^&+:;,./=_-`{|}()[]\\?<>'";
+    var sRetValue = "";
+
+    for(i=0; i<sValue.length; i++){
+        if(sSpecial.indexOf(sValue.charAt(i)) == -1)
+            sRetValue += sValue.charAt(i);
+    }
+
+    return sRetValue;
+}
+
+/************************************************************************************************
+ * Function : 입력받은 Number에 컴마를 추가한다.
+ * @param   : nNumber 숫자
+              iFractionDigit 출력시 소숫점 이하의 자릿수(반올림함)
+ * Return   : String(Comma를 포함하고 있는 숫자)
+************************************************************************************************/
+function fn_toFixedLocaleString(nNumber, iFractionDigit)
+{
+    if(fn_isNull(nNumber)) return "";
+    if(fn_isNull(iFractionDigit)) iFractionDigit = 0;
+
+    nNumber = Math.round(Number(nNumber), iFractionDigit);
+
+    var sNumber = String(nNumber);
+    var aNumber = sNumber.split(".");
+
+    return Number(aNumber[0]).toLocaleString() + (aNumber.length > 1 ? ("." + aNumber[1]) : "");
+}
+
+
+
+
+
+/************************************************************************************************
+ * Function : 입력 문자열중 숫자 값만 리턴.
+ * @param   : 문자열
+ * Return   : 숫자 값 문자열
+************************************************************************************************/
+function fn_getDigit(sValue)
+{
+    if(fn_isNull(sValue)) return sValue;
+
+    return String(sValue).replace(new RegExp("\\D", "g"), "");
+}
+
+/************************************************************************************************
+ * Function : 입력된 10진수를 16진수로 변환하는 함수
+ * @param   : 10진수
+ * Return   : 16진수
+************************************************************************************************/
+function fn_10To16(nValue)
+{
+    if(fn_isNull(nValue)) return nValue;
+    if(!isNumeric(nValue)) return nValue;
+
+    return Number(nValue).toString(16);
+}
+
+/************************************************************************************************
+ * Function : 입력된 16진수를 10진수로 변환하는 함수
+ * @param   : 16진수
+ * Return   : 10진수
+************************************************************************************************/
+function fn_16To10(nValue)
+{
+    if(fn_isNull(nValue)) return nValue;
+    if(!isNumeric(nValue)) return nValue;
+
+    return Number(nValue).toString(10);
+}
+
+
+/************************************************************************************************
+ * Function : 입력된 문자열의 좌우측 공백을 제거한 문자열을 반환
+ * @param   : arg(String)
+ * Return   : trim된 문자열
+************************************************************************************************/
+function fn_trim(arg)
+{
+    if (fn_isNull(arg)) 
+        return "";
+        
+    //var sArg = arg.toString();
+    var sArg = new String(arg);
+    
+    return sArg.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+
+
+/************************************************************************************************
+ * Function : 입력된 문자열 길이 반환하는 함수
+ * @param   : 1. sValue - String
+ * Return   : return int
+************************************************************************************************/
+function fn_getLength(sValue)
+{
+    if (new String(sValue).valueOf() == "undefined") return 0;
+    if (sValue == null) return 0;
+    
+    var v_ChkStr = new String(fn_trim(sValue));
+  
+    if (v_ChkStr == null) return 0;
+    if (v_ChkStr.toString().length == 0 ) return 0;
+    
+    return v_ChkStr.toString().length;
+}
+
+
+/************************************************************************************************
+ * Function : 입력받은 전체 길이를 계산 결과를 Number Type으로 반환
+              문자, 숫자, 특수문자 : 1 로 Count
+              그 외 한글/한자 : 2 로 count
+ * @param   : 대상문자열
+ * Return   : number - length
+************************************************************************************************/
+function fn_getLengthB(sValue)
+{
+    if(fn_isNull(sValue)) return 0;
+
+    var sChk = sValue.toString();
+    var iCnt = 0;
+
+    for(var i=0; i<sChk.length; i++)
+        (sChk.charCodeAt(i) > 127) ? iCnt += 2 : iCnt++;
+
+    return iCnt;
+}
+
+
+/************************************************************************************************
+ * Function : 오른쪽 채우기 함수
+ * @param   : sValue  - 대상문자열
+              nLength - 자리수
+              sChar    - 채울 문자
+ * Return   : 컴마가 제거된 String
+************************************************************************************************/
+function fn_Rpad(sValue, nLength, sChar)
+{
+    if(fn_isNull(sValue)) return sValue;
+    if(fn_isNull(sChar)) sChar = " ";
+
+    var sRetVal  = new String(sValue);
+    var nIteration = nLength - fn_getLength(sRetVal);
+    var sPadChar = (sChar.length > 1) ? sChar.charAt(0) : sChar;
+
+    for(var i=0; i<nIteration; i++)
+        sRetVal += sPadChar;
+
+    return sRetVal;
+}
+
+
+/************************************************************************************************
+ * Function : 오른쪽 채우기 함수 (length를 byte로 계산)
+ * @param   : sValue  - 대상문자열
+              nLength - 자리수
+              sChar    - 채울 문자
+ * Return   : 컴마가 제거된 String
+************************************************************************************************/
+function fn_RpadB(sValue, nLength, sChar)
+{
+    if(fn_isNull(sValue)) return sValue;
+    if(fn_isNull(sChar)) sChar = " ";
+
+    var sRetVal  = new String(sValue);
+    var nIteration = nLength - fn_getLengthB(sRetVal);
+    var sPadChar = (sChar.length > 1) ? sChar.charAt(0) : sChar;
+
+    for(var i=0; i<nIteration; i++)
+        sRetVal += sPadChar;
+
+    return sRetVal;
+}
+
+
+/************************************************************************************************
+ * Function : 왼쪽 채우기 함수
+ * @param   : sValue  - 대상문자열
+              nLength - 자리수
+              sChar    - 채울 문자
+ * Return   : String - length
+************************************************************************************************/
+function fn_Lpad(sValue, nLength, sChar) 
+{
+    if(fn_isNull(sValue)) return sValue;
+    if(fn_isNull(sChar)) sChar = " ";
+
+    var sRetVal = new String(sValue);
+    var nIteration  = nLength - fn_getLength(sRetVal);
+    var sPadChar = (sChar.length > 1) ? sChar.charAt(0) : sChar;
+
+    for(var i=0; i<nIteration; i++)
+        sRetVal = sPadChar + sRetVal;
+
+    return sRetVal;
+}
+
+
+
+/************************************************************************************************
+ * Function : 왼쪽 채우기 함수 (length를 byte로 계산)
+ * @param   : sValue  - 대상문자열
+              nLength - 자리수
+              sChar    - 채울 문자
+ * Return   : String - length
+************************************************************************************************/
+function fn_LpadB(sValue, nLength, sChar) 
+{
+    if(fn_isNull(sValue)) return sValue;
+    if(fn_isNull(sChar)) sChar = " ";
+
+    var sRetVal = new String(sValue);
+    var nIteration  = nLength - fn_getLengthB(sRetVal);
+    var sPadChar = (sChar.length > 1) ? sChar.charAt(0) : sChar;
+
+    for(var i=0; i<nIteration; i++)
+        sRetVal = sPadChar + sRetVal;
+
+    return sRetVal;
+}
+
+
+
+/************************************************************************************************
+ * Function : 문자 포맷 형식 변환 ( 해당 문자는 포맷에서 @ 사용)
+ * @param   : sValue - 문자열
+              sMask - 문자열 포맷, (@:문자, 포맷스트링("-", ",", ".")등
+ * Return   : 포맷된 문자
+************************************************************************************************/
+function fn_getFormat(sValue, sMask) 
+{
+    var sRetVal = "";
+    var sUnit;
+
+    if(fn_isNull(sValue)) return "";
+
+    sValue = String(sValue);
+
+    for(var i=0; i<sMask.length; i++){
+        sUnit = sMask.charAt(i);
+        if(sUnit == "@"){
+            sRetVal += sValue.charAt(0);
+            sValue = sValue.substr(1);
+        }
+        else
+            sRetVal += sUnit;
+    }
+
+    return sRetVal;
+}
+/************************************************************************************************
+ * Function : yyyyMMdd 형태의 문자열 날짜 리턴 ( 예)fn_makeDate("2010", "05", "01");
+ * @param   : nYear - 년도 
+ * @param   : nMonth - 월
+ * @param   : nDate - 일
+ * Return   : true/false(정합 여부)
+************************************************************************************************/
+function fn_makeDate(nYear, nMonth, nDate)
+{
+    if(fn_isNull(nYear) || fn_isNull(nMonth) || fn_isNull(nDate)) return "";
+
+    var objDate = new Date(nYear, nMonth-1, nDate);
+
+    var sYear   = objDate.getFullYear().toString();
+    var sMonth  = fn_Lpad(String(objDate.getMonth() + 1), 2, "0");
+    var sDate   = fn_Lpad(String(objDate.getDate()), 2, "0");
+
+    return sYear + sMonth + sDate;
+}
+
+
+
+/************************************************************************************************
+ * Function : 입력된 날자에 nOffset 으로 지정된 만큼의 일을 증감한다.
+ * @param   : sDate - yyyyMMdd 형식의 날짜 문자열
+ * @param   : nOffset - 증감할 일수
+ * Return   : yyyyMMdd 형태의 문자열
+************************************************************************************************/
+function fn_addDate(sDate, iOffset)
+{
+    if(fn_isNull(sDate) || fn_isNull(iOffset)) return "";
+
+    var nYear = parseInt(sDate.substr(0, 4));
+    var nMonth = parseInt(sDate.substr(4, 2));
+    var nDate = parseInt(sDate.substr(6, 2)) + iOffset;
+
+    return fn_makeDate(nYear, nMonth, nDate);
+}
+
+/************************************************************************************************
+ * Function : 입력된 날자에 nOffset 으로 지정된 만큼의 월을 증감한다.
+ * @param   : sDate - yyyyMMdd 형식의 날짜 문자열
+ * @param   : nOffset - 증감할 월수
+ * Return   : yyyyMMdd 형태의 문자열
+************************************************************************************************/
+function fn_addMonth(sDate, iOffset)
+{
+    if(fn_isNull(sDate) || fn_isNull(iOffset)) return "";
+    
+    sDate = String(sDate);
+    var iYear = parseInt(sDate.substr(0, 4));
+    var iMonth = parseInt(sDate.substr(4, 2)) + iOffset;
+    var iDate = parseInt(sDate.substr(6, 2));
+    var sRet = fn_makeDate(iYear, iMonth, 1).substr(0, 6);
+    var iLastDate = parseInt(fn_getLastDay(sRet));
+
+    if(iDate > iLastDate)
+        return sRet + iLastDate.toString();
+    else
+        return sRet + fn_Lpad(iDate.toString(), 2, "0");
+}
+
+/************************************************************************************************
+ * Function : 해당월의 마지막 날짜
+ * @param   : sDate - yyyyMMdd 형식의 날짜 문자열
+ * Return   : 마지막 일자
+************************************************************************************************/
+function fn_getLastDay(sDate)
+{
+    if(fn_isNull(sDate)) return "";
+
+    var iMonth = parseInt(String(sDate).substr(4, 2), 10);
+    switch(iMonth){
+        case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+            return 31;
+        case 2:
+            if(fn_isLeapYear(sDate)) return 29;
+            else return 28;
+        default:
+            return 30;
+    }
+}
+
+/************************************************************************************************
+ * Function : 입력된 날자로부터 요일을 구함
+ * @param   : sDate('yyyyMMdd' 형태로 표현된 날짜)
+ * Return   : String(0-일요일 ~ 6-토요일)
+************************************************************************************************/
+function fn_getDay(sDate)
+{
+    var objDate = new Date(fn_getFormat(sDate, "@@@@-@@-@@"));
+    return objDate.getDay();
+}
+
+/************************************************************************************************
+ * Function : 입력된 날자로부터 요일을 구함
+ * @param   : sDate('yyyyMMdd' 형태로 표현된 날짜)
+ * Return   : String(일, 월, 화, 수, 목, 금, 토)
+************************************************************************************************/
+function fn_getDayKor(sDate)
+{
+    var arrWeek = new Array["일", "월", "화", "수", "목", "금", "토"];     
+    return arrWeek[fn_getDay(sDate)];
+}
+
+/************************************************************************************************
+ * Function : 해당 PC의 오늘 날짜를 가져온다
+ * @param   : 
+ * Return   : 오늘 날짜("yyyyMMdd" 형태)
+************************************************************************************************/
+function fn_today()
+{
+    var sToday = "";
+    var objDate = new Date();
+    
+    var sToday  = objDate.getFullYear() + "";
+        sToday += fn_Lpad((objDate.getMonth() + 1), 2, "0");
+        sToday += fn_Lpad((objDate.getDate()), 2, "0");
+
+    return sToday;
+}
+
+/************************************************************************************************
+ * Function : 해당 PC의 오늘 날짜+시간를 가져온다.
+ * @param   : 
+ * Return   : 오늘 날짜("yyyyMMddhhmmss" 형태)
+************************************************************************************************/
+function fn_todayTime()
+{
+    var sToday = "";
+    var objDate = new Date();
+    var sToday  = objDate.getFullYear() + "";
+        sToday += fn_Lpad((objDate.getMonth() + 1), 2, "0");
+        sToday += fn_Lpad(objDate.getDate(), 2, "0");
+        sToday += fn_Lpad(objDate.getHours(), 2, "0");
+        sToday += fn_Lpad(objDate.getMinutes(), 2, "0");
+        sToday += fn_Lpad(objDate.getSeconds(), 2, "0");
+
+    return sToday;
+}
+
+/************************************************************************************************
+ * Function : 해당 PC의 오늘 날짜+시간를 가져온다.
+ * @param   : 
+ * Return   : 오늘 날짜("yyyy-MM-dd hh:mm:ss" 형태)
+************************************************************************************************/
+function fn_todayTimeFormat()
+{
+    var sToday = "";
+    var objDate = new Date();
+    var sToday  = objDate.getFullYear() + "";
+        sToday += "-" + fn_Lpad((objDate.getMonth() + 1), 2, "0");
+        sToday += "-" + fn_Lpad(objDate.getDate(), 2, "0");
+        sToday += " " + fn_Lpad(objDate.getHours(), 2, "0");
+        sToday += ":" + fn_Lpad(objDate.getMinutes(), 2, "0");
+        sToday += ":" + fn_Lpad(objDate.getSeconds(), 2, "0");
+
+    return sToday;
+}
+
+/************************************************************************************************
+ * Function : 해당 PC의 오늘 날짜+시간를 가져온다.(Millisecond 포함)
+ * @param   : 
+ * Return   : 오늘 날짜("yyyyMMddhhmmss" 형태)
+************************************************************************************************/
+function fn_todayFullTime()
+{
+    var sToday = "";
+    var objDate = new Date();
+    var sToday  = objDate.getFullYear() + "";
+        sToday += fn_Lpad((objDate.getMonth() + 1), 2, "0");
+        sToday += fn_Lpad(objDate.getDate(), 2, "0");
+        sToday += fn_Lpad(objDate.getHours(), 2, "0");
+        sToday += fn_Lpad(objDate.getMinutes(), 2, "0");
+        sToday += fn_Lpad(objDate.getSeconds(), 2, "0");
+        sToday += fn_Lpad(objDate.getMilliseconds(), 3, "0");
+
+    return sToday;
+}
+
+/************************************************************************************************
+ * Function : 년월일(yyyyMMdd)을 입력하면 해당 주차를 리턴한다.
+ * @param   : sDate - yyyyMMdd형태의 From 일자 (예 : "20121122")
+ * Return   : 6자리 년도주차(yyyyWW)
+************************************************************************************************/
+function fn_getWeek(sDate)
+{
+    if(sDate.length != 8 || !isNumeric(sDate)) return "";
+
+    var nYear  = parseInt(sDate.substr(0, 4));
+    var nMonth = parseInt(sDate.substr(4, 2));
+    var nDay   = parseInt(sDate.substr(6, 8));
+
+    var startAt = 0; ///////////// 일요일 표시 부분 / 0 : 일요일(일월화...) / 1 : 월요일(...금토일)
+
+    if(startAt == 0) nDay = nDay + 1;
+
+    var a = Math.floor((14-nMonth) / 12);
+    var y = nYear + 4800 - a;
+    var m = nMonth + (12 * a) - 3;
+    var b = Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400);
+    var J = nDay + Math.floor(((153 * m) + 2) / 5) + (365 * y) + b - 32045;
+    var d4 = (((J + 31741 - (J % 7)) % 146097) % 36524) % 1461;
+    var L = Math.floor(d4 / 1460);
+    var d1 = ((d4 - L) % 365) + L;
+//trace(a + " :: " + y + " :: " + m + " :: " + b + " :: " + J + " :: " + d4 + " :: " + L + " :: " + d1);
+    var week = Math.floor(d1/7) + 1;
+        week = week.toString();
+
+    if(nMonth == 12 && nDay > 28 && week < 8)
+        nYear = nYear + 1;
+
+    return nYear + fn_Lpad(week, 2, "0");
+}
+
+/************************************************************************************************
+ * Function : 주차의 시작일을 가져온다
+ * @param   : strWeek - 주차 (년도+주차) 예-201250 / 2012년도의50주차
+ * Return   : 주차의 시작일 / String
+************************************************************************************************/
+function fn_setWeekFirstDay(strWeek)
+{
+    var firstDay,lastDay;   //시작일과 마지막일
+    var firstW;             //년도의 첫번째 주차 (계산시 사용)
+    var day;                //시작일의 day
+    var sYear = strWeek.substr(0,4);
+    var sdWeek = Number(strWeek.substr(4,2));
+
+    //var endVS2 = Number(sYear+"02");
+
+    var endWeek;
+    for(var a=31; a>1; a--){
+        endWeek = fn_getWeek(sYear+"12"+fn_Lpad(String(a), 2, "0"));
+        if(Number(endWeek.substr(4, 2)) == 52)
+            break;
+    }
+
+    //매년 1주차의 firstDay구하기
+    for(var i=1; i<=31; i++){
+        day = fn_Lpad(i.toString(), 2,"0");
+        firstW = fn_getWeek(sYear+"01"+day);
+        firstDay = sYear+"01"+day;
+
+        if(Number(firstW.substr(4, 2)) == 1){
+            if(i==1){
+                sYear = sYear-1;
+                for(var v=25; v<32; v++){
+                    firstW = fn_getWeek(sYear+"12"+v);
+                    firstDay = sYear+"12"+v;
+
+                    if(Number(firstW.substr(4, 2)) == 1){
+                        firstDay = sYear+"12"+v;
+                        i = 31; //시작일이 계산되었으면 종료하기 위함
+                        break;
+                    }
+                }
+            }
+            else{
+                break;
+            }
+        }
+    }
+
+    var returnDay = fn_addDate(firstDay, (sdWeek-1)*7);    //시작일로 부터 주차의 날짜만큼 더해준다.
+
+    return returnDay;
+}
+
+/************************************************************************************************
+ * Function : 두 일자간의 차이 일수 계산
+ * @param   : sStartDate(yyyyMMdd형태의 From 일자) ( 예 : "20121122" )
+ * @param   : sEndDate(yyyyMMdd형태의 To 일자) ( 예 : "20121202" )
+ * Return   : 차이 일수
+************************************************************************************************/
+function fn_diffDate(sStartDate, sEndDate)
+{
+    sStartDate = String(sStartDate);
+    sEndDate   = String(sEndDate);
+
+    var objEndDate = new Date(parseInt(sEndDate.substring(0, 4),  10), parseInt(sEndDate.substring(4, 6) - 1,  10), parseInt(sEndDate.substring(6, 8), 10));
+    var objStartDate = new Date(parseInt(sStartDate.substring(0, 4),  10), parseInt(sStartDate.substring(4, 6) - 1,  10), parseInt(sStartDate.substring(6, 8), 10));
+
+    return parseInt((objEndDate - objStartDate) / (1000 * 60 * 60 * 24));
+}
+
+/************************************************************************************************
+ * Function : 두 월간의 차이 월수 계산
+ * @param   : sStartDate(yyyyMMdd형태의 From 일자) ( 예 : "20121122" )
+ * @param   : sEndDate(yyyyMMdd형태의 To 일자) ( 예 : "20121202" )
+ * Return   : 차이 월수
+************************************************************************************************/
+function fn_diffMonth(sStartDate, sEndDate)
+{
+    var nStartMon, nEndMon;
+
+    nStartMon = parseInt(String(sStartDate).substring(0, 4)) * 12 + parseInt(String(sStartDate).substring(4, 6) - 1);
+    nEndMon = parseInt(String(sEndDate).substring(0, 4)) * 12 + parseInt(String(sEndDate).substring(4, 6) - 1);
+
+    return (nEndMon - nStartMon);
+}
+
+/************************************************************************************************
+ * Function : 두 시간간의 차이 계산
+ * @param   : strStartTime(HHmmss형태의 From 시간) (예 : "033025")
+ * @param   : strEndTime(HHmmss형태의 To 시간) (예 : "034025")
+ * @param   : sType(구하고자하는 타입(시, 분, 초)) (예 : "HH")
+ * Return   : 차이 시간
+************************************************************************************************/
+function fn_diffTime(sStartTime, sEndTime, sType)
+{
+    var nFromHH = parseInt(sStartTime.substring(0, 2));
+    var nFromMm = parseInt(sStartTime.substring(2, 4));
+    var nFromSs = parseInt(sStartTime.substring(4, 6));
+
+    var nToHH = parseInt(sEndTime.substring(0, 2));
+    var nToMm = parseInt(sEndTime.substring(2, 4));
+    var nToSs = parseInt(sEndTime.substring(4, 6));
+
+    var nFromTotalSs = (nFromHH * 3600) + (nFromMm * 60) + nFromSs;
+    var nToTotalSs   = (nToHH * 3600) + (nToMm * 60) + nToSs;
+
+    if(sType == "HH")
+        return (Math.floor((nToTotalSs - nFromTotalSs) / 3600));
+    else if(sType == "mm")
+        return (Math.floor((nToTotalSs - nFromTotalSs) / 60));
+    else if(sType == "ss")
+        return (nToTotalSs - nFromTotalSs);
+}
+
+/************************************************************************************************
+ * Function : 두 시간간의 차이 계산
+ * @param   : strStartTime(HHmmss형태의 From 시간) (예 : "033025000")
+ * @param   : strEndTime(HHmmss형태의 To 시간) (예 : "034025000")
+ * @param   : sType(구하고자하는 타입(시, 분, 초)) (예 : "HH")
+ * Return   : 차이 시간
+************************************************************************************************/
+function fn_diffTime2(sStartTime, sEndTime, sType)
+{
+    var nFromHH = Number(sStartTime.substring(0, 2));
+    var nFromMm = Number(sStartTime.substring(2, 4));
+    var nFromSs = Number(sStartTime.substring(4, 6));
+    var nFromMs = Number(sStartTime.substring(6, 9));
+
+    var nToHH = Number(sEndTime.substring(0, 2));
+    var nToMm = Number(sEndTime.substring(2, 4));
+    var nToSs = Number(sEndTime.substring(4, 6));
+    var nToMs = Number(sEndTime.substring(6, 9));
+    var nFromTotal_ss = (nFromHH * 3600) + (nFromMm * 60) + nFromSs + (nFromMs*0.001);
+    var nToTotal_ss = (nToHH * 3600) + (nToMm * 60) + nToSs + (nToMs*0.001);
+
+    if(sType == "HH")
+        return (Math.floor((nToTotal_ss - nFromTotal_ss) / 3600000));
+    else if(sType == "mm")
+        return (Math.floor((nToTotal_ss - nFromTotal_ss) / 60000));
+    else if(sType == "ss")
+        return Math.round((nToTotal_ss - nFromTotal_ss), 3);
+}
+
+
+
+
+/************************************************************************************************
+ * Function : 한달전 날짜 구하는 함수
+ * @param   : sDate - yyyyMMdd형태의 From 일자 (예 : "20121122")
+ * Return   : 한달전 날짜(yyyyMMdd형태)
+************************************************************************************************/
+
+function fn_getPretMonth(sDate)
+{
+    if(fn_isNull(sDate)) sDate = fn_today();
+    return fn_addMonth(sDate, -1);
+}
+
+
+
+/************************************************************************************************
+ * Function : 한달후 날짜 구하는 함수.
+ * @param   : sDate - yyyyMMdd형태의 From 일자 (예 : "20121122")
+ * Return   : 한달후 날짜(yyyyMMdd형태)
+************************************************************************************************/
+
+function fn_getAfterMonth(sDate) 
+{
+    if(fn_isNull(sDate)) sDate = fn_today();
+    return fn_addMonth(sDate, 1);
+}
+
+
+
+
+/************************************************************************************************
+ * Function : 문자를 날짜로 변환
+ * @param   : sDate - yyyyMMdd형태의 From 일자 (예 : "20121122")
+ * Return   : Date Object
+************************************************************************************************/
+function fn_str2Date(sDate)
+{
+    if(fn_isNull(sDate)) sDate = fn_today();
+    return new Date(parseInt(sDate.substr(0, 4)), parseInt(sDate.substr(4, 2))-1, parseInt(sDate.substr(6, 2)));
+}
+
+/************************************************************************************************
+ * Function : 날짜를 문자로 변환
+ * @param   : objDate - Date Object
+ * Return   : yyyyMMdd형태의 문자열
+************************************************************************************************/
+function fn_date2Str(objDate)
+{
+    if(objDate == null) return "";
+
+    if(objDate.constructor != Date) return "";
+
+    return objDate.getFullYear() + fn_Lpad((objDate.getMonth()+1) + "", 2, "0") + fn_Lpad(objDate.getDate() + "", 2, "0") 
+}
+
+/************************************************************************************************
+ * Function : 현재월 1일 만들기.
+ * @param   : sDate - yyyyMMdd형태의 From 일자 (예 : "20121122")
+ * Return   : 해당월 1일( yyyyMMdd형태의 문자열)
+************************************************************************************************/
+function fn_getFirstDate(sDate)
+{
+    if(fn_isNull(sDate)) sDate = fn_today();
+
+    var objDate = fn_str2Date(sDate);
+
+    return  objDate.getFullYear() + fn_Lpad((objDate.getMonth()+1) + "", 2, "0") + "01";
+}
+
+
+
+
+
+/************************************************************************************************
+ * Function : 날자 시간 계산
+ * @param   : sFromDateTime - yyyyMMddhhmiss형식 문자열의 시작 시간
+ * @param   : sToDateTime - yyyyMMddhhmiss형식 문자열의 끝 시간
+ * @param   : sRtnTp - 결과 값 타입
+              (DATETIME_DAY | DATETIME_HOUR | DATETIME_MINUTE | DATETIME_SECOND | DATETIME_MILISECOND)
+ * Return   : 계산된 문자열
+************************************************************************************************/
+function fn_calcDataTime(sFromDateTime, sToDateTime, sRtnTp)
+{
+    if(fn_isNull(sFromDateTime) || fn_isNull(sToDateTime)) return "";
+    if(sFromDateTime.length < 14 || sToDateTime.length < 14) return "";
+
+    var iMilliSec = 1000;
+    var iMilliMin = iMilliSec * 60;
+    var iMilliHr  = iMilliMin * 60;
+    var iMilliDy  = iMilliHr * 24;
+
+    sFromDateTime = String(sFromDateTime);
+    sToDateTime = String(sToDateTime);
+    var objFromDateTime = new Date(sFromDateTime.substr(0, 4), sFromDateTime.substr(4, 2), sFromDateTime.substr(6, 2),
+                                sFromDateTime.substr(8, 2), sFromDateTime.substr(10,2), sFromDateTime.substr(12,2));
+    var objToDateTime = new Date(sToDateTime.substr(0, 4), sToDateTime.substr(4, 2), sToDateTime.substr(6, 2),
+                                 sToDateTime.substr(8, 2), sToDateTime.substr(10,2), sToDateTime.substr(12,2));
+    var nDiffDate = objToDateTime - objFromDateTime;
+
+    switch(sRtnTp){
+        case "DATETIME_MILISECOND":
+            return nDiffDate;
+        case "DATETIME_SECOND":
+            return parseInt((nDiffDate / iMilliSec));
+        case "DATETIME_MINUTE":
+            return parseInt((nDiffDate / iMilliMin));
+        case "DATETIME_HOUR":
+            return parseInt((nDiffDate / iMilliHr));
+        default:
+            return parseInt(nDiffDate / iMilliDy);
+    }
+
+    return sRetVal;
+}
+
+/************************************************************************************************
+ * Function : 윤년여부 확인
+ * @param   : sDate - yyyyMMdd형태의 날짜
+ * Return   : true/false(정합 여부)
+************************************************************************************************/
+function fn_isLeapYear(sDate)
+{
+    if(fn_isNull(sDate)) return false;
+    if(String(sDate).trim().length != 8) return false;
+    if(!isNumeric(sDate)) return false;
+
+    var iY = parseInt(sDate.toString().substring(0, 4), 10);
+
+    if((iY % 4) == 0){
+        if((iY % 100) != 0 || (iY % 400) == 0)
+            return true;
+        else
+            return false;
+    }
+    else
+        return false;
+}
+
+
+
+/************************************************************************************************
+ * Function : 양력을 음력으로 변환해주는 함수 (처리가능 기간  1841 - 2043년)
+ * @param   : sDate - yyyyMMdd형태의 양력일자 ( 예 : "20121122" )
+  * Return   :  - 성공 = Flag(1 Byte) + (yyyyMMdd형태의 음력일자)
+                  ( Flag : 평달 = "0", 윤달 = "1" )
+                - 실패 = "" ( 1841 ~ 2043 범위 오류시 )
+************************************************************************************************/
+function Solar2Lunar(sDate)
+{
+    var sMd = "31,0,31,30,31,30,31,31,30,31,30,31";
+    var aMd = new Array();
+
+    var aBaseInfo = new Array();
+    var aDt = new Array();      // 매년의 음력일수를 저장할 배열 변수
+    var td;                 // 음력일을 계산하기 위해 양력일과의 차이를 저장할 변수
+    var td1;                    // 1840년까지의 날수
+    var td2;                    // 현재까지의 날수
+    var mm;                 // 임시변수
+    var nLy, nLm, nLd;          // 계산된 음력 년, 월, 일을 저장할 변수
+    var sLyoon;                 // 현재월이 윤달임을 표시
+
+    if( fn_isNull(sDate) )     return "";
+    
+    sY = parseInt(sDate.substr(0,4), 10);
+    sM = parseInt(sDate.substr(4,2), 10);
+    sD = parseInt(sDate.substr(6,2), 10);
+    if( sY < 1841 || sY > 2043 )    return "";
+
+    aBaseInfo = _SolarBase();
+    aMd = sMd.split(",");
+    if( IsLeapYear(sDate) == true )                 
+        aMd[1] = 29;
+    else
+        aMd[1] = 28;    
+    
+    td1 = 672069;                // 672069 = 1840 * 365 + 1840/4 - 1840/100 + 1840/400 + 23  //1840년까지 날수
+        
+    // 1841년부터 작년까지의 날수
+    td2 = (sY - 1) * 365 + parseInt((sY - 1)/4) - parseInt((sY - 1)/100) + parseInt((sY - 1)/400);
+        
+    // 전월까지의 날수를 더함
+    for( i = 0 ; i <= sM - 2 ; i++ )
+        td2 = td2 + parseInt(aMd[i]);
+
+    // 현재일까지의 날수를 더함
+    td2 = td2 + sD;
+
+    // 양력현재일과 음력 1840년까지의 날수의 차이
+    td = td2 - td1 + 1;
+    
+    // 1841년부터 음력날수를 계산
+    for( i = 0 ; i <= sY - 1841 ; i++ )
+    {
+        aDt[i] = 0;
+        for( j = 0 ; j <= 11 ; j++ )
+        {
+            switch( parseInt(aBaseInfo[i*12 + j]) )
+            {
+                case 1 : mm = 29;
+                         break;
+                case 2 : mm = 30;
+                         break;             
+                case 3 : mm = 58;   // 29 + 29
+                         break;             
+                case 4 : mm = 59;   // 29 + 30
+                         break;             
+                case 5 : mm = 59;   // 30 + 29
+                         break;             
+                case 6 : mm = 60;   // 30 + 30
+                         break;             
+            }
+            aDt[i] = aDt[i] + mm;
+        }
+    }
+        
+    // 1840년 이후의 년도를 계산 - 현재까지의 일수에서 위에서 계산된 1841년부터의 매년 음력일수를 빼가면수 년도를 계산
+    nLy = 0;
+    do
+    {
+        td = td - aDt[nLy];
+        nLy = nLy + 1;
+    }
+    while(td > aDt[nLy]);
+    
+    nLm = 0;
+    sLyoon = "0";           // 현재월이 윤달임을 표시할 변수 - 기본값 평달
+    do
+    {
+        if( parseInt(aBaseInfo[nLy*12 + nLm]) <= 2 )
+        {
+            mm = parseInt(aBaseInfo[nLy*12 + nLm]) + 28;
+            if( td > mm )
+            {
+                td = td - mm;
+                nLm = nLm + 1;
+            }
+            else
+                break;
+        }
+        else
+        {
+            switch( parseInt(aBaseInfo[nLy*12 + nLm]) )
+            {
+                case 3 :
+                    m1 = 29;
+                    m2 = 29;
+                    break;
+                case 4 : 
+                    m1 = 29;
+                    m2 = 30;
+                    break;                  
+                case 5 : 
+                    m1 = 30;
+                    m2 = 29;
+                    break;                  
+                case 6 : 
+                    m1 = 30;
+                    m2 = 30;
+                    break;                  
+            }
+
+            if( td > m1 )
+            {
+                td = td - m1;
+                if( td > m2 )
+                {
+                    td = td - m2;
+                    nLm = nLm + 1;
+                }
+                else
+                {
+                    sLyoon = "1";
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    while(1);
+    
+    nLy = nLy + 1841;
+    nLm = nLm + 1;
+    nLd = td;
+
+    return sLyoon+nLy+fn_Lpad(nLm, 2, '0')+fn_Lpad(nLd, 2, '0');
+}
+
+/************************************************************************************************
+ * Function : 음력을 양력으로 변환해주는 함수 (처리가능 기간  1841 - 2043년)
+ * @param   : sDate - Flag(1 Byte)+yyyyMMdd형태의 음력일자 ( 예 : "020121122" )
+                ( Flag : 평달 = "0", 윤달 = "1" )
+  * Return   :  - 성공 = yyyyMMdd형태의 양력일자
+                - 실패 = null 
+                - 1841 ~ 2043 범위 오류의 경우
+                - sDate가 9자리가 아닐경우
+                - sDate의 첫자리 Flag가 "0"도 아니고 "1"도 아닌 경우
+************************************************************************************************/
+function Lunar2Solar(sDate)
+{
+    var sMd = "31,0,31,30,31,30,31,31,30,31,30,31";
+    var aMd = new Array();  
+    var aBaseInfo = new Array();    
+    
+    var nLy, nLm, nLd, sLflag;      // 전해온 음력 인자값을 저장할 년, 월, 일, 윤달여부 임시변수
+    var nSy, nSm, nSd;              // 계산된 양력 년, 월, 일을 저장할 변수
+    var y1, m1, i, j, y2, y3;   // 임시변수 
+    var leap;
+
+    if( fn_isNull(sDate) )         return "";
+    if( sDate.length != 9 )     return "";
+    
+    sLflag = sDate.substr(0,1);
+    nLy = parseInt(sDate.substr(1,4), 10);
+    nLm = parseInt(sDate.substr(5,2), 10);
+    nLd = parseInt(sDate.substr(7,2), 10);
+    if( nLy < 1841 || nLy > 2043 )          return "";
+    if( sLflag != "0" && sLflag != "1" )    return "";
+        
+    aBaseInfo = _SolarBase();
+    aMd = sMd.split(",");
+    if( IsLeapYear(sDate.substr(1,8)) == true )                 
+        aMd[1] = 29;
+    else
+        aMd[1] = 28;    
+        
+    y1 = nLy - 1841;
+    m1 = nLm - 1;
+    leap = 0;
+    if( parseInt(aBaseInfo[y1*12 + m1]) > 2 )
+        leap = IsLeayYear(nLy+"0101");
+    
+    if( leap == 1 )
+    {
+        switch( parseInt(aBaseInfo[y1*12 + m1]) )
+        {
+            case 3 : mm = 29;
+                     break;
+            case 4 : mm = 30;
+                     break;         
+            case 5 : mm = 29;
+                     break;         
+            case 6 : mm = 30;
+                     break;
+        }
+    }
+    else
+    {
+        switch( parseInt(aBaseInfo[y1*12 + m1]) )
+        {
+            case 1 : mm = 29;
+                     break;         
+            case 2 : mm = 30;
+                     break;         
+            case 3 : mm = 29;
+                     break;         
+            case 4 : mm = 29;
+                     break;         
+            case 5 : mm = 30;
+                     break;         
+            case 6 : mm = 30;
+                     break;         
+        }
+    }
+
+    td = 0;
+    for( i = 0 ; i <= y1 - 1 ; i++ )
+    {
+        for( j = 0 ; j <= 11 ; j++ )
+        {
+            switch( parseInt(aBaseInfo[i*12 + j]) )
+            {
+                case 1 : td = td + 29;
+                         break;
+                case 2 : td = td + 30;
+                         break;             
+                case 3 : td = td + 58;
+                         break;             
+                case 4 : td = td + 59;
+                         break;             
+                case 5 : td = td + 59;
+                         break;             
+                case 6 : td = td + 60;
+                         break;             
+            }
+        }
+    }
+
+    for( j = 0 ; j <= m1 - 1 ; j++ )
+    {
+        switch( parseInt(aBaseInfo[y1*12 + j]) )
+        {
+            case 1 : td = td + 29;
+                     break;         
+            case 2 : td = td + 30;
+                     break;                     
+            case 3 : td = td + 58;
+                     break;                     
+            case 4 : td = td + 59;
+                     break;                     
+            case 5 : td = td + 59;
+                     break;                     
+            case 6 : td = td + 60;
+                     break;                     
+        }
+    }
+
+    if( leap == 1 )
+    {
+        switch( parseInt(aBaseInfo[y1*12 + m1]) )
+        {
+            case 3 : mm = 29;
+                     break;                     
+            case 4 : mm = 29;
+                     break;                     
+            case 5 : mm = 30;
+                     break;                     
+            case 6 : mm = 30;
+                     break;                     
+        }
+    }
+    
+    td = td + nLd + 22;
+    
+    if( sLflag == "1" )
+    {
+        switch( parseInt(aBaseInfo[y1*12 + m1]) )
+        {
+            case 3 : td = td + 29;
+                     break;                     
+            case 4 : td = td + 30;
+                     break;                     
+            case 5 : td = td + 29;
+                     break;                     
+            case 6 : td = td + 30;
+                     break;                     
+        }
+    }
+    
+    y1 = 1840;
+    do
+    {
+        y1 = y1 + 1;
+        leap = IsLeapYear(y1+"0101");
+
+        if( leap == 1 )
+            y2 = 366;
+        else
+            y2 = 365;
+
+        if( td <= y2 )
+            break;
+            
+        td = td - y2;
+    }
+    while(1);
+
+    nSy = y1;
+    aMd[1] = y2 - 337;
+    m1 = 0;
+    do
+    {
+        m1 = m1 + 1;
+        if( td <= parseInt(aMd[m1-1]) )
+            break;
+        td = td - parseInt(aMd[m1-1]);
+    }
+    while(1);
+    
+    nSm = m1;
+    nSd = td;
+    y3 = nSy;
+    td = y3 * 365 + parseInt(y3/4) - parseInt(y3/100) + parseInt(y3/400);
+    for( i = 0 ; i <= nSm - 1 ; i++ )
+        td = td + parseInt(aMd[i]);
+
+    td = td + nSd;
+
+    return y3 + fn_Lpad(nSm, 2, '0')+fn_Lpad(nSd, 2, '0');
+}
+
+ /************************************************************************************************
+ * Function :  각 월별 음력 기준 정보를 처리하는 함수(처리가능 기간  1841 - 2043년)
+     단, 내부에서 사용하는 함수임    
+   return 
+    - 성공 = 음력 기준정보
+    - 실패 = 
+************************************************************************************************/
+function _SolarBase()
+{
+    var kk;
+    
+    //1841
+    kk = "1,2,4,1,1,2,1,2,1,2,2,1,";
+    kk += "2,2,1,2,1,1,2,1,2,1,2,1,";
+    kk += "2,2,2,1,2,1,4,1,2,1,2,1,";
+    kk += "2,2,1,2,1,2,1,2,1,2,1,2,";
+    kk += "1,2,1,2,2,1,2,1,2,1,2,1,";
+    kk += "2,1,2,1,5,2,1,2,2,1,2,1,";
+    kk += "2,1,1,2,1,2,1,2,2,2,1,2,";
+    kk += "1,2,1,1,2,1,2,1,2,2,2,1,";
+    kk += "2,1,2,3,2,1,2,1,2,1,2,2,";
+    kk += "2,1,2,1,1,2,1,1,2,2,1,2,";
+    //1851
+    kk += "2,2,1,2,1,1,2,1,2,1,5,2,";
+    kk += "2,1,2,2,1,1,2,1,2,1,1,2,";
+    kk += "2,1,2,2,1,2,1,2,1,2,1,2,";
+    kk += "1,2,1,2,1,2,5,2,1,2,1,2,";
+    kk += "1,1,2,1,2,2,1,2,2,1,2,1,";
+    kk += "2,1,1,2,1,2,1,2,2,2,1,2,";
+    kk += "1,2,1,1,5,2,1,2,1,2,2,2,";
+    kk += "1,2,1,1,2,1,1,2,2,1,2,2,";
+    kk += "2,1,2,1,1,2,1,1,2,1,2,2,";
+    kk += "2,1,6,1,1,2,1,1,2,1,2,2,";
+    //1861
+    kk += "1,2,2,1,2,1,2,1,2,1,1,2,";
+    kk += "2,1,2,1,2,2,1,2,2,3,1,2,";
+    kk += "1,2,2,1,2,1,2,2,1,2,1,2,";
+    kk += "1,1,2,1,2,1,2,2,1,2,2,1,";
+    kk += "2,1,1,2,4,1,2,2,1,2,2,1,";
+    kk += "2,1,1,2,1,1,2,2,1,2,2,2,";
+    kk += "1,2,1,1,2,1,1,2,1,2,2,2,";
+    kk += "1,2,2,3,2,1,1,2,1,2,2,1,";
+    kk += "2,2,2,1,1,2,1,1,2,1,2,1,";
+    kk += "2,2,2,1,2,1,2,1,1,5,2,1,";
+    //1871
+    kk += "2,2,1,2,2,1,2,1,2,1,1,2,";
+    kk += "1,2,1,2,2,1,2,1,2,2,1,2,";
+    kk += "1,1,2,1,2,4,2,1,2,2,1,2,";
+    kk += "1,1,2,1,2,1,2,1,2,2,2,1,";
+    kk += "2,1,1,2,1,1,2,1,2,2,2,1,";
+    kk += "2,2,1,1,5,1,2,1,2,2,1,2,";
+    kk += "2,2,1,1,2,1,1,2,1,2,1,2,";
+    kk += "2,2,1,2,1,2,1,1,2,1,2,1,";
+    kk += "2,2,4,2,1,2,1,1,2,1,2,1,";
+    kk += "2,1,2,2,1,2,2,1,2,1,1,2,";
+    //1881
+    kk += "1,2,1,2,1,2,5,2,2,1,2,1,";
+    kk += "1,2,1,2,1,2,1,2,2,1,2,2,";
+    kk += "1,1,2,1,1,2,1,2,2,2,1,2,";
+    kk += "2,1,1,2,3,2,1,2,2,1,2,2,";
+    kk += "2,1,1,2,1,1,2,1,2,1,2,2,";
+    kk += "2,1,2,1,2,1,1,2,1,2,1,2,";
+    kk += "2,2,1,5,2,1,1,2,1,2,1,2,";
+    kk += "2,1,2,2,1,2,1,1,2,1,2,1,";
+    kk += "2,1,2,2,1,2,1,2,1,2,1,2,";
+    kk += "1,5,2,1,2,2,1,2,1,2,1,2,";
+    //1891
+    kk += "1,2,1,2,1,2,1,2,2,1,2,2,";
+    kk += "1,1,2,1,1,5,2,2,1,2,2,2,";
+    kk += "1,1,2,1,1,2,1,2,1,2,2,2,";
+    kk += "1,2,1,2,1,1,2,1,2,1,2,2,";
+    kk += "2,1,2,1,5,1,2,1,2,1,2,1,";
+    kk += "2,2,2,1,2,1,1,2,1,2,1,2,";
+    kk += "1,2,2,1,2,1,2,1,2,1,2,1,";
+    kk += "2,1,5,2,2,1,2,1,2,1,2,1,";
+    kk += "2,1,2,1,2,1,2,2,1,2,1,2,";
+    kk += "1,2,1,1,2,1,2,5,2,2,1,2,";
+    //1901
+    kk += "1,2,1,1,2,1,2,1,2,2,2,1,";
+    kk += "2,1,2,1,1,2,1,2,1,2,2,2,";
+    kk += "1,2,1,2,3,2,1,1,2,2,1,2,";
+    kk += "2,2,1,2,1,1,2,1,1,2,2,1,";
+    kk += "2,2,1,2,2,1,1,2,1,2,1,2,";
+    kk += "1,2,2,4,1,2,1,2,1,2,1,2,";
+    kk += "1,2,1,2,1,2,2,1,2,1,2,1,";
+    kk += "2,1,1,2,2,1,2,1,2,2,1,2,";
+    kk += "1,5,1,2,1,2,1,2,2,2,1,2,";
+    kk += "1,2,1,1,2,1,2,1,2,2,2,1,";
+    //1911
+    kk += "2,1,2,1,1,5,1,2,2,1,2,2,";
+    kk += "2,1,2,1,1,2,1,1,2,2,1,2,";
+    kk += "2,2,1,2,1,1,2,1,1,2,1,2,";
+    kk += "2,2,1,2,5,1,2,1,2,1,1,2,";
+    kk += "2,1,2,2,1,2,1,2,1,2,1,2,";
+    kk += "1,2,1,2,1,2,2,1,2,1,2,1,";
+    kk += "2,3,2,1,2,2,1,2,2,1,2,1,";
+    kk += "2,1,1,2,1,2,1,2,2,2,1,2,";
+    kk += "1,2,1,1,2,1,5,2,2,1,2,2,";
+    kk += "1,2,1,1,2,1,1,2,2,1,2,2,";
+    //1921
+    kk += "2,1,2,1,1,2,1,1,2,1,2,2,";
+    kk += "2,1,2,2,3,2,1,1,2,1,2,2,";
+    kk += "1,2,2,1,2,1,2,1,2,1,1,2,";
+    kk += "2,1,2,1,2,2,1,2,1,2,1,1,";
+    kk += "2,1,2,5,2,1,2,2,1,2,1,2,";
+    kk += "1,1,2,1,2,1,2,2,1,2,2,1,";
+    kk += "2,1,1,2,1,2,1,2,2,1,2,2,";
+    kk += "1,5,1,2,1,1,2,2,1,2,2,2,";
+    kk += "1,2,1,1,2,1,1,2,1,2,2,2,";
+    kk += "1,2,2,1,1,5,1,2,1,2,2,1,";
+    //1931
+    kk += "2,2,2,1,1,2,1,1,2,1,2,1,";
+    kk += "2,2,2,1,2,1,2,1,1,2,1,2,";
+    kk += "1,2,2,1,6,1,2,1,2,1,1,2,";
+    kk += "1,2,1,2,2,1,2,2,1,2,1,2,";
+    kk += "1,1,2,1,2,1,2,2,1,2,2,1,";
+    kk += "2,1,4,1,2,1,2,1,2,2,2,1,";
+    kk += "2,1,1,2,1,1,2,1,2,2,2,1,";
+    kk += "2,2,1,1,2,1,4,1,2,2,1,2,";
+    kk += "2,2,1,1,2,1,1,2,1,2,1,2,";
+    kk += "2,2,1,2,1,2,1,1,2,1,2,1,";
+    //1941
+    kk += "2,2,1,2,2,4,1,1,2,1,2,1,";
+    kk += "2,1,2,2,1,2,2,1,2,1,1,2,";
+    kk += "1,2,1,2,1,2,2,1,2,2,1,2,";
+    kk += "1,1,2,4,1,2,1,2,2,1,2,2,";
+    kk += "1,1,2,1,1,2,1,2,2,2,1,2,";
+    kk += "2,1,1,2,1,1,2,1,2,2,1,2,";
+    kk += "2,5,1,2,1,1,2,1,2,1,2,2,";
+    kk += "2,1,2,1,2,1,1,2,1,2,1,2,";
+    kk += "2,2,1,2,1,2,3,2,1,2,1,2,";
+    kk += "2,1,2,2,1,2,1,1,2,1,2,1,";
+    //1951
+    kk += "2,1,2,2,1,2,1,2,1,2,1,2,";
+    kk += "1,2,1,2,4,2,1,2,1,2,1,2,";
+    kk += "1,2,1,1,2,2,1,2,2,1,2,2,";
+    kk += "1,1,2,1,1,2,1,2,2,1,2,2,";
+    kk += "2,1,4,1,1,2,1,2,1,2,2,2,";
+    kk += "1,2,1,2,1,1,2,1,2,1,2,2,";
+    kk += "2,1,2,1,2,1,1,5,2,1,2,2,";
+    kk += "1,2,2,1,2,1,1,2,1,2,1,2,";
+    kk += "1,2,2,1,2,1,2,1,2,1,2,1,";
+    kk += "2,1,2,1,2,5,2,1,2,1,2,1,";
+    //1961
+    kk += "2,1,2,1,2,1,2,2,1,2,1,2,";
+    kk += "1,2,1,1,2,1,2,2,1,2,2,1,";
+    kk += "2,1,2,3,2,1,2,1,2,2,2,1,";
+    kk += "2,1,2,1,1,2,1,2,1,2,2,2,";
+    kk += "1,2,1,2,1,1,2,1,1,2,2,1,";
+    kk += "2,2,5,2,1,1,2,1,1,2,2,1,";
+    kk += "2,2,1,2,2,1,1,2,1,2,1,2,";
+    kk += "1,2,2,1,2,1,5,2,1,2,1,2,";
+    kk += "1,2,1,2,1,2,2,1,2,1,2,1,";
+    kk += "2,1,1,2,2,1,2,1,2,2,1,2,";
+    //1971
+    kk += "1,2,1,1,5,2,1,2,2,2,1,2,";
+    kk += "1,2,1,1,2,1,2,1,2,2,2,1,";
+    kk += "2,1,2,1,1,2,1,1,2,2,2,1,";
+    kk += "2,2,1,5,1,2,1,1,2,2,1,2,";
+    kk += "2,2,1,2,1,1,2,1,1,2,1,2,";
+    kk += "2,2,1,2,1,2,1,5,2,1,1,2,";
+    kk += "2,1,2,2,1,2,1,2,1,2,1,1,";
+    kk += "2,2,1,2,1,2,2,1,2,1,2,1,";
+    kk += "2,1,1,2,1,6,1,2,2,1,2,1,";
+    kk += "2,1,1,2,1,2,1,2,2,1,2,2,";
+    //1981
+    kk += "1,2,1,1,2,1,1,2,2,1,2,2,";
+    kk += "2,1,2,3,2,1,1,2,2,1,2,2,";
+    kk += "2,1,2,1,1,2,1,1,2,1,2,2,";
+    kk += "2,1,2,2,1,1,2,1,1,5,2,2,";
+    kk += "1,2,2,1,2,1,2,1,1,2,1,2,";
+    kk += "1,2,2,1,2,2,1,2,1,2,1,1,";
+    kk += "2,1,2,2,1,5,2,2,1,2,1,2,";
+    kk += "1,1,2,1,2,1,2,2,1,2,2,1,";
+    kk += "2,1,1,2,1,2,1,2,2,1,2,2,";
+    kk += "1,2,1,1,5,1,2,1,2,2,2,2,";
+    //1991
+    kk += "1,2,1,1,2,1,1,2,1,2,2,2,";
+    kk += "1,2,2,1,1,2,1,1,2,1,2,2,";
+    kk += "1,2,5,2,1,2,1,1,2,1,2,1,";
+    kk += "2,2,2,1,2,1,2,1,1,2,1,2,";
+    kk += "1,2,2,1,2,2,1,5,2,1,1,2,";
+    kk += "1,2,1,2,2,1,2,1,2,2,1,2,";
+    kk += "1,1,2,1,2,1,2,2,1,2,2,1,";
+    kk += "2,1,1,2,3,2,2,1,2,2,2,1,";
+    kk += "2,1,1,2,1,1,2,1,2,2,2,1,";
+    kk += "2,2,1,1,2,1,1,2,1,2,2,1,";
+    //2001
+    kk += "2,2,2,3,2,1,1,2,1,2,1,2,";
+    kk += "2,2,1,2,1,2,1,1,2,1,2,1,";
+    kk += "2,2,1,2,2,1,2,1,1,2,1,2,";
+    kk += "1,5,2,2,1,2,1,2,2,1,1,2,";
+    kk += "1,2,1,2,1,2,2,1,2,2,1,2,";
+    kk += "1,1,2,1,2,1,5,2,2,1,2,2,";
+    kk += "1,1,2,1,1,2,1,2,2,2,1,2,";
+    kk += "2,1,1,2,1,1,2,1,2,2,1,2,";
+    kk += "2,2,1,1,5,1,2,1,2,1,2,2,";
+    kk += "2,1,2,1,2,1,1,2,1,2,1,2,";
+    //2011
+    kk += "2,1,2,2,1,2,1,1,2,1,2,1,";
+    kk += "2,1,6,2,1,2,1,1,2,1,2,1,";
+    kk += "2,1,2,2,1,2,1,2,1,2,1,2,";
+    kk += "1,2,1,2,1,2,1,2,5,2,1,2,";
+    kk += "1,2,1,1,2,1,2,2,2,1,2,2,";
+    kk += "1,1,2,1,1,2,1,2,2,1,2,2,";
+    kk += "2,1,1,2,3,2,1,2,1,2,2,2,";
+    kk += "1,2,1,2,1,1,2,1,2,1,2,2,";
+    kk += "2,1,2,1,2,1,1,2,1,2,1,2,";
+    kk += "2,1,2,5,2,1,1,2,1,2,1,2,";
+    //2021
+    kk += "1,2,2,1,2,1,2,1,2,1,2,1,";
+    kk += "2,1,2,1,2,2,1,2,1,2,1,2,";
+    kk += "1,5,2,1,2,1,2,2,1,2,1,2,";
+    kk += "1,2,1,1,2,1,2,2,1,2,2,1,";
+    kk += "2,1,2,1,1,5,2,1,2,2,2,1,";
+    kk += "2,1,2,1,1,2,1,2,1,2,2,2,";
+    kk += "1,2,1,2,1,1,2,1,1,2,2,2,";
+    kk += "1,2,2,1,5,1,2,1,1,2,2,1,";
+    kk += "2,2,1,2,2,1,1,2,1,1,2,2,";
+    kk += "1,2,1,2,2,1,2,1,2,1,2,1,";
+    //2031
+    kk += "2,1,5,2,1,2,2,1,2,1,2,1,";
+    kk += "2,1,1,2,1,2,2,1,2,2,1,2,";
+    kk += "1,2,1,1,2,1,5,2,2,2,1,2,";
+    kk += "1,2,1,1,2,1,2,1,2,2,2,1,";
+    kk += "2,1,2,1,1,2,1,1,2,2,1,2,";
+    kk += "2,2,1,2,1,4,1,1,2,1,2,2,";
+    kk += "2,2,1,2,1,1,2,1,1,2,1,2,";
+    kk += "2,2,1,2,1,2,1,2,1,1,2,1,";
+    kk += "2,2,1,2,5,2,1,2,1,2,1,1,";
+    kk += "2,1,2,2,1,2,2,1,2,1,2,1,";
+    //2041
+    kk += "2,1,1,2,1,2,2,1,2,2,1,2,";
+    kk += "1,5,1,2,1,2,1,2,2,2,1,2,";
+    kk += "1,2,1,1,2,1,1,2,2,1,2,2";
+    
+    var arr = new Array();
+    arr = kk.split(",");
+    
+    return arr;
+}
+
+
+ /************************************************************************************************
+ * Function :  ag_grid 초기값 세팅 및 비교
+     gird 초기값을 저장한다.
+   param : _GRID [ag_grid]
+   return  
+************************************************************************************************/
+let _gInitGridArry = {};
+function fn_setInitData(_GRID){
+//     console.log(_GRID);
+    
+    let _classId = (_GRID.gridDiv.className).split(" ");
+    
+    if(fn_isNull(_GRID.id))_GRID.id = _classId[0];
+    
+    let initRows = [];
+    _GRID.gridOptions.api.forEachNode( function(rowNode, index) {
+        rowNode.data.etype = "";
+        initRows.push(rowNode.data);
+    });
+    
+//     console.log('-----------------------forEachNode------------------------------');
+//     console.log(initRows);
+    
+//    _gInitGridArry[_GRID.id] = initRows; //주소값 보유
+    _gInitGridArry[_GRID.id] = $.parseJSON(JSON.stringify(initRows)); // 주소값 삭제
+
+//     console.log(_gInitGridArry);
+
+}
+
+ /************************************************************************************************
+ * Function :  ag_grid 초기값 비교
+     gird row값 변경여부를 확인한다.
+   param : _E[ onCellValueChanged => event ], _GRID [ag_grid]
+   return  
+************************************************************************************************/
+function fn_chkUpdGrid(_E, _GRID){
+    
+//    console.log(_E);
+    
+    if(_E.column.colId == "etype") return false;
+    
+//    let rowNode = _GRID.gridOptions.api.getDisplayedRowAtIndex(_E.rowIndex);
+    
+    let initData = _gInitGridArry[_GRID.id];
+    
+//    console.log("etype ==> "+_E.data.etype);
+    if(_E.data.etype != "D" && _E.data.etype != "C" ){
+        let isChange = false;
+        
+        //조회된 값과 별개로 화면에서만 처리하는 컬럼에 대한 체크 추가
+        if(!initData[_E.rowIndex][_E.column.colId]) initData[_E.rowIndex][_E.column.colId] = "";
+        
+        for(let item in initData[_E.rowIndex]){
+//                 console.log(item + " ==> " + _E.data[item] + " | " + initData[_E.rowIndex][item]);
+            
+            if(!isChange && item != 'etype' && fn_nvl(_E.data[item], "") != fn_nvl(initData[_E.rowIndex][item], "")){
+//                console.log(item + " ==> " + _E.data[item] + " | " + initData[_E.rowIndex][item]);
+                isChange = true;
+            }
+        }
+        
+        //변경사항이 없을때
+//        console.log("isChange ==> " + (isChange ? "U":""));
+//        rowNode.node.data.etype = (isChange ? "U":"");
+        _E.node.data.etype = (isChange ? "U":"");
+        
+        _GRID.gridOptions.api.refreshCells();
+    }
+    
+    
+}
+
+function fn_chkUpdGridAll(_GRID){
+    
+    let initData = _gInitGridArry[_GRID.id];
+    
+//    console.log("fn_chkUpdGridAll ==> "+_GRID.id);
+    
+    _GRID.gridOptions.api.forEachNode( function(rowNode, index) {
+//        console.log("etype ==> "+rowNode.data.etype);
+        if(rowNode.data.etype != "D" && rowNode.data.etype != "C" ){
+            let isChange = false;
+            
+            for(let item in initData[index]){
+//                console.log(item + " ==> " + rowNode.data[item] + " | " + initData[index][item]);
+                
+                if(!isChange && item != 'etype' && fn_nvl(rowNode.data[item], "") != fn_nvl(initData[index][item], "")){
+//                    console.log(item + " ==> " + rowNode.data[item] + " | " + initData[index][item]);
+                    isChange = true;
+                }
+            }
+            
+            //변경사항이 없을때
+//            console.log("["+index + "] isChange ==> " + (isChange ? "U":""));
+//            rowNode.setDataValue('etype', (isChange ? "U":""));
+            rowNode.data.etype = (isChange ? "U":"");
+        }
+        
+    });
+    
+    _GRID.gridOptions.api.refreshCells();
+    
+}
+
+ /************************************************************************************************
+ * Function :  form 초기값 세팅 및 비교
+     form 초기값을 저장한다.
+   param : _FORM [form '#id']
+   return  
+************************************************************************************************/
+let _gInitFormData = {};
+function fn_setInitDataToForm(_FORM){
+//     console.log(_FORM);
+    
+    if(fn_isNull(_FORM))return false;
+    
+    let _id = (_FORM).replace("#", "");
+    
+    _gInitFormData[_id] = fn_getValues(_FORM); // 
+
+//     console.log(_gInitFormData);
+
+}
+
+ /************************************************************************************************
+ * Function :  form 초기값 비교
+     form값 변경여부를 확인한다.
+   param : _FORM [form '#id']
+   return  
+************************************************************************************************/
+function fn_chkUpdForm(_FORM){
+    
+//     console.log(_E.rowIndex);
+    if(fn_isNull(_FORM))return false;
+    
+    let _id = (_FORM).replace("#", "");
+    
+    if(!_gInitFormData[_id]) return false;
+    
+    let _checkFormData = fn_getValues(_FORM);
+    
+    let isChange = false;
+        
+    for(let item in _gInitFormData[_id]){
+//        console.log(item + " ==> " + _checkFormData[item] + " | " + _gInitFormData[item]);
+        
+        if(!isChange && fn_nvl(_gInitFormData[_id][item], "") != fn_nvl(_checkFormData[item], "")){
+//            console.log(item + " ==> " + _checkFormData[item] + " | " + _gInitFormData[item]);
+            isChange = true;
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+ /************************************************************************************************
+ * Function :  form, div 내부값 가져오기
+      id 로 명시된 객체의 자식값을 가져온다.
+   param : id => '#id'
+   return  {}배열
+************************************************************************************************/
+function fn_getValues(selector){
+    let formValues = {};
+    $(selector + ' input, ' + selector + ' select, '  + selector + ' textarea').each(function(index){
+//         console.log($(this));
+        if($(this)[0].name){
+            let vName = $(this)[0].name;
+            if($(this).attr("type") != "radio" && $(this).attr("type") != "checkbox"){// radio, checkbox 제외
+                if($(this).attr("inputStyle") == "numberComma"){
+                    formValues[vName] = fn_replaceAll(fn_nvl($(this).val(), "0") , "," , "");
+                }else{
+                    formValues[vName] = $(this).val();
+                }
+            }else if($(this).attr("type") == "radio" && $(this).is('checked')){//radio
+                formValues[vName] =  $(this).val();
+            }else if($(this).attr("type") == "checkbox"){//radio
+                if($(this).prop('checked')){
+                    formValues[vName] = fn_nvl($(this).attr('checkValue'), $(this).attr('value'));
+                }else{
+                    formValues[vName] = $(this).attr('uncheckValue');
+                }
+            }
+        }
+    });
+    
+//     console.log('-----------------fn_getValues['+selector+']--------------------');
+//     console.log($(selector));
+//     console.log(formValues);
+    
+    return formValues;
+}
+
+ /************************************************************************************************
+ * Function :  data{} => form 객체로 바인딩시킨다.
+   param : data{}, form(id)
+   return  
+************************************************************************************************/
+function fn_DataToForm(_data, _Form){
+    
+//    console.log('----------------------------_data----------------------------');
+//    console.log(_data);
+    
+    $(_Form + ' input, ' + _Form + ' select, '  + _Form + ' textarea').each(function(index){
+//        console.log($(this));
+        if($(this)[0].name){
+            let vName = $(this)[0].name;
+            let vVal = "";
+            
+            if(_data[vName]) {
+                vVal = fn_nvl(_data[vName], "");
+            }
+//            console.log(vName + " ==> " + vVal);
+                
+            if($(this).attr("type") != "radio" && $(this).attr("type") != "checkbox"){// radio, checkbox 제외
+                $(this).val(vVal);
+            }else if($(this).attr("type") == "checkbox"){// checkbox
+                vVal = fn_nvl(fn_nvl(_data[vName], $(this).attr('uncheckValue')), "");
+                
+//                console.log(vName + " ==> " + $(this).attr("type") + " : " + _data[vName] + " => " + vVal + ", " + $(this).prop('value'));
+                
+                if( vVal == $(this).attr('checkValue')){
+                    $(this).prop('checked', true);
+                }else{
+                    $(this).prop('checked', false);
+                }
+            }else{// radio
+//                console.log($(this).attr("type") + " => " + vVal + ", " + $(this).prop('value'));
+                if( vVal == $(this).attr('value')){
+                    $(this).prop('checked', true);
+                }else{
+                    $(this).prop('checked', false);
+                }
+            }
+        }
+    });
+}
+
+ /************************************************************************************************
+ * Function :  ag_grid에 지정된 Form 객체로 바인딩시킨다.
+   param : ag_grid
+   return  
+************************************************************************************************/
+function fn_GridToForm(_grid){
+    let _rows = _grid.gridOptions.api.getSelectedRows();
+    
+    let _Form = '#'+_grid.gridOptions.bindFormId;
+    if(_rows.length > 0){
+        fn_DataToForm(_rows[0], _Form);
+    }else{
+        $(_Form).clearForm();
+    }
+}
+
+ /************************************************************************************************
+ * Function :  Form 객체의 값을 Grid에 바인딩시킨다.
+   param : (form, div), ag_grid, update 반영여부
+   return  
+************************************************************************************************/
+function fn_FormToGrid(_FormId, _grid, _updFlag){
+    
+    let _Form = '#'+_FormId;
+    let _Data = fn_getValues(_Form);
+    let _Upd  = fn_nvl(_updFlag, true);
+//    console.log('-------------------fn_getValues-----------------------------');
+//    console.log(_Data);
+    _grid.updateSelectedRow(_Data);
+    
+    //그리드 cellValueChange 이벤트 발생 = > 그리드 바인드 값 적용을 위해 사용
+    let _nodes = _grid.gridOptions.api.getSelectedNodes();
+    
+    if(_Upd){
+        let _eType = "U";
+        if(_nodes[0].data.etype == "C") _eType = "C";
+         
+        _nodes[0].setDataValue("etype", _eType);
+    }
+}
+
+ /************************************************************************************************
+ * Function :  Tab 객체의 해당 index를 선택하고 보여준다.
+   param : tablist id, index
+   return  
+************************************************************************************************/
+function fn_showTab_IndexById(_TabId, _idx){
+    $('#'+_TabId+' li:eq('+_idx+') a').tab('show');
+}
+
+ /************************************************************************************************
+ * Function :  Tab 객체의 해당 index를 선택하고 보여준다.
+   param : tablist class, index
+   return  
+************************************************************************************************/
+function fn_showTab_IndexByClass(_TabClass, _idx){
+    $('.'+_TabClass+' li:eq('+_idx+') a').tab('show');
+}
+
+ /************************************************************************************************
+ * Function :  Tab 객체의 해당 id를 선택하고 보여준다.
+   param : tablist id, index
+   return  
+************************************************************************************************/
+function fn_showTab_IdById(_TabId, _Id){
+    let _idx = fn_getTabIndexById(_TabId, _Id);
+    fn_showTab_IndexById(_TabId, _idx);
+}
+
+ /************************************************************************************************
+ * Function :  Tab 객체의 해당 id를 선택하고 보여준다.
+   param : tablist class, index
+   return  
+************************************************************************************************/
+function fn_showTab_IdByClass(_TabClass, _Id){
+    let _idx = fn_getTabIndexByClass(_TabClass, _Id);
+    fn_showTab_IndexByClass(_TabClass, _idx);
+}
+
+ /************************************************************************************************
+ * Function :  현재 활성화된 Tab 객체를 반환해준다.
+   param : tablist id
+   return  [tab Object]
+************************************************************************************************/
+function fn_getActiveTab(_TabId){
+    return $('#'+_TabId+' li.nav-item a.active');
+}
+
+ /************************************************************************************************
+ * Function :  Tab 객체의 해당 index를 반환해준다.
+   param : tablist id, tabid
+   return  index
+************************************************************************************************/
+function fn_getTabIndexById(_TabId, _Id){
+    
+    //기본은 현재 활셩화된 탭
+    if(fn_isNull(_Id)){
+        _Id = $('#'+_TabId+' li.nav-item a.active')[0].hash.replace('#', '');
+    }
+    
+    let tablist = $('#'+_TabId+' li.nav-item a'); // 전체 tab 객체
+    let _Index = 0;
+    for(let i=0; i<tablist.length; i++){
+        if(tablist[i].hash == ('#'+_Id)){
+            _Index = i;
+            break;
+        }
+    }
+    
+    return _Index;
+}
+
+ /************************************************************************************************
+ * Function :  Tab 객체의 해당 index를 반환해준다.
+   param : tablist Class, tabid
+   return  index
+************************************************************************************************/
+function fn_getTabIndexByClass(_TabClass, _Id){
+    
+    //기본은 현재 활셩화된 탭
+    if(fn_isNull(_Id)){
+        _Id = $('.'+_TabClass+' li.nav-item a.active')[0].hash.replace('#', '');
+    }
+    
+    let tablist = $('.'+_TabClass+' li.nav-item a'); // 전체 tab 객체
+    let _Index = 0;
+    for(let i=0; i<tablist.length; i++){
+        if(tablist[i].hash == ('#'+_Id)){
+            _Index = i;
+            break;
+        }
+    }
+    
+    return _Index;
+}
+
+
+
+
+ /************************************************************************************************
+ * Function :  form 하위객체 초기화. 예시) $('#dataForm').clearForm();
+   param : '<form>'
+   return  
+************************************************************************************************/
+$.fn.clearForm = function () {
+  return this.each(function () {
+    var type = this.type,
+      tag = this.tagName.toLowerCase();
+    if (tag === 'form') {
+      return $(':input', this).clearForm();
+    }
+    if (
+      type === 'text' ||
+      type === 'password' ||
+      type === 'hidden' ||
+      tag === 'textarea'
+    ) {
+      this.value = '';
+    } else if (type === 'checkbox' || type === 'radio') {
+      this.checked = false;
+    } else if (tag === 'select') {
+      this.selectedIndex = -1;
+    }
+  });
+};
+
+
+ /************************************************************************************************
+ * Function :  브라우저 확인 IE 이면 true
+   param : 
+   return  
+************************************************************************************************/
+function isIE() {
+    return (navigator.appName === 'Netscape' && navigator.userAgent.search('Trident') !== -1) ||
+        navigator.userAgent.toLowerCase().indexOf("msie") !== -1;
+}
+
+ /************************************************************************************************
+ * Function :  크롬에서 파일생성
+   param : fileName[생성 파일명], content[파일내용]
+   return  
+************************************************************************************************/
+function saveToFile_Chrome(fileName, content) {
+    var blob = new Blob([content], { type: 'text/plain' });
+    objURL = window.URL.createObjectURL(blob);
+            
+    // 이전에 생성된 메모리 해제
+    if (window.__Xr_objURL_forCreatingFile__) {
+        window.URL.revokeObjectURL(window.__Xr_objURL_forCreatingFile__);
+    }
+    window.__Xr_objURL_forCreatingFile__ = objURL;
+    var a = document.createElement('a');
+    a.download = fileName;
+    a.href = objURL;
+    a.click();
+}
+
+ /************************************************************************************************
+ * Function :  IE 에서 파일생성
+   param : fileName[생성 파일명], content[파일내용]
+   return  
+************************************************************************************************/
+function saveToFile_IE(fileName, content) {
+    var blob = new Blob([content], { type: "text/plain", endings: "native" });
+    window.navigator.msSaveBlob(blob, fileName);
+    //window.navigator.msSaveOrOpenBlob(blob, fileName);
+}
