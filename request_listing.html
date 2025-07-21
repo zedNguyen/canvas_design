@@ -253,7 +253,7 @@
           </div>
         </div>
 
-                <div class="card" style="margin-bottom: 0px;" data-collapse="">
+        <div class="card" style="margin-bottom: 0px;" data-collapse="">
           <div class="card-header field-header open" data-collapse-summary="" aria-expanded="true">
             <a>
               <a class="card-link" aria-expanded="true" aria-controls="cardBody">검색조건
@@ -605,8 +605,8 @@
             return `<span style="display:inline-block;padding:0px 12px;border-radius:5px;font-size:13px;font-weight:500;color:#e74c3c;background:#fdeaea;min-width:70px;">반려됨</span>`;
           } else if (data.canApprove) {
             return `
-              <button class='btn btn-harmony-blue btn-sm' style='margin-right:6px;border-radius:6px;padding:0px 8px;' title='승인' onclick="alert('승인: ${data.id}')"><i class='fa fa-check'></i> <span style='font-weight:500;'>승인</span></button>
-              <button class='btn btn-outline-secondary btn-sm' style='border-radius:6px;padding:0px 8px;' title='반려' onclick="alert('반려: ${data.id}')"><i class='fa fa-times'></i> <span style='font-weight:500;'>반려</span></button>
+              <button class='btn btn-harmony-blue btn-sm' style='margin-right:6px;border-radius:6px;padding:0px 8px;' title='승인' onclick="confirmAction('approve', '${data.id}', function() { alert('승인: ${data.id}'); })"><i class='fa fa-check'></i> <span style='font-weight:500;'>승인</span></button>
+              <button class='btn btn-outline-secondary btn-sm' style='border-radius:6px;padding:0px 8px;' title='반려' onclick="confirmAction('reject', '${data.id}', function() { alert('반려: ${data.id}'); })"><i class='fa fa-times'></i> <span style='font-weight:500;'>반려</span></button>
             `;
           } else {
             return `<span style="color:#888;">승인 불가</span>`;
@@ -662,6 +662,60 @@
     });
   </script>
 
+  <!-- Custom Confirm Modal -->
+  <style>
+    /* Ensure custom confirm modal is always on top */
+    #customConfirmModal .modal-dialog {
+      z-index: 12000 !important;
+    }
+
+    #customConfirmModal {
+      z-index: 12000 !important;
+    }
+  </style>
+  <div class="modal fade" id="customConfirmModal" tabindex="-1" role="dialog" aria-labelledby="customConfirmModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="border-radius: 12px; overflow: hidden;">
+        <div class="modal-header" style="border-bottom: 1px solid #f0f0f0;">
+          <h5 class="modal-title" id="customConfirmModalLabel">확인</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="customConfirmMessage"
+          style="font-size:16px;color:#222;padding:24px 18px 12px 18px;text-align:center;"></div>
+        <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
+          <button type="button" class="btn btn-secondary btn-sm" id="customConfirmCancel">취소</button>
+          <button type="button" class="btn btn-harmony-blue btn-sm" id="customConfirmOk">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Custom confirm logic
+    function showCustomConfirm(message, onConfirm) {
+      $('#customConfirmMessage').text(message);
+      $('#customConfirmModal').modal('show');
+      // Remove previous handlers
+      $('#customConfirmOk').off('click');
+      $('#customConfirmCancel').off('click');
+      // OK
+      $('#customConfirmOk').on('click', function () {
+        $('#customConfirmModal').modal('hide');
+        if (onConfirm) onConfirm();
+      });
+      // Cancel
+      $('#customConfirmCancel, .close').on('click', function () {
+        $('#customConfirmModal').modal('hide');
+      });
+    }
+    // Confirmation utility (global)
+    function confirmAction(action, id, callback) {
+      const actionText = action === 'approve' ? '승인' : '반려';
+      showCustomConfirm(`정말로 이 요청을 ${actionText}하시겠습니까?`, callback);
+    }
   </script>
   <!-- 타임리프 사용을 위해서 th:inline="javascript" -->
   <script>
@@ -1086,8 +1140,16 @@
         $('#commentInput').val('');
       }
     });
-    $('#approveBtn').off('click').on('click', function () { alert('승인: ' + data.id); });
-    $('#rejectBtn').off('click').on('click', function () { alert('반려: ' + data.id); });
+    $('#approveBtn').off('click').on('click', function () {
+      confirmAction('approve', data.id, function () {
+        alert('승인: ' + data.id);
+      });
+    });
+    $('#rejectBtn').off('click').on('click', function () {
+      confirmAction('reject', data.id, function () {
+        alert('반려: ' + data.id);
+      });
+    });
     $('#addCommentBtn').off('click').on('click', function () {
       const val = $('#commentInput').val();
       if (val) {
