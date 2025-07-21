@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>요청 목록</title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <meta name="robots" content="noindex,nofollow" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Global site tag (gtag.js) - Google Analytics PROD만 동작 -->
+
+  <link href="./저장위치 관리_files/bootstrap.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/perfect-scrollbar.min.css" rel="stylesheet" />
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/style.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/jquery-ui.min.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./저장위치 관리_files/pinejs.css" />
+
+  <link href="./저장위치 관리_files/ag-grid.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/ag-theme-balham.min.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/aggrid.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/toastr.css" rel="stylesheet" />
+
+  <link href="./저장위치 관리_files/blue.css" id="theme" rel="stylesheet" />
+
+  <!-- Harmony Blue & custom styles for /learn pages -->
+  <link href="./style.css" rel="stylesheet" />
+  <link href="./저장위치 관리_files/custom.css" rel="stylesheet" />
+
+  <script src="./저장위치 관리_files/jquery.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/popper.min.js.download"></script>
+  <script src="./저장위치 관리_files/bootstrap.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/perfect-scrollbar.jquery.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/waves.js.download"></script>
+
+  <script src="./저장위치 관리_files/sidebarmenu.js.download"></script>
+  <!-- <script th:src="@{/plugins/pinejs/js/adminpro.js}"></script> -->
+
+  <script src="./저장위치 관리_files/adminpro.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.toast.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.serializeObject.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.validate.min.js.download"></script>
+  <script src="./저장위치 관리_files/messages_ko.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery-ui.min.js.download"></script>
+  <script src="./저장위치 관리_files/numeral.min.js.download"></script>
+  <script src="./저장위치 관리_files/lodash.4.17.15.min.js.download"></script>
+  <script src="./저장위치 관리_files/moment.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.collapse.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.bootstrap-touchspin.min.js.download"></script>
+  <!-- bootstrap submodal -->
+  <script src="./저장위치 관리_files/bs.sm.js.download"></script>
+
+  <script src="./저장위치 관리_files/xlsx.full.min.js.download"></script>
+  <script src="./저장위치 관리_files/fileSaver.min.js.download"></script>
+  <script src="./저장위치 관리_files/toastr.min.js.download"></script>
+
+  <script src="./저장위치 관리_files/jquery.mask.js.download"></script>
+
+  <script src="./저장위치 관리_files/ag-grid-enterprise.min.noStyle.js.download"></script>
+  <script>
+    agGrid.LicenseManager.setLicenseKey(
+      "CompanyName=JSIT,LicensedGroup=HANSOL PNS IT-SERVICE,LicenseType=MultipleApplications,LicensedConcurrentDeveloperCount=3,LicensedProductionInstancesCount=2,AssetReference=AG-008218,ExpiryDate=21_May_2021_[v2]_MTYyMTU1MTYwMDAwMA==fb098f15da774457685846b99c4a3a7e"
+    );
+  </script>
+  <script src="./저장위치 관리_files/ag_base.js.download"></script>
+  <script src="./저장위치 관리_files/ag_locale_ko.js.download"></script>
+  <script src="./저장위치 관리_files/ag_renderer.js.download"></script>
+  <script src="./저장위치 관리_files/ag_formatter.js.download"></script>
+  <script src="./저장위치 관리_files/ag_editor.js.download"></script>
+  <script src="./저장위치 관리_files/ag_excel.js.download"></script>
+
+  <!-- CK Editor -->
+  <!-- ============================================================== -->
+  <script src="./저장위치 관리_files/ckeditor.js.download"></script>
+  <style>
+    .cke {
+      visibility: hidden;
+    }
+  </style>
+
+  <script src="./저장위치 관리_files/pine.js.download"></script>
+  <script src="./저장위치 관리_files/global-val.js.download"></script>
+  <script src="./저장위치 관리_files/core.js.download"></script>
+  <script src="./저장위치 관리_files/file.js.download"></script>
+  <script src="./저장위치 관리_files/auth.js.download"></script>
+  <script src="./저장위치 관리_files/editor.js.download"></script>
+  <script src="./저장위치 관리_files/aggridHelper.js.download"></script>
+
+  <!-- ============================================================== -->
+
+  <script src="./저장위치 관리_files/doc_ready.js.download"></script>
+</head>
+
+<body class="fix-header card-no-border main">
+  <div class="preloader" style="display: none">
+    <div class="loader">
+      <div class="loader__figure"></div>
+      <p class="loader__label">Harmony</p>
+    </div>
+  </div>
+
+  <div id="main-wrapper">
+    <header class="topbar">
+      <nav class="navbar top-navbar navbar-expand-md navbar-light">
+        <div class="navbar-header">
+          <a class="navbar-brand">
+            <b>
+              <img src="./저장위치 관리_files/logo-icon.png" alt="homepage" class="dark-logo" />
+
+              <img src="./저장위치 관리_files/logo-light-icon.png" alt="homepage" class="light-logo" />
+            </b>
+
+            <span>
+              <img src="./저장위치 관리_files/logo-text.png" alt="homepage" class="dark-logo" />
+
+              <img src="./저장위치 관리_files/logo-light-text.png" class="light-logo" alt="homepage" /></span>
+          </a>
+        </div>
+
+        <div class="navbar-collapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i
+                  class="ti-menu"></i></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link sidebartoggler hidden-sm-down waves-effect waves-dark" href="javascript:void(0)"><i
+                  class="fa-solid fa-bars"></i></a>
+            </li>
+          </ul>
+
+          <ul class="navbar-nav my-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="javascript:void(0)">
+                <span style="font-weight: bold; font-size: 18px">dev서버</span>
+              </a>
+            </li>
+
+            <li class="nav-item hidden-xs-down search-box">
+              <a class="nav-link hidden-sm-down waves-effect waves-dark" href="javascript:void(0)" title="메뉴 검색"><i
+                  class="ti-search"></i></a>
+              <form class="app-search" onsubmit="return false">
+                <input type="text" id="menu-search-txt" class="form-control" placeholder="메뉴 검색" />
+                <a class="srh-btn"><i class="ti-close"></i></a>
+                <div id="menu-search" class="search-rslt"></div>
+              </form>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle waves-effect waves-dark" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <span>시스템관리</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right animated flipInY">
+                <ul class="dropdown-user">
+                  <li>
+                    <div class="dw-user-box">
+                      <div class="u-text">
+                        <h4>
+                          <i class="fas fa-user"></i>&nbsp;
+                          <span>시스템관리</span>
+                        </h4>
+                        <p class="text-muted"><span></span></p>
+                      </div>
+                    </div>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <a><i class="ti-settings"></i> 계정설정</a>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <a><i class="fa fa-power-off"></i> 로그아웃</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <aside class="left-sidebar">
+      <div class="scroll-sidebar ps-container ps-theme-default" data-ps-id="6445c0c0-d75d-a3cd-4fab-49cc73438c65">
+        <nav class="sidebar-nav active">
+          <ul id="sidebarnav" class="in">
+            <li class="nav-small-cap">즐겨찾기 ★</li>
+            <ul class="list-group" id="sidebarnav-favorite"></ul>
+            <li class="nav-devider"></li>
+
+            <li class="nav-small-cap">프로그램</li>
+
+            <li class="active">
+              <a class="has-arrow waves-effect waves-dark" aria-expanded="true">
+                <i class="mdi mdi-format-list-bulleted"></i>
+                <span class="hide-menu">Request</span>
+              </a>
+
+              <ul aria-expanded="true" class="collapse in show">
+                <li style="margin-left: 14px;">
+                  <a class=" waves-effect waves-dark" href="./request_popup.html">Popup Request
+                    Demo</a>
+                </li>
+                <li style="margin-left: 14px;">
+                  <a class=" waves-effect waves-dark" href="./request_listing.html " style="color: #007bff;">Request
+                    listing Demo</a>
+                </li>
+
+              </ul>
+            </li>
+          </ul>
+        </nav>
+        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px">
+          <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px"></div>
+        </div>
+        <div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px">
+          <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px"></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="page-wrapper" style="min-height: 952px">
+      <div class="container-fluid r-aside">
+        <div class="row page-titles m-b-10">
+          <div class="col-md-5 align-self-center">
+            <!-- <h4 class="text-themecolor"><i class="fas fa-sticky-note pageIcon"></i><span id="pageTitles">HOME</span></h3> -->
+            <!-- <h6 class="text-themecolor" id="pageTitleText">HOME</h5> -->
+            <li id="pageTitleText">
+              팝업 요청 목록<i class="fa-regular fa-star" style="
+                    font-size: 16px !important;
+                    font-weight: bold !important;
+                    margin-left: 5px;
+                  " data-favo="N"></i>
+            </li>
+          </div>
+        </div>
+
+                <div class="card" style="margin-bottom: 0px;" data-collapse="">
+          <div class="card-header field-header open" data-collapse-summary="" aria-expanded="true">
+            <a>
+              <a class="card-link" aria-expanded="true" aria-controls="cardBody">검색조건
+                <span class="expanded">
+                  <p><b>▼</b></p>
+                </span>
+              </a>
+            </a>
+          </div>
+          <div id="cardBody" class="collapse show field-body" aria-hidden="false">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-4 d-flex align-items-center">
+                  <label for="filter-prod-from">기간</label>
+                  <input type="date" id="filter-prod-from" name="filter-prod-from" class="form-control form-control-sm"
+                    style="width: 33%" placeholder="YYYY-MM-DD" />
+                  <span style="margin: 0 2px">~</span>
+                  <input type="date" id="filter-prod-to" name="filter-prod-to" class="form-control form-control-sm"
+                    style="width: 33%" placeholder="YYYY-MM-DD" />
+                  <input type="checkbox" id="filter-all" checked class="ml-1"
+                    style="vertical-align:middle; display: none;" />
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- Tabs for request types -->
+        <ul class="nav nav-tabs mb-3" id="requestTabs" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="tab-all" data-toggle="tab" href="#tabAll" role="tab">전체 요청</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="tab-approve" data-toggle="tab" href="#tabApprove" role="tab">승인 필요</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="tab-sent" data-toggle="tab" href="#tabSent" role="tab">보낸 요청</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="requestTabContent">
+          <div class="tab-pane fade show active" id="tabAll" role="tabpanel">
+            <div id="agGridAll" class="ag-theme-balham" style="height:400px;width:100%;"></div>
+          </div>
+          <div class="tab-pane fade" id="tabApprove" role="tabpanel">
+            <div id="agGridApprove" class="ag-theme-balham" style="height:400px;width:100%;"></div>
+          </div>
+          <div class="tab-pane fade" id="tabSent" role="tabpanel">
+            <div id="agGridSent" class="ag-theme-balham" style="height:400px;width:100%;"></div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- End fixed bottom info bar -->
+
+      <footer class="footer text-center">© 2025 Harmony by HansolPNS</footer>
+    </div>
+    <!-- Fixed bottom info bar -->
+
+  </div> <!-- page-wrapper -->
+  </div> <!-- main-wrapper -->
+
+  <input type="hidden" id="spring_profile" value="dev" />
+  <input type="hidden" id="loginUserId" value="marusys" />
+  <input type="hidden" id="session_USER_ID" value="marusys" />
+  <input type="hidden" id="session_USER_NM" value="시스템관리" />
+  <input type="hidden" id="session_MANDT" value="100" />
+  <input type="hidden" id="session_MANDT_NM" value="지류유통" />
+  <input type="hidden" id="session_BUKRS" value="M200" />
+  <input type="hidden" id="session_BUKRS_NM" value="PNS지류유통" />
+  <input type="hidden" id="session_VKGRP" value="" />
+  <input type="hidden" id="session_VKGRP_NM" value="" />
+  <input type="hidden" id="session_MOBILE" value="" />
+  <input type="hidden" id="session_EMAIL" value="" />
+  <input type="hidden" id="session_KOSTL" value="" />
+  <input type="hidden" id="session_ADMIN_YN" value="N" />
+  <input type="hidden" id="session_LOGIN_DT" value="2025-07-15 19:30:24" />
+  <input type="hidden" id="session_SMART_ID" value="" />
+  <input type="hidden" id="session_SMART_PASSWORD" value="" />
+  <input type="hidden" id="session_USER_IP" value="0:0:0:0:0:0:0:1" />
+  <input type="hidden" id="session_SESSION_ID" value="" />
+  <input type="hidden" id="session_FIRST_TOPMENU" value="" />
+  <input type="hidden" id="session_MM" value="MM999" />
+  <input type="hidden" id="session_SD" value="SD999" />
+  <input type="hidden" id="session_CO" value="CO999" />
+  <input type="hidden" id="session_FI" value="FI999" />
+  <input type="hidden" id="session_CM" value="CM999" />
+  <input type="hidden" id="session_IN_IP_YN" value="N" />
+  <input type="hidden" id="session_UPPER_BU" value="" />
+  <input type="hidden" id="session_UPPER_NAME" value="" />
+
+  <input id="message" type="hidden" value="" />
+
+  <!-- Modal Request Popup -->
+  <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <form id="requestForm" class="modal-content" style="border-radius: 16px; overflow: hidden;">
+        <div class="modal-header" style="border-bottom: 1px solid #f0f0f0;">
+          <h5 class="modal-title" id="requestModalLabel"><i class="fa fa-paper-plane"></i> 새 요청 등록</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="background: #f7f9fb;">
+
+
+          <div
+            style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 24px 24px 12px 24px;">
+            <!-- 결재자 -->
+            <div class="row" style="margin-bottom: 18px;">
+              <div class="col-md-4" style="padding: 0 12px; border-right: 1px solid #e3e7ed; text-align: center;">
+                <div style="font-size:15px;color:#222;text-align: left; font-weight: bold ;">요청자</div>
+                <div
+                  style="width: 64px; height: 64px; margin: 0 auto 12px; background: #e3e7ed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; color: #4a5568;">
+                  <span id="userAvatar">AV</span>
+                </div>
+                <div style="font-size: 18px; font-weight: bold; color: #222;" id="userName">김철수</div>
+                <div style="font-size: 14px; color: #888; margin-bottom: 8px;" id="userOrg">홍길동</div>
+                <div style="font-size: 13px; color: #666;">부서: <span id="userDept">웹팀</span></div>
+                <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일: <span id="userDate">2025/07/21</span>
+                </div>
+
+              </div>
+              <div class="col-md-8">
+                <div style="margin-bottom: 18px;">
+                  <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">결재자</div>
+                  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+                    <div id="approverList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                    <button class="btn btn-light btn-sm" type="button" id="showApproverSelect"
+                      style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;"><i
+                        class="fa fa-plus" style="color:#2563eb;"></i></button>
+                    <div id="approverSelectWrap" style="display:none;min-width:180px;">
+                      <div class="input-group mb-2" style="max-width: 220px;">
+                        <select class="form-control form-control-sm" id="approverSelect">
+                          <option value="">결재자 선택</option>
+                          <option value="박민수">박민수</option>
+                          <option value="이영희">이영희</option>
+                          <option value="최지훈">최지훈</option>
+                        </select>
+                        <div class="input-group-append">
+                          <button class="btn btn-primary btn-sm" type="button" id="addApprover">확인</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 참조자 -->
+                <div style="margin-bottom: 18px;">
+                  <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom: 6px;">참조자</div>
+                  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+                    <div id="ccList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                    <button class="btn btn-light btn-sm" type="button" id="showCCSelect"
+                      style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;"><i
+                        class="fa fa-plus" style="color:#a259e6;"></i></button>
+                    <div id="ccSelectWrap" style="display:none;min-width:180px;">
+                      <div class="input-group mb-2" style="max-width: 220px;">
+                        <select class="form-control form-control-sm" id="ccSelect">
+                          <option value="">참조자 선택</option>
+                          <option value="김영수">김영수</option>
+                          <option value="박지은">박지은</option>
+                          <option value="정우성">정우성</option>
+                        </select>
+                        <div class="input-group-append">
+                          <button class="btn btn-purple btn-sm" type="button" id="addCC">확인</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- 제목, 내용, 우선순위, 부서, 첨부파일 -->
+            <div class="form-group">
+              <label for="title" style="font-size: 14px; font-weight: bold;">제목 <span style="color:red">*</span></label>
+              <input type="text" class="form-control form-control-sm" id="title" name="title" placeholder="요청 제목을 입력하세요"
+                required>
+            </div>
+            <div class="form-group">
+              <label for="content" style="font-size: 14px; font-weight: bold;">내용 <span
+                  style="color:red">*</span></label>
+              <textarea class="form-control form-control-sm" id="content" name="content" rows="3"
+                placeholder="요청 내용을 입력하세요" required></textarea>
+            </div>
+            <div class="form-row mb-2">
+              <div class="form-group col-md-6">
+                <label for="priority" style="font-size: 14px; font-weight: bold;">우선순위</label>
+                <select class="form-control form-control-sm" id="priority" name="priority">
+                  <option value="낮음">낮음</option>
+                  <option value="보통">보통</option>
+                  <option value="높음">높음</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="department" style="font-size: 14px; font-weight: bold;">부서</label>
+                <input type="text" class="form-control form-control-sm" id="department" name="department"
+                  placeholder="관련 부서를 입력하세요">
+              </div>
+            </div>
+            <!-- 첨부파일 (드래그 앤 드롭 유지) -->
+            <div class="form-group">
+              <label for="attachment" style="font-size: 14px; font-weight: bold;">첨부파일</label>
+              <div id="drop-area"
+                style="border: 2px dashed #bdbdbd; border-radius: 12px; background: #fff; padding: 32px 0; text-align: center; margin-top: 8px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s;">
+                <span style="font-size: 16px; color: #444;">여기로 파일을 끌어다 놓거나 <span id="browseFile"
+                    style="color: #2563eb; text-decoration: underline; cursor: pointer;">파일 선택</span></span>
+                <div style="font-size: 12px; color: #888; margin-top: 8px;">최대 크기: 5MB (PDF, DOCX, XLSX, JPG, PNG 지원)
+                </div>
+                <input type="file" id="attachment" name="attachment" style="display: none;"
+                  accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" />
+                <div id="fileName" style="margin-top: 10px; font-size: 14px; color: #2563eb;"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
+          <button type="submit" class="btn btn-harmony-blue btn-sm"><i class="fa fa-paper-plane"></i> 요청 보내기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script>
+    // Mock request data
+    const mockRequests = [
+      {
+        id: 'REQ001',
+        title: '인쇄 자재 구매',
+        date: '2025-07-18',
+        status: '대기중',
+        type: '보낸 요청',
+        approvers: [
+          { name: '박민수', avatar: 'PM', status: 'pending' },
+          { name: '이영희', avatar: 'LY', status: 'approved' },
+          { name: '김철수', avatar: 'KC', status: 'pending' }
+        ],
+        canApprove: false,
+        attachment: { name: '견적서.pdf', size: '1.2MB' }
+      },
+      {
+        id: 'REQ002',
+        title: '기계 수리 요청',
+        date: '2025-07-19',
+        status: '대기중',
+        type: '승인 필요',
+        approvers: [
+          { name: 'marusys', avatar: 'MS', status: 'pending' },
+          { name: '최지훈', avatar: 'CJ', status: 'pending' },
+          { name: '이영희', avatar: 'LY', status: 'approved' },
+          { name: '김영수', avatar: 'KY', status: 'rejected' }
+        ],
+        canApprove: true
+      },
+      {
+        id: 'REQ003',
+        title: '야근 제안',
+        date: '2025-07-20',
+        status: '승인됨',
+        type: '보낸 요청',
+        approvers: [
+          { name: '박민수', avatar: 'PM', status: 'approved' },
+          { name: '이영희', avatar: 'LY', status: 'approved' }
+        ],
+        canApprove: false
+      },
+      {
+        id: 'REQ004',
+        title: '휴가 신청',
+        date: '2025-07-17',
+        status: '반려됨',
+        type: '승인 필요',
+        approvers: [
+          { name: 'marusys', avatar: 'MS', status: 'rejected' },
+          { name: '최지훈', avatar: 'CJ', status: 'pending' }
+        ],
+        canApprove: true
+      }
+    ];
+
+    // AG Grid column definitions
+    const requestColumnDefs = [
+      { headerName: '요청 번호', field: 'id', minWidth: 100, cellClass: 'ag-left-cell' },
+      { headerName: '제목', field: 'title', minWidth: 180, cellClass: 'ag-left-cell' },
+      { headerName: '요청일', field: 'date', minWidth: 120, cellClass: 'ag-left-cell' },
+      {
+        headerName: '상태',
+        field: 'status',
+        minWidth: 110,
+        cellClass: 'ag-left-cell',
+        cellRenderer: function (params) {
+          const status = params.value;
+          let color = '#4a90e2', bg = '#eaf3fb', text = '대기중';
+          if (status === '승인됨') { color = '#2ecc40'; bg = '#eafbe7'; text = '승인됨'; }
+          else if (status === '반려됨') { color = '#e74c3c'; bg = '#fdeaea'; text = '반려됨'; }
+          return `<span style="display:inline-block;padding:0px 12px;border-radius:5px;font-size:13px;font-weight:500;color:${color};background:${bg};min-width:70px;">${text}</span>`;
+        }
+      },
+      {
+        headerName: '요청 유형',
+        field: 'type',
+        minWidth: 110,
+        cellClass: 'ag-left-cell',
+        cellRenderer: function (params) {
+          const type = params.value;
+          let color = '#2563eb', bg = '#f0f4fa', text = type;
+          if (type === '승인 필요') { color = '#f39c12'; bg = '#fff8e1'; }
+          else if (type === '보낸 요청') { color = '#888'; bg = '#f7f7f7'; }
+          return `<span style="display:inline-block;padding:0px 12px;border-radius:5px;font-size:13px;font-weight:500;color:${color};background:${bg};min-width:70px;">${text}</span>`;
+        }
+      },
+      {
+        headerName: '결재자',
+        field: 'approvers',
+        minWidth: 160,
+        cellClass: 'ag-center-cell',
+        cellRenderer: function (params) {
+          const approvers = params.value || [];
+          return `<div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;">
+            ${approvers.map(app => `
+              <div style="position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+                <span style="width:36px;height:36px;border-radius:50%;background:#e3e7ed;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#2563eb;font-size:15px;">${app.avatar}</span>
+                <span style="position:absolute;bottom:-8px;right:-5px;">
+                  ${app.status === 'approved' ? '<i class="fa fa-check-circle" style="color:#2ecc40;font-size:16px;" title="승인됨"></i>' : app.status === 'pending' ? '<i class="fa fa-clock" style="color:#f1c40f;font-size:16px;" title="대기중"></i>' : '<i class="fa fa-times-circle" style="color:#e74c3c;font-size:16px;" title="반려됨"></i>'}
+                </span>
+              </div>
+            `).join('')}
+          </div>`;
+        }
+      },
+      {
+        headerName: '승인/반려',
+        field: 'approveActions',
+        minWidth: 160,
+        cellRenderer: function (params) {
+          const data = params.data;
+          // Nếu đã duyệt hoặc đã từ chối thì show trạng thái
+          if (data.status === '승인됨') {
+            return `<span style="display:inline-block;padding:0px 12px;border-radius:5px;font-size:13px;font-weight:500;color:#2ecc40;background:#eafbe7;min-width:70px;">승인됨</span>`;
+          } else if (data.status === '반려됨') {
+            return `<span style="display:inline-block;padding:0px 12px;border-radius:5px;font-size:13px;font-weight:500;color:#e74c3c;background:#fdeaea;min-width:70px;">반려됨</span>`;
+          } else if (data.canApprove) {
+            return `
+              <button class='btn btn-harmony-blue btn-sm' style='margin-right:6px;border-radius:6px;padding:0px 8px;' title='승인' onclick="alert('승인: ${data.id}')"><i class='fa fa-check'></i> <span style='font-weight:500;'>승인</span></button>
+              <button class='btn btn-outline-secondary btn-sm' style='border-radius:6px;padding:0px 8px;' title='반려' onclick="alert('반려: ${data.id}')"><i class='fa fa-times'></i> <span style='font-weight:500;'>반려</span></button>
+            `;
+          } else {
+            return `<span style="color:#888;">승인 불가</span>`;
+          }
+        }
+      },
+      {
+        headerName: '상세보기',
+        field: 'viewDetail',
+        minWidth: 100,
+        cellRenderer: function (params) {
+          const data = params.data;
+          return `<button class='btn btn-outline-secondary btn-sm' style='border-radius:6px;padding:2px 6px;' title='상세보기' onclick="showRequestDetail(${JSON.stringify(data).replace(/"/g, '&quot;')})"><i class='fa fa-eye'></i></button>`;
+        }
+      }
+    ];
+
+    // AG Grid options
+    function getGridOptions(rowData) {
+      return {
+        columnDefs: requestColumnDefs,
+        rowData: rowData,
+        defaultColDef: {
+          resizable: true,
+          sortable: true,
+          filter: true,
+          minWidth: 60,
+          cellClass: 'ag-left-cell',
+          cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'flex-start', height: '100%' }
+        },
+        suppressRowClickSelection: true,
+        animateRows: true,
+        domLayout: 'autoHeight',
+        getRowHeight: function (params) {
+          return 52; // tăng chiều cao dòng
+        }
+      };
+    }
+
+    // Phân loại request cho từng tab
+    function filterRequests(type) {
+      if (type === 'all') return mockRequests;
+      if (type === 'approve') return mockRequests.filter(r => r.type === '승인 필요');
+      if (type === 'sent') return mockRequests.filter(r => r.type === '보낸 요청');
+      return [];
+    }
+
+    // Khởi tạo AG Grid khi DOM ready
+    document.addEventListener('DOMContentLoaded', function () {
+      new agGrid.Grid(document.getElementById('agGridAll'), getGridOptions(filterRequests('all')));
+      new agGrid.Grid(document.getElementById('agGridApprove'), getGridOptions(filterRequests('approve')));
+      new agGrid.Grid(document.getElementById('agGridSent'), getGridOptions(filterRequests('sent')));
+    });
+  </script>
+
+  </script>
+  <!-- 타임리프 사용을 위해서 th:inline="javascript" -->
+  <script>
+  </script>
+  <script>
+    // Column definitions for production grid (tái sử dụng)
+    const productionColumnDefs = [
+      { headerName: "출력선택", field: "print_select", width: 90, checkboxSelection: true, headerCheckboxSelection: true },
+      { headerName: "생산일자", field: "prod_date", width: 110 },
+      { headerName: "작업순서", field: "work_order", width: 90 },
+      { headerName: "호기", field: "machine_no", width: 70 },
+      { headerName: "생태", field: "prod_type", width: 70 },
+      { headerName: "판매처", field: "seller", width: 110 },
+      { headerName: "납품처", field: "buyer", width: 110 },
+      { headerName: "납기일자", field: "due_date", width: 110 },
+      { headerName: "납기시간", field: "due_time", width: 90 },
+      { headerName: "영업오더", field: "sales_order", width: 110 },
+      { headerName: "작업유형", field: "job_type", width: 90 },
+      { headerName: "생산오더", field: "prod_order", width: 110 },
+      { headerName: "재단구분", field: "cut_type", width: 90 },
+      { headerName: "FSC", field: "fsc", width: 60 },
+      { headerName: "투입지종", field: "input_paper", width: 90 },
+      { headerName: "투입평량", field: "input_weight", width: 90 },
+      { headerName: "투입가로", field: "input_width", width: 90 },
+      { headerName: "투입세로", field: "input_height", width: 90 },
+      { headerName: "투입인치", field: "input_inch", width: 90 },
+      { headerName: "계획 폭", field: "plan_width", width: 90 },
+      { headerName: "계획 가로", field: "plan_garo", width: 90 },
+      { headerName: "계획 세로", field: "plan_sero", width: 90 },
+      { headerName: "계획 수량( R )", field: "plan_qty_r", width: 110 },
+      { headerName: "계획 중량 (Kg)", field: "plan_weight_kg", width: 120 },
+      { headerName: "투입 롤수", field: "input_roll_cnt", width: 90 },
+      { headerName: "기계 속도", field: "machine_speed", width: 90 },
+      { headerName: "작업시간(분)", field: "work_time_min", width: 110 },
+      { headerName: "소요 길이", field: "need_length", width: 90 },
+      { headerName: "소요 (분)", field: "need_min", width: 90 },
+      { headerName: "중지(분)", field: "stop_min", width: 90 },
+      { headerName: "중지사유", field: "stop_reason", width: 110 },
+      { headerName: "CUT (정매)", field: "cut_main", width: 90 },
+      { headerName: "CUT (여분)", field: "cut_extra", width: 90 },
+      { headerName: "PT", field: "pt", width: 60 },
+      { headerName: "생산지시 선택", field: "prod_select", width: 110 },
+      { headerName: "확정 처리", field: "confirm_proc", width: 90 },
+      { headerName: "삭제 처리", field: "delete_proc", width: 90 },
+      { headerName: "비고 (생산유의사항)", field: "note_prod", width: 160 },
+      { headerName: "비고2 (포장유의사항)", field: "note_pack", width: 160 },
+      { headerName: "전달 사항", field: "note_transfer", width: 120 }
+    ];
+
+    // Grid options for production grid
+    const productionGridOptions = {
+      columnDefs: productionColumnDefs,
+      rowSelection: 'multiple',
+      defaultColDef: {
+        resizable: true,
+        sortable: true,
+        filter: true,
+        minWidth: 60
+      },
+      suppressRowClickSelection: false,
+      animateRows: true,
+      rowData: [
+        {
+          print_select: false,
+          prod_date: "2025-07-10",
+          work_order: "1",
+          machine_no: "1호기",
+          prod_type: "일반",
+          seller: "한솔PNS",
+          buyer: "고객A",
+          due_date: "2025-07-14",
+          due_time: "14:00",
+          sales_order: "SO123456",
+          job_type: "절단",
+          prod_order: "PO987654",
+          cut_type: "정매",
+          fsc: "Y",
+          input_paper: "백상지",
+          input_weight: "80",
+          input_width: "1000",
+          input_height: "1200",
+          input_inch: "39.4",
+          plan_width: "1000",
+          plan_garo: "1000",
+          plan_sero: "1200",
+          plan_qty_r: "10",
+          plan_weight_kg: "800",
+          input_roll_cnt: "2",
+          machine_speed: "150",
+          work_time_min: "60",
+          need_length: "1500",
+          need_min: "60",
+          stop_min: "0",
+          stop_reason: "",
+          cut_main: "10",
+          cut_extra: "1",
+          pt: "PT1",
+          prod_select: false,
+          confirm_proc: "N",
+          delete_proc: "N",
+          note_prod: "주의사항 없음",
+          note_pack: "포장 주의",
+          note_transfer: "전달사항 없음"
+        }
+      ] // Dữ liệu sẽ được load động
+    };
+
+    // Khởi tạo grid khi DOM ready
+    document.addEventListener('DOMContentLoaded', function () {
+      new agGrid.Grid(document.getElementById('productionGrid'), productionGridOptions);
+    });
+  </script>
+  <script>
+    $(function () {
+      var path = window.location.pathname;
+      $('#sidebarnav a[href="' + path + '"]').each(function () {
+        $(this).parent('li').addClass('active');
+        $(this).closest('ul').addClass('in show').attr('aria-expanded', 'true');
+        $(this).closest('li').addClass('active');
+        $(this).attr('aria-expanded', 'true');
+      });
+    });
+  </script>
+  <script>
+    // Set user info (avatar, name, org, date)
+    function getInitials(name) {
+      return name.split(' ').map(w => w[0]).join('').toUpperCase();
+    }
+    const userName = $('#session_USER_NM').val() || 'Nguyễn Hữu Quang';
+    const userOrg = 'Joey Nguyen'; // Có thể lấy từ session nếu có
+    const userDept = 'Web'; // Có thể lấy từ session nếu có
+    const userDate = new Date().toISOString().slice(0, 10);
+    $('#userAvatar').text(getInitials(userName));
+    $('#userName').text(userName);
+    $('#userOrg').text(userOrg);
+    $('#userDept').text(userDept);
+    $('#userDate').text(userDate.replace(/-/g, '/'));
+
+    // Approver logic
+    let approvers = ["박민수", "이영희"]; // 기본 결재자
+    function renderApprovers() {
+      $('#approverList').html(approvers.map((name, idx) =>
+        `<div style="display:flex;align-items:center;background:#f0f4fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
+      <div style='width:28px;height:28px;border-radius:50%;background:#2563eb22;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#2563eb;'><i class='fa fa-user'></i></div>
+      <span style='font-size:14px;color:#222;'>${name}</span>
+      <span style='cursor:pointer;color:#f00;font-size:16px;margin-left:4px;' onclick='removeApprover(${idx})' title='삭제'><i class='fa fa-times-circle'></i></span>
+    </div>`
+      ).join(''));
+    }
+    window.removeApprover = function (idx) {
+      approvers.splice(idx, 1);
+      renderApprovers();
+    }
+    // Approver select show/hide logic
+    $('#showApproverSelect').on('click', function () {
+      $('#approverSelectWrap').show();
+      $('#approverSelect').focus();
+    });
+    $('#addApprover').on('click', function () {
+      const val = $('#approverSelect').val();
+      if (val && !approvers.includes(val)) {
+        approvers.push(val);
+        renderApprovers();
+      }
+      $('#approverSelectWrap').hide();
+      $('#approverSelect').val('');
+    });
+    $(document).on('click', function (e) {
+      if (!$(e.target).closest('#approverSelectWrap, #showApproverSelect').length) {
+        $('#approverSelectWrap').hide();
+      }
+    });
+    // CC logic
+    let ccs = ["김영수", "박지은"]; // 기본 참조자
+    function renderCCs() {
+      $('#ccList').html(ccs.map((name, idx) =>
+        `<div style="display:flex;align-items:center;background:#f6f0fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
+      <div style='width:28px;height:28px;border-radius:50%;background:#a259e622;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#a259e6;'><i class='fa fa-user'></i></div>
+      <span style='font-size:14px;color:#222;'>${name}</span>
+      <span style='cursor:pointer;color:#f00;font-size:16px;margin-left:4px;' onclick='removeCC(${idx})' title='삭제'><i class='fa fa-times-circle'></i></span>
+    </div>`
+      ).join(''));
+    }
+    window.removeCC = function (idx) {
+      ccs.splice(idx, 1);
+      renderCCs();
+    }
+    // CC select show/hide logic
+    $('#showCCSelect').on('click', function () {
+      $('#ccSelectWrap').show();
+      $('#ccSelect').focus();
+    });
+    $('#addCC').on('click', function () {
+      const val = $('#ccSelect').val();
+      if (val && !ccs.includes(val)) {
+        ccs.push(val);
+        renderCCs();
+      }
+      $('#ccSelectWrap').hide();
+      $('#ccSelect').val('');
+    });
+    $(document).on('click', function (e) {
+      if (!$(e.target).closest('#ccSelectWrap, #showCCSelect').length) {
+        $('#ccSelectWrap').hide();
+      }
+    });
+    // 기본 결재자/참조자 렌더링
+    $(document).ready(function () {
+      renderApprovers();
+      renderCCs();
+    });
+  </script>
+</body>
+<!-- Modal Request Detail Popup -->
+<div class="modal fade" id="requestDetailModal" tabindex="-1" role="dialog" aria-labelledby="requestDetailModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <form class="modal-content" style="border-radius: 16px; overflow: hidden;">
+      <div class="modal-header" style="border-bottom: 1px solid #f0f0f0;">
+        <h5 class="modal-title" id="requestDetailModalLabel"><i class="fa fa-eye"></i> 요청 상세</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="background: #f7f9fb;">
+        <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 24px 24px 12px 24px;">
+          <div class="row" style="margin-bottom: 18px;">
+            <div class="col-md-4" style="padding: 0 12px; border-right: 1px solid #e3e7ed; text-align: center;">
+              <div style="font-size:15px;color:#222;text-align: left; font-weight: bold ;">요청자</div>
+              <div
+                style="width: 64px; height: 64px; margin: 0 auto 12px; background: #e3e7ed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; color: #4a5568;">
+                <span id="detailUserAvatar">AV</span>
+              </div>
+              <div style="font-size: 18px; font-weight: bold; color: #222;" id="detailUserName">김철수</div>
+              <div style="font-size: 14px; color: #888; margin-bottom: 8px;" id="detailUserOrg">홍길동</div>
+              <div style="font-size: 13px; color: #666;">부서: <span id="detailUserDept">웹팀</span></div>
+              <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일: <span
+                  id="detailUserDate">2025/07/21</span></div>
+            </div>
+            <div class="col-md-8">
+              <div style="margin-bottom: 18px;">
+                <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">결재자</div>
+                <div id="detailApproverList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+              </div>
+              <div style="margin-bottom: 18px;">
+                <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom: 6px;">참조자</div>
+                <div id="detailCCList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="detailTitleInput" style="font-size: 14px; font-weight: bold;">제목 <span
+                style="color:red">*</span></label>
+            <input type="text" class="form-control form-control-sm" id="detailTitleInput" name="title" readonly>
+          </div>
+          <div class="form-group">
+            <label for="detailContentInput" style="font-size: 14px; font-weight: bold;">내용 <span
+                style="color:red">*</span></label>
+            <textarea class="form-control form-control-sm" id="detailContentInput" name="content" rows="3"
+              readonly></textarea>
+          </div>
+          <div class="form-row mb-2">
+            <div class="form-group col-md-6">
+              <label for="detailPriorityInput" style="font-size: 14px; font-weight: bold;">우선순위</label>
+              <select class="form-control form-control-sm" id="detailPriorityInput" name="priority" disabled>
+                <option value="낮음">낮음</option>
+                <option value="보통">보통</option>
+                <option value="높음">높음</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="detailDepartmentInput" style="font-size: 14px; font-weight: bold;">부서</label>
+              <input type="text" class="form-control form-control-sm" id="detailDepartmentInput" name="department"
+                readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="detailAttachmentInput" style="font-size: 14px; font-weight: bold;">첨부파일</label>
+            <input type="text" class="form-control form-control-sm" id="detailAttachmentInput" name="attachment"
+              readonly>
+          </div>
+          <!-- History -->
+          <div style="margin-bottom: 18px;">
+            <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">처리 이력</div>
+            <div id="detailHistory"
+              style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:300px;overflow:auto;">
+            </div>
+          </div>
+          <!-- Comment -->
+          <div style="margin-bottom: 18px;">
+            <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">댓글</div>
+            <div id="detailComments"
+              style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:300px;overflow:auto;">
+            </div>
+            <div class="input-group mt-2">
+              <input type="text" id="commentInput" class="form-control form-control-sm" placeholder="댓글을 입력하세요...">
+              <div class="input-group-append">
+                <button class="btn btn-harmony-blue btn-sm" id="addCommentBtn" type="button"><i
+                    class="fa fa-paper-plane"></i> 등록</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-harmony-blue btn-sm" id="approveBtn"><i class="fa fa-check"></i>
+          승인</button>
+        <button type="button" class="btn btn-outline-secondary btn-sm" id="rejectBtn"><i class="fa fa-times"></i>
+          반려</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  // Show request detail popup
+  function showRequestDetail(data) {
+    // Fill all fields in the form with request data
+    $('#detailUserAvatar').text(data.id ? data.id.slice(-2) : 'AV');
+    $('#detailUserName').text(data.title || '김철수');
+    $('#detailUserOrg').text(data.type || '홍길동');
+    $('#detailUserDept').text(data.department || '웹팀');
+    $('#detailUserDate').text(data.date || '2025/07/21');
+    $('#detailTitleInput').val(data.title || '요청 제목');
+    $('#detailContentInput').val('요청 내용 예시...');
+    $('#detailPriorityInput').val(data.priority || '보통');
+    $('#detailDepartmentInput').val(data.department || '웹팀');
+    // 첨부파일 mock UI
+    let fileHtml = '';
+    if (data.attachment && data.attachment.name) {
+      fileHtml = `
+          <div style="display:flex;align-items:center;gap:10px;background:#f7f7f7;border-radius:8px;padding:8px 14px;margin-bottom:6px;">
+            <i class="fa fa-file" style="color:#2563eb;font-size:18px;"></i>
+            <span style="font-size:14px;color:#222;font-weight:500;">${data.attachment.name}</span>
+            <span style="font-size:12px;color:#888;">${data.attachment.size}</span>
+            <button class="btn btn-outline-secondary btn-sm" style="border-radius:6px;padding:2px 8px;" onclick="alert('다운로드: ${data.attachment.name}')"><i class="fa fa-download"></i> 다운로드</button>
+          </div>
+        `;
+    } else {
+      fileHtml = `<span style="font-size:14px;color:#888;">첨부파일 없음</span>`;
+    }
+    $('#detailAttachmentInput').replaceWith(`<div id="detailAttachmentInput">${fileHtml}</div>`);
+    // Approvers: show trạng thái từng người
+    $('#detailApproverList').html((data.approvers || []).map(app => {
+      let statusHtml = '';
+      if (app.status === 'approved') {
+        statusHtml = `<span style='margin-left:6px;color:#2ecc40;font-weight:500;'><i class='fa fa-check-circle'></i> </span>`;
+      } else if (app.status === 'pending') {
+        statusHtml = `<span style='margin-left:6px;color:#f1c40f;font-weight:500;'><i class='fa fa-clock'></i> </span>`;
+      } else if (app.status === 'rejected') {
+        statusHtml = `<span style='margin-left:6px;color:#e74c3c;font-weight:500;'><i class='fa fa-times-circle'></i> </span>`;
+      }
+      return `<div style="display:flex;align-items:center;background:#f0f4fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
+          <div style='width:28px;height:28px;border-radius:50%;background:#2563eb22;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#2563eb;'>${app.avatar}</div>
+          <span style='font-size:14px;color:#222;'>${app.name}</span>
+          ${statusHtml}
+        </div>`;
+    }).join(''));
+
+    // CCs: show luôn dữ liệu nếu có
+    $('#detailCCList').html((data.ccs || []).map(name =>
+      `<div style="display:flex;align-items:center;background:#f6f0fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
+          <div style='width:28px;height:28px;border-radius:50%;background:#a259e622;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#a259e6;'><i class='fa fa-user'></i></div>
+          <span style='font-size:14px;color:#222;'>${name}</span>
+        </div>`
+    ).join(''));
+    // Timeline style for history
+    const historyItems = [
+      { date: '2025-07-18', text: '요청 생성', user: '김철수', type: 'create' },
+      { date: '2025-07-19', text: '이영희 승인', user: '이영희', type: 'approve' },
+      { date: '2025-07-20', text: '부서로 전달', user: '웹팀', type: 'send' }
+    ];
+    $('#detailHistory').html(`
+        <ul class="timeline-list" style="list-style:none;padding:0;margin:0;">
+          ${historyItems.map((item, idx) => `
+            <li style="position:relative;padding-left:32px;margin-bottom:18px;">
+              <span style="position:absolute;left:0;top:0;width:18px;height:18px;border-radius:50%;background:${item.type === 'approve' ? '#2ecc40' : item.type === 'create' ? '#2563eb' : '#888'};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:bold;">${idx + 1}</span>
+              <div style="font-size:13px;color:#888;">${item.date}</div>
+              <div style="font-size:15px;color:#222;font-weight:500;">${item.text}</div>
+              <div style="font-size:13px;color:#2563eb;">${item.user}</div>
+              ${idx < historyItems.length - 1 ? `<span style='position:absolute;left:8px;top:18px;width:2px;height:calc(100% - 18px);background:#e3e7ed;'></span>` : ''}
+            </li>
+          `).join('')}
+        </ul>
+      `);
+    // Modern comment style
+    const comments = [
+      { user: '김철수', text: '빠른 처리 부탁드립니다.', time: '2025-07-18 10:12' },
+      { user: '이영희', text: '승인 완료.', time: '2025-07-19 14:22' }
+    ];
+    $('#detailComments').html(`
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          ${comments.map(c => `
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#e3e7ed;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#2563eb;font-size:15px;">${c.user.split(' ').map(w => w[0]).join('').toUpperCase()}</div>
+              <div style="background:#fff;border-radius:8px;padding:10px 14px;box-shadow:0 1px 4px #0001;min-width:120px;">
+                <div style="font-size:14px;font-weight:500;color:#2563eb;">${c.user}</div>
+                <div style="font-size:14px;color:#222;margin-top:2px;">${c.text}</div>
+                <div style="font-size:12px;color:#888;margin-top:4px;">${c.time}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `);
+    // Add new comment
+    $('#addCommentBtn').off('click').on('click', function () {
+      const val = $('#commentInput').val();
+      if (val) {
+        const now = new Date();
+        const time = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        const user = '나';
+        $('#detailComments').append(`
+            <div style=\"display:flex;align-items:flex-start;gap:10px;margin-top:12px;\">
+              <div style=\"width:32px;height:32px;border-radius:50%;background:#e3e7ed;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#2563eb;font-size:15px;\">${user[0]}</div>
+              <div style=\"background:#fff;border-radius:8px;padding:10px 14px;box-shadow:0 1px 4px #0001;min-width:120px;\">
+                <div style=\"font-size:14px;font-weight:500;color:#2563eb;\">${user}</div>
+                <div style=\"font-size:14px;color:#222;margin-top:2px;\">${val}</div>
+                <div style=\"font-size:12px;color:#888;margin-top:4px;\">${time}</div>
+              </div>
+            </div>
+          `);
+        $('#commentInput').val('');
+      }
+    });
+    $('#approveBtn').off('click').on('click', function () { alert('승인: ' + data.id); });
+    $('#rejectBtn').off('click').on('click', function () { alert('반려: ' + data.id); });
+    $('#addCommentBtn').off('click').on('click', function () {
+      const val = $('#commentInput').val();
+      if (val) {
+        $('#detailComments').append(`<div><b>나:</b> ${val}</div>`);
+        $('#commentInput').val('');
+      }
+    });
+    $('#requestDetailModal').modal('show');
+  }
+</script>
+
+</html>
