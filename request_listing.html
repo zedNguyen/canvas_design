@@ -264,7 +264,7 @@
             </a>
           </div>
           <div id="cardBody" class="collapse show field-body" aria-hidden="false">
-            <div class="card-body">
+            <div class="card-body pl-0">
               <div class="row">
                 <div class="col-4 d-flex align-items-center">
                   <label for="filter-prod-from">기간</label>
@@ -277,6 +277,10 @@
                     style="vertical-align:middle; display: none;" />
                 </div>
 
+
+                <button id="btn-print" class="btn btn-harmony-blue btn-sm">
+                  <i class="fa fa-search"></i> 검색
+                </button>
               </div>
             </div>
           </div>
@@ -286,21 +290,17 @@
 
         <!-- Tabs for request types -->
         <ul class="nav nav-tabs mb-3" id="requestTabs" role="tablist">
+
           <li class="nav-item">
-            <a class="nav-link active" id="tab-all" data-toggle="tab" href="#tabAll" role="tab">전체 요청</a>
+            <a class="nav-link active" id="tab-approve" data-toggle="tab" href="#tabApprove" role="tab">결재함</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="tab-approve" data-toggle="tab" href="#tabApprove" role="tab">승인 필요</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="tab-sent" data-toggle="tab" href="#tabSent" role="tab">보낸 요청</a>
+            <a class="nav-link" id="tab-sent" data-toggle="tab" href="#tabSent" role="tab">상신함</a>
           </li>
         </ul>
         <div class="tab-content" id="requestTabContent">
-          <div class="tab-pane fade show active" id="tabAll" role="tabpanel">
-            <div id="agGridAll" class="ag-theme-balham" style="height:400px;width:100%;"></div>
-          </div>
-          <div class="tab-pane fade" id="tabApprove" role="tabpanel">
+
+          <div class="tab-pane fade show active" id="tabApprove" role="tabpanel">
             <div id="agGridApprove" class="ag-theme-balham" style="height:400px;width:100%;"></div>
           </div>
           <div class="tab-pane fade" id="tabSent" role="tabpanel">
@@ -352,137 +352,7 @@
   <input id="message" type="hidden" value="" />
 
   <!-- Modal Request Popup -->
-  <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <form id="requestForm" class="modal-content" style="border-radius: 16px; overflow: hidden;">
-        <div class="modal-header" style="border-bottom: 1px solid #f0f0f0;">
-          <h5 class="modal-title" id="requestModalLabel"><i class="fa fa-paper-plane"></i> 새 요청 등록</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" style="background: #f7f9fb;">
 
-
-          <div
-            style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 24px 24px 12px 24px;">
-            <!-- 결재자 -->
-            <div class="row" style="margin-bottom: 18px;">
-              <div class="col-md-4" style="padding: 0 12px; border-right: 1px solid #e3e7ed; text-align: center;">
-                <div style="font-size:15px;color:#222;text-align: left; font-weight: bold ;">요청자</div>
-                <div
-                  style="width: 64px; height: 64px; margin: 0 auto 12px; background: #e3e7ed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; color: #4a5568;">
-                  <span id="userAvatar">AV</span>
-                </div>
-                <div style="font-size: 18px; font-weight: bold; color: #222;" id="userName">김철수</div>
-                <div style="font-size: 14px; color: #888; margin-bottom: 8px;" id="userOrg">홍길동</div>
-                <div style="font-size: 13px; color: #666;">부서: <span id="userDept">웹팀</span></div>
-                <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일: <span id="userDate">2025/07/21</span>
-                </div>
-
-              </div>
-              <div class="col-md-8">
-                <div style="margin-bottom: 18px;">
-                  <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">결재자</div>
-                  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-                    <div id="approverList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                    <button class="btn btn-light btn-sm" type="button" id="showApproverSelect"
-                      style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;"><i
-                        class="fa fa-plus" style="color:#2563eb;"></i></button>
-                    <div id="approverSelectWrap" style="display:none;min-width:180px;">
-                      <div class="input-group mb-2" style="max-width: 220px;">
-                        <select class="form-control form-control-sm" id="approverSelect">
-                          <option value="">결재자 선택</option>
-                          <option value="박민수">박민수</option>
-                          <option value="이영희">이영희</option>
-                          <option value="최지훈">최지훈</option>
-                        </select>
-                        <div class="input-group-append">
-                          <button class="btn btn-primary btn-sm" type="button" id="addApprover">확인</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- 참조자 -->
-                <div style="margin-bottom: 18px;">
-                  <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom: 6px;">참조자</div>
-                  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-                    <div id="ccList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                    <button class="btn btn-light btn-sm" type="button" id="showCCSelect"
-                      style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;"><i
-                        class="fa fa-plus" style="color:#a259e6;"></i></button>
-                    <div id="ccSelectWrap" style="display:none;min-width:180px;">
-                      <div class="input-group mb-2" style="max-width: 220px;">
-                        <select class="form-control form-control-sm" id="ccSelect">
-                          <option value="">참조자 선택</option>
-                          <option value="김영수">김영수</option>
-                          <option value="박지은">박지은</option>
-                          <option value="정우성">정우성</option>
-                        </select>
-                        <div class="input-group-append">
-                          <button class="btn btn-purple btn-sm" type="button" id="addCC">확인</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            <!-- 제목, 내용, 우선순위, 부서, 첨부파일 -->
-            <div class="form-group">
-              <label for="title" style="font-size: 14px; font-weight: bold;">제목 <span style="color:red">*</span></label>
-              <input type="text" class="form-control form-control-sm" id="title" name="title" placeholder="요청 제목을 입력하세요"
-                required>
-            </div>
-            <div class="form-group">
-              <label for="content" style="font-size: 14px; font-weight: bold;">내용 <span
-                  style="color:red">*</span></label>
-              <textarea class="form-control form-control-sm" id="content" name="content" rows="3"
-                placeholder="요청 내용을 입력하세요" required></textarea>
-            </div>
-            <div class="form-row mb-2">
-              <div class="form-group col-md-6">
-                <label for="priority" style="font-size: 14px; font-weight: bold;">우선순위</label>
-                <select class="form-control form-control-sm" id="priority" name="priority">
-                  <option value="낮음">낮음</option>
-                  <option value="보통">보통</option>
-                  <option value="높음">높음</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="department" style="font-size: 14px; font-weight: bold;">부서</label>
-                <input type="text" class="form-control form-control-sm" id="department" name="department"
-                  placeholder="관련 부서를 입력하세요">
-              </div>
-            </div>
-            <!-- 첨부파일 (드래그 앤 드롭 유지) -->
-            <div class="form-group">
-              <label for="attachment" style="font-size: 14px; font-weight: bold;">첨부파일</label>
-              <div id="drop-area"
-                style="border: 2px dashed #bdbdbd; border-radius: 12px; background: #fff; padding: 32px 0; text-align: center; margin-top: 8px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s;">
-                <span style="font-size: 16px; color: #444;">여기로 파일을 끌어다 놓거나 <span id="browseFile"
-                    style="color: #2563eb; text-decoration: underline; cursor: pointer;">파일 선택</span></span>
-                <div style="font-size: 12px; color: #888; margin-top: 8px;">최대 크기: 5MB (PDF, DOCX, XLSX, JPG, PNG 지원)
-                </div>
-                <input type="file" id="attachment" name="attachment" style="display: none;"
-                  accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" />
-                <div id="fileName" style="margin-top: 10px; font-size: 14px; color: #2563eb;"></div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
-          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
-          <button type="submit" class="btn btn-harmony-blue btn-sm"><i class="fa fa-paper-plane"></i> 요청 보내기</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
 
   <script>
@@ -561,22 +431,9 @@
         }
       },
       {
-        headerName: '요청 유형',
-        field: 'type',
-        minWidth: 110,
-        cellClass: 'ag-left-cell',
-        cellRenderer: function (params) {
-          const type = params.value;
-          let color = '#2563eb', bg = '#f0f4fa', text = type;
-          if (type === '승인 필요') { color = '#f39c12'; bg = '#fff8e1'; }
-          else if (type === '보낸 요청') { color = '#888'; bg = '#f7f7f7'; }
-          return `<span style="display:inline-block;padding:0px 12px;border-radius:5px;font-size:13px;font-weight:500;color:${color};background:${bg};min-width:70px;">${text}</span>`;
-        }
-      },
-      {
         headerName: '결재자',
         field: 'approvers',
-        minWidth: 160,
+        minWidth: 428,
         cellClass: 'ag-center-cell',
         cellRenderer: function (params) {
           const approvers = params.value || [];
@@ -605,8 +462,8 @@
             return `<span style="display:inline-block;padding:0px 12px;border-radius:5px;font-size:13px;font-weight:500;color:#e74c3c;background:#fdeaea;min-width:70px;">반려됨</span>`;
           } else if (data.canApprove) {
             return `
-              <button class='btn btn-harmony-blue btn-sm' style='margin-right:6px;border-radius:6px;padding:0px 8px;' title='승인' onclick="confirmAction('approve', '${data.id}', function() { alert('승인: ${data.id}'); })"><i class='fa fa-check'></i> <span style='font-weight:500;'>승인</span></button>
-              <button class='btn btn-outline-secondary btn-sm' style='border-radius:6px;padding:0px 8px;' title='반려' onclick="confirmAction('reject', '${data.id}', function() { alert('반려: ${data.id}'); })"><i class='fa fa-times'></i> <span style='font-weight:500;'>반려</span></button>
+              <button class='btn btn-success btn-sm' style='margin-right:6px;border-radius:6px;padding:0px 8px;background-color:#2ecc40;border-color:#2ecc40;color:#fff;' title='승인' onclick="alert('승인: ${data.id}')"><i class='fa fa-check'></i> <span style='font-weight:500;'>승인</span></button>
+              <button class='btn btn-danger btn-sm' style='border-radius:6px;padding:0px 8px;background-color:#e53e3e;border-color:#e53e3e;color:#fff;' title='반려' onclick="alert('반려: ${data.id}')"><i class='fa fa-times'></i> <span style='font-weight:500;'>반려</span></button>
             `;
           } else {
             return `<span style="color:#888;">승인 불가</span>`;
@@ -662,172 +519,8 @@
     });
   </script>
 
-  <!-- Custom Confirm Modal -->
-  <style>
-    /* Ensure custom confirm modal is always on top */
-    #customConfirmModal .modal-dialog {
-      z-index: 12000 !important;
-    }
-
-    #customConfirmModal {
-      z-index: 12000 !important;
-    }
-  </style>
-  <div class="modal fade" id="customConfirmModal" tabindex="-1" role="dialog" aria-labelledby="customConfirmModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content" style="border-radius: 12px; overflow: hidden;">
-        <div class="modal-header" style="border-bottom: 1px solid #f0f0f0;">
-          <h5 class="modal-title" id="customConfirmModalLabel">확인</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" id="customConfirmMessage"
-          style="font-size:16px;color:#222;padding:24px 18px 12px 18px;text-align:center;"></div>
-        <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
-          <button type="button" class="btn btn-secondary btn-sm" id="customConfirmCancel">취소</button>
-          <button type="button" class="btn btn-harmony-blue btn-sm" id="customConfirmOk">확인</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Custom confirm logic
-    function showCustomConfirm(message, onConfirm) {
-      $('#customConfirmMessage').text(message);
-      $('#customConfirmModal').modal('show');
-      // Remove previous handlers
-      $('#customConfirmOk').off('click');
-      $('#customConfirmCancel').off('click');
-      // OK
-      $('#customConfirmOk').on('click', function () {
-        $('#customConfirmModal').modal('hide');
-        if (onConfirm) onConfirm();
-      });
-      // Cancel
-      $('#customConfirmCancel, .close').on('click', function () {
-        $('#customConfirmModal').modal('hide');
-      });
-    }
-    // Confirmation utility (global)
-    function confirmAction(action, id, callback) {
-      const actionText = action === 'approve' ? '승인' : '반려';
-      showCustomConfirm(`정말로 이 요청을 ${actionText}하시겠습니까?`, callback);
-    }
-  </script>
   <!-- 타임리프 사용을 위해서 th:inline="javascript" -->
-  <script>
-  </script>
-  <script>
-    // Column definitions for production grid (tái sử dụng)
-    const productionColumnDefs = [
-      { headerName: "출력선택", field: "print_select", width: 90, checkboxSelection: true, headerCheckboxSelection: true },
-      { headerName: "생산일자", field: "prod_date", width: 110 },
-      { headerName: "작업순서", field: "work_order", width: 90 },
-      { headerName: "호기", field: "machine_no", width: 70 },
-      { headerName: "생태", field: "prod_type", width: 70 },
-      { headerName: "판매처", field: "seller", width: 110 },
-      { headerName: "납품처", field: "buyer", width: 110 },
-      { headerName: "납기일자", field: "due_date", width: 110 },
-      { headerName: "납기시간", field: "due_time", width: 90 },
-      { headerName: "영업오더", field: "sales_order", width: 110 },
-      { headerName: "작업유형", field: "job_type", width: 90 },
-      { headerName: "생산오더", field: "prod_order", width: 110 },
-      { headerName: "재단구분", field: "cut_type", width: 90 },
-      { headerName: "FSC", field: "fsc", width: 60 },
-      { headerName: "투입지종", field: "input_paper", width: 90 },
-      { headerName: "투입평량", field: "input_weight", width: 90 },
-      { headerName: "투입가로", field: "input_width", width: 90 },
-      { headerName: "투입세로", field: "input_height", width: 90 },
-      { headerName: "투입인치", field: "input_inch", width: 90 },
-      { headerName: "계획 폭", field: "plan_width", width: 90 },
-      { headerName: "계획 가로", field: "plan_garo", width: 90 },
-      { headerName: "계획 세로", field: "plan_sero", width: 90 },
-      { headerName: "계획 수량( R )", field: "plan_qty_r", width: 110 },
-      { headerName: "계획 중량 (Kg)", field: "plan_weight_kg", width: 120 },
-      { headerName: "투입 롤수", field: "input_roll_cnt", width: 90 },
-      { headerName: "기계 속도", field: "machine_speed", width: 90 },
-      { headerName: "작업시간(분)", field: "work_time_min", width: 110 },
-      { headerName: "소요 길이", field: "need_length", width: 90 },
-      { headerName: "소요 (분)", field: "need_min", width: 90 },
-      { headerName: "중지(분)", field: "stop_min", width: 90 },
-      { headerName: "중지사유", field: "stop_reason", width: 110 },
-      { headerName: "CUT (정매)", field: "cut_main", width: 90 },
-      { headerName: "CUT (여분)", field: "cut_extra", width: 90 },
-      { headerName: "PT", field: "pt", width: 60 },
-      { headerName: "생산지시 선택", field: "prod_select", width: 110 },
-      { headerName: "확정 처리", field: "confirm_proc", width: 90 },
-      { headerName: "삭제 처리", field: "delete_proc", width: 90 },
-      { headerName: "비고 (생산유의사항)", field: "note_prod", width: 160 },
-      { headerName: "비고2 (포장유의사항)", field: "note_pack", width: 160 },
-      { headerName: "전달 사항", field: "note_transfer", width: 120 }
-    ];
-
-    // Grid options for production grid
-    const productionGridOptions = {
-      columnDefs: productionColumnDefs,
-      rowSelection: 'multiple',
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 60
-      },
-      suppressRowClickSelection: false,
-      animateRows: true,
-      rowData: [
-        {
-          print_select: false,
-          prod_date: "2025-07-10",
-          work_order: "1",
-          machine_no: "1호기",
-          prod_type: "일반",
-          seller: "한솔PNS",
-          buyer: "고객A",
-          due_date: "2025-07-14",
-          due_time: "14:00",
-          sales_order: "SO123456",
-          job_type: "절단",
-          prod_order: "PO987654",
-          cut_type: "정매",
-          fsc: "Y",
-          input_paper: "백상지",
-          input_weight: "80",
-          input_width: "1000",
-          input_height: "1200",
-          input_inch: "39.4",
-          plan_width: "1000",
-          plan_garo: "1000",
-          plan_sero: "1200",
-          plan_qty_r: "10",
-          plan_weight_kg: "800",
-          input_roll_cnt: "2",
-          machine_speed: "150",
-          work_time_min: "60",
-          need_length: "1500",
-          need_min: "60",
-          stop_min: "0",
-          stop_reason: "",
-          cut_main: "10",
-          cut_extra: "1",
-          pt: "PT1",
-          prod_select: false,
-          confirm_proc: "N",
-          delete_proc: "N",
-          note_prod: "주의사항 없음",
-          note_pack: "포장 주의",
-          note_transfer: "전달사항 없음"
-        }
-      ] // Dữ liệu sẽ được load động
-    };
-
-    // Khởi tạo grid khi DOM ready
-    document.addEventListener('DOMContentLoaded', function () {
-      new agGrid.Grid(document.getElementById('productionGrid'), productionGridOptions);
-    });
-  </script>
+  <!-- ...existing code... -->
   <script>
     $(function () {
       var path = window.location.pathname;
@@ -932,39 +625,46 @@
 <!-- Modal Request Detail Popup -->
 <div class="modal fade" id="requestDetailModal" tabindex="-1" role="dialog" aria-labelledby="requestDetailModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <form class="modal-content" style="border-radius: 16px; overflow: hidden;">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content" style=" overflow: hidden;">
       <div class="modal-header" style="border-bottom: 1px solid #f0f0f0;">
         <h5 class="modal-title" id="requestDetailModalLabel"><i class="fa fa-eye"></i> 요청 상세</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" style="background: #f7f9fb;">
-        <div style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 24px 24px 12px 24px;">
-          <div class="row" style="margin-bottom: 18px;">
-            <div class="col-md-4" style="padding: 0 12px; border-right: 1px solid #e3e7ed; text-align: center;">
-              <div style="font-size:15px;color:#222;text-align: left; font-weight: bold ;">요청자</div>
+      <div class="modal-body" style="background: #f7f9fb; padding: 0;">
+        <div style="background: #fff; padding: 24px 12px 12px 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style=" display: flex; align-items: center; gap: 16px;">
               <div
-                style="width: 64px; height: 64px; margin: 0 auto 12px; background: #e3e7ed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; color: #4a5568;">
-                <span id="detailUserAvatar">AV</span>
+                style="width: 50px; height: 50px; background: #e3e7ed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; color: #4a5568;">
+                <span id="userAvatar">김</span>
               </div>
-              <div style="font-size: 18px; font-weight: bold; color: #222;" id="detailUserName">김철수</div>
-              <div style="font-size: 14px; color: #888; margin-bottom: 8px;" id="detailUserOrg">홍길동</div>
-              <div style="font-size: 13px; color: #666;">부서: <span id="detailUserDept">웹팀</span></div>
-              <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일: <span
-                  id="detailUserDate">2025/07/21</span></div>
+              <div>
+                <div style="font-size: 18px; font-weight: bold; color: #222;" id="userName">김철수</div>
+                <div style="font-size: 13px; color: #666;">조직: <span id="userDept">웹팀</span></div>
+
+              </div>
+
             </div>
-            <div class="col-md-8">
-              <div style="margin-bottom: 18px;">
-                <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">결재자</div>
-                <div id="detailApproverList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+
+
+            <div>
+              <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일: <span id="userDate">2025/07/21</span>
               </div>
-              <div style="margin-bottom: 18px;">
-                <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom: 6px;">참조자</div>
-                <div id="detailCCList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+              <div style="float: right;">
+                <select id="priority" name="priority"
+                  style="padding: 0px 12px; border-radius: 5px; border: 1px solid #e3e7ed; font-size: 15px; font-weight: 500; background: #f7f9fb; color: #222; outline: none; appearance: none; position: relative; margin-bottom: 0;">
+                  <option value="low" data-color="#38b2ac">낮음</option>
+                  <option value="medium" data-color="#f6ad55">보통</option>
+                  <option value="high" data-color="#f56565">높음</option>
+                  <option value="urgent" data-color="#e53e3e">긴급</option>
+                </select>
               </div>
+
             </div>
+
           </div>
           <div class="form-group">
             <label for="detailTitleInput" style="font-size: 14px; font-weight: bold;">제목 <span
@@ -977,76 +677,132 @@
             <textarea class="form-control form-control-sm" id="detailContentInput" name="content" rows="3"
               readonly></textarea>
           </div>
-          <div class="form-row mb-2">
-            <div class="form-group col-md-6">
-              <label for="detailPriorityInput" style="font-size: 14px; font-weight: bold;">우선순위</label>
-              <select class="form-control form-control-sm" id="detailPriorityInput" name="priority" disabled>
-                <option value="낮음">낮음</option>
-                <option value="보통">보통</option>
-                <option value="높음">높음</option>
-              </select>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="detailDepartmentInput" style="font-size: 14px; font-weight: bold;">부서</label>
-              <input type="text" class="form-control form-control-sm" id="detailDepartmentInput" name="department"
-                readonly>
-            </div>
-          </div>
           <div class="form-group">
             <label for="detailAttachmentInput" style="font-size: 14px; font-weight: bold;">첨부파일</label>
             <input type="text" class="form-control form-control-sm" id="detailAttachmentInput" name="attachment"
               readonly>
           </div>
-          <!-- History -->
-          <div style="margin-bottom: 18px;">
-            <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">처리 이력</div>
-            <div id="detailHistory"
-              style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:300px;overflow:auto;">
+
+          <div class="row" style="padding: 0;">
+            <div class="col-6" style="padding: 0; padding-right: 5px;">
+              <!-- History -->
+              <div style="margin-bottom: 18px;">
+                <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">처리 이력</div>
+                <div id="detailHistory"
+                  style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:200px;overflow:auto;">
+                </div>
+              </div>
+
             </div>
+
+            <div class="col-6" style="padding: 0; padding-left: 5px;">
+              <!-- Comment -->
+              <div style="margin-bottom: 18px;">
+                <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">댓글</div>
+                <div id="detailComments"
+                  style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:200px;overflow:auto;">
+                </div>
+                <div class="input-group mt-2">
+                  <input type="text" id="commentInput" class="form-control form-control-sm" placeholder="댓글을 입력하세요...">
+                  <div class="input-group-append">
+                    <button class="btn btn-harmony-blue btn-sm" id="addCommentBtn" type="button"><i
+                        class="fa fa-paper-plane"></i> 등록</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+
           </div>
-          <!-- Comment -->
-          <div style="margin-bottom: 18px;">
-            <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">댓글</div>
-            <div id="detailComments"
-              style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:300px;overflow:auto;">
-            </div>
-            <div class="input-group mt-2">
-              <input type="text" id="commentInput" class="form-control form-control-sm" placeholder="댓글을 입력하세요...">
-              <div class="input-group-append">
-                <button class="btn btn-harmony-blue btn-sm" id="addCommentBtn" type="button"><i
-                    class="fa fa-paper-plane"></i> 등록</button>
+
+
+
+          <div>
+            <div class="approval-line-wrap" style="margin-top:18px;">
+              <div class="d-flex align-items-center mb-2" style="gap:12px; justify-content: space-between; ">
+                <div>
+                  <button id="applyDefaultLine" type="button" class="btn btn-harmony-blue btn-sm"><i
+                      class="fa fa-sync"></i> 기본
+                    결재선 적용</button>
+                  <button id="saveDefaultLine" type="button" class="btn btn-outline-secondary btn-sm"><i
+                      class="fa fa-save"></i>
+                    결재선 저장</button>
+
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <div class="form-check form-switch ml-2">
+                    <input class="form-check-input" type="checkbox" id="parallelApproval" style="display: none;">
+                    <label id="parallelApprovalWrapper" class="form-check-label" for="parallelApproval"
+                      style="font-size:14px;">병렬 결재</label>
+
+                  </div>
+                  <button id="addApprovalRow" type="button" class="btn btn-outline-primary btn-sm"
+                    style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:18px;border:none;"><i
+                      class="fa fa-plus"></i></button>
+                  <div id="zedd"></div>
+
+                </div>
+
+
+              </div>
+              <div id="approvalGrid" class="ag-theme-balham"
+                style="height: 300px; width: 100%; background: #fff; border-radius: 12px; box-shadow:0 1px 8px #0001; font-size:15px;">
+              </div>
+
+              <!-- User Search Popup -->
+              <div id="userSearchModal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title"><i class="fa fa-search"></i> 결재자 검색</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                          aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                      <input type="text" id="userSearchInput" class="form-control mb-2"
+                        placeholder="이름, 아이디, 직책으로 검색..." style="border:none;box-shadow:none;">
+                      <div id="userSearchList"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+
           </div>
+
         </div>
       </div>
       <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-harmony-blue btn-sm" id="approveBtn"><i class="fa fa-check"></i>
+        <button type="button" class="btn btn-success btn-sm" id="approveBtn"
+          style="background-color:#2ecc40;border-color:#2ecc40;color:#fff;"><i class="fa fa-check"></i>
           승인</button>
-        <button type="button" class="btn btn-outline-secondary btn-sm" id="rejectBtn"><i class="fa fa-times"></i>
+        <button type="button" class="btn btn-danger btn-sm" id="rejectBtn"
+          style="background-color:#e53e3e;border-color:#e53e3e;color:#fff;"><i class="fa fa-times" style=""></i>
           반려</button>
       </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
-<script>
-  // Show request detail popup
-  function showRequestDetail(data) {
-    // Fill all fields in the form with request data
-    $('#detailUserAvatar').text(data.id ? data.id.slice(-2) : 'AV');
-    $('#detailUserName').text(data.title || '김철수');
-    $('#detailUserOrg').text(data.type || '홍길동');
-    $('#detailUserDept').text(data.department || '웹팀');
-    $('#detailUserDate').text(data.date || '2025/07/21');
-    $('#detailTitleInput').val(data.title || '요청 제목');
-    $('#detailContentInput').val('요청 내용 예시...');
-    $('#detailPriorityInput').val(data.priority || '보통');
-    $('#detailDepartmentInput').val(data.department || '웹팀');
-    // 첨부파일 mock UI
-    let fileHtml = '';
-    if (data.attachment && data.attachment.name) {
-      fileHtml = `
+  <script>
+    // Show request detail popup
+    function showRequestDetail(data) {
+      // Fill all fields in the form with request data
+      $('#detailUserAvatar').text(data.id ? data.id.slice(-2) : 'AV');
+      $('#detailUserName').text(data.title || '김철수');
+      $('#detailUserOrg').text(data.type || '홍길동');
+      $('#detailUserDept').text(data.department || '웹팀');
+      $('#detailUserDate').text(data.date || '2025/07/21');
+      $('#detailTitleInput').val(data.title || '요청 제목');
+      $('#detailContentInput').val('요청 내용 예시...');
+      $('#detailPriorityInput').val(data.priority || '보통');
+      $('#detailDepartmentInput').val(data.department || '웹팀');
+      // 첨부파일 mock UI
+      let fileHtml = '';
+      if (data.attachment && data.attachment.name) {
+        fileHtml = `
           <div style="display:flex;align-items:center;gap:10px;background:#f7f7f7;border-radius:8px;padding:8px 14px;margin-bottom:6px;">
             <i class="fa fa-file" style="color:#2563eb;font-size:18px;"></i>
             <span style="font-size:14px;color:#222;font-weight:500;">${data.attachment.name}</span>
@@ -1054,80 +810,88 @@
             <button class="btn btn-outline-secondary btn-sm" style="border-radius:6px;padding:2px 8px;" onclick="alert('다운로드: ${data.attachment.name}')"><i class="fa fa-download"></i> 다운로드</button>
           </div>
         `;
-    } else {
-      fileHtml = `<span style="font-size:14px;color:#888;">첨부파일 없음</span>`;
-    }
-    $('#detailAttachmentInput').replaceWith(`<div id="detailAttachmentInput">${fileHtml}</div>`);
-    // Approvers: show trạng thái từng người
-    $('#detailApproverList').html((data.approvers || []).map(app => {
-      let statusHtml = '';
-      if (app.status === 'approved') {
-        statusHtml = `<span style='margin-left:6px;color:#2ecc40;font-weight:500;'><i class='fa fa-check-circle'></i> </span>`;
-      } else if (app.status === 'pending') {
-        statusHtml = `<span style='margin-left:6px;color:#f1c40f;font-weight:500;'><i class='fa fa-clock'></i> </span>`;
-      } else if (app.status === 'rejected') {
-        statusHtml = `<span style='margin-left:6px;color:#e74c3c;font-weight:500;'><i class='fa fa-times-circle'></i> </span>`;
+      } else {
+        fileHtml = `<span style="font-size:14px;color:#888;">첨부파일 없음</span>`;
       }
-      return `<div style="display:flex;align-items:center;background:#f0f4fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
+      $('#detailAttachmentInput').replaceWith(`<div id="detailAttachmentInput">${fileHtml}</div>`);
+      // Approvers: show trạng thái từng người
+      $('#detailApproverList').html((data.approvers || []).map(app => {
+        let statusHtml = '';
+        if (app.status === 'approved') {
+          statusHtml = `<span style='margin-left:6px;color:#2ecc40;font-weight:500;'><i class='fa fa-check-circle'></i> </span>`;
+        } else if (app.status === 'pending') {
+          statusHtml = `<span style='margin-left:6px;color:#f1c40f;font-weight:500;'><i class='fa fa-clock'></i> </span>`;
+        } else if (app.status === 'rejected') {
+          statusHtml = `<span style='margin-left:6px;color:#e74c3c;font-weight:500;'><i class='fa fa-times-circle'></i> </span>`;
+        }
+        return `<div style="display:flex;align-items:center;background:#f0f4fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
           <div style='width:28px;height:28px;border-radius:50%;background:#2563eb22;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#2563eb;'>${app.avatar}</div>
           <span style='font-size:14px;color:#222;'>${app.name}</span>
           ${statusHtml}
         </div>`;
-    }).join(''));
+      }).join(''));
 
-    // CCs: show luôn dữ liệu nếu có
-    $('#detailCCList').html((data.ccs || []).map(name =>
-      `<div style="display:flex;align-items:center;background:#f6f0fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
+      // CCs: show luôn dữ liệu nếu có
+      $('#detailCCList').html((data.ccs || []).map(name =>
+        `<div style="display:flex;align-items:center;background:#f6f0fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
           <div style='width:28px;height:28px;border-radius:50%;background:#a259e622;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#a259e6;'><i class='fa fa-user'></i></div>
           <span style='font-size:14px;color:#222;'>${name}</span>
         </div>`
-    ).join(''));
-    // Timeline style for history
-    const historyItems = [
-      { date: '2025-07-18', text: '요청 생성', user: '김철수', type: 'create' },
-      { date: '2025-07-19', text: '이영희 승인', user: '이영희', type: 'approve' },
-      { date: '2025-07-20', text: '부서로 전달', user: '웹팀', type: 'send' }
-    ];
-    $('#detailHistory').html(`
+      ).join(''));
+      // Timeline style for history
+      const historyItems = [
+        { date: '2025-07-18', text: '요청 생성', user: '김철수', type: 'create' },
+        { date: '2025-07-19', text: '이영희 승인', user: '이영희', type: 'approve' },
+        { date: '2025-07-20', text: '부서로 전달', user: '웹팀', type: 'send' }
+      ];
+      $('#detailHistory').html(`
         <ul class="timeline-list" style="list-style:none;padding:0;margin:0;">
           ${historyItems.map((item, idx) => `
-            <li style="position:relative;padding-left:32px;margin-bottom:18px;">
+            <li style="position:relative;padding-left:32px;margin-bottom:18px; ">
               <span style="position:absolute;left:0;top:0;width:18px;height:18px;border-radius:50%;background:${item.type === 'approve' ? '#2ecc40' : item.type === 'create' ? '#2563eb' : '#888'};display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:bold;">${idx + 1}</span>
-              <div style="font-size:13px;color:#888;">${item.date}</div>
-              <div style="font-size:15px;color:#222;font-weight:500;">${item.text}</div>
+             <div style="display:flex;gap:4px;">
               <div style="font-size:13px;color:#2563eb;">${item.user}</div>
+              <div style="font-size:13px;color:#888;">${item.date}</div>
+              </div>
+              
+              <div style="font-size:15px;color:#222;font-weight:500;">${item.text}</div>
+              
               ${idx < historyItems.length - 1 ? `<span style='position:absolute;left:8px;top:18px;width:2px;height:calc(100% - 18px);background:#e3e7ed;'></span>` : ''}
             </li>
           `).join('')}
         </ul>
       `);
-    // Modern comment style
-    const comments = [
-      { user: '김철수', text: '빠른 처리 부탁드립니다.', time: '2025-07-18 10:12' },
-      { user: '이영희', text: '승인 완료.', time: '2025-07-19 14:22' }
-    ];
-    $('#detailComments').html(`
+      // Modern comment style
+      const comments = [
+        { user: '김철수', text: '빠른 처리 부탁드립니다.', time: '2025-07-18 10:12' },
+        { user: '이영희', text: '승인 완료.', time: '2025-07-19 14:22' }
+      ];
+      $('#detailComments').html(`
         <div style="display:flex;flex-direction:column;gap:12px;">
           ${comments.map(c => `
             <div style="display:flex;align-items:flex-start;gap:10px;">
               <div style="width:32px;height:32px;border-radius:50%;background:#e3e7ed;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#2563eb;font-size:15px;">${c.user.split(' ').map(w => w[0]).join('').toUpperCase()}</div>
               <div style="background:#fff;border-radius:8px;padding:10px 14px;box-shadow:0 1px 4px #0001;min-width:120px;">
-                <div style="font-size:14px;font-weight:500;color:#2563eb;">${c.user}</div>
+                <div style="display:flex;justify-content:space-between;align-items:center; gap: 20px;">
+                  <div style="font-size:14px;font-weight:500;color:#2563eb;">${c.user}</div>
+                  <div style="font-size:12px;color:#888;">${c.time}</div>
+                  </div>
+                
                 <div style="font-size:14px;color:#222;margin-top:2px;">${c.text}</div>
-                <div style="font-size:12px;color:#888;margin-top:4px;">${c.time}</div>
+                
               </div>
             </div>
           `).join('')}
         </div>
       `);
-    // Add new comment
-    $('#addCommentBtn').off('click').on('click', function () {
-      const val = $('#commentInput').val();
-      if (val) {
-        const now = new Date();
-        const time = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        const user = '나';
-        $('#detailComments').append(`
+      // Add new comment
+      $('#addCommentBtn').off('click').on('click', function () {
+        const val = $('#commentInput').val();
+        if (val) {
+          const now = new Date();
+          const time = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+          const user = '나';
+          $('#detailComments').append(`
             <div style=\"display:flex;align-items:flex-start;gap:10px;margin-top:12px;\">
               <div style=\"width:32px;height:32px;border-radius:50%;background:#e3e7ed;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#2563eb;font-size:15px;\">${user[0]}</div>
               <div style=\"background:#fff;border-radius:8px;padding:10px 14px;box-shadow:0 1px 4px #0001;min-width:120px;\">
@@ -1137,28 +901,351 @@
               </div>
             </div>
           `);
-        $('#commentInput').val('');
-      }
-    });
-    $('#approveBtn').off('click').on('click', function () {
-      confirmAction('approve', data.id, function () {
-        alert('승인: ' + data.id);
+          $('#commentInput').val('');
+        }
       });
-    });
-    $('#rejectBtn').off('click').on('click', function () {
-      confirmAction('reject', data.id, function () {
-        alert('반려: ' + data.id);
+      $('#approveBtn').off('click').on('click', function () { alert('승인: ' + data.id); });
+      $('#rejectBtn').off('click').on('click', function () { alert('반려: ' + data.id); });
+      $('#addCommentBtn').off('click').on('click', function () {
+        const val = $('#commentInput').val();
+        if (val) {
+          $('#detailComments').append(`<div><b>나:</b> ${val}</div>`);
+          $('#commentInput').val('');
+        }
       });
-    });
-    $('#addCommentBtn').off('click').on('click', function () {
-      const val = $('#commentInput').val();
-      if (val) {
-        $('#detailComments').append(`<div><b>나:</b> ${val}</div>`);
-        $('#commentInput').val('');
+      $('#requestDetailModal').modal('show');
+    }
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      // Approval Line Component
+      let isEdit = false; // 상태 변수
+      const mockUsers = [
+        { id: 'u001', name: '김철수', title: '팀장', dept: '웹팀' },
+        { id: 'u002', name: '박민수', title: '과장', dept: '영업팀' },
+        { id: 'u003', name: '이영희', title: '대리', dept: '기획팀' },
+        { id: 'u004', name: '최지훈', title: '사원', dept: '개발팀' },
+        { id: 'u005', name: '정수진', title: '부장', dept: '인사팀' },
+        { id: 'u006', name: '조현우', title: '팀장', dept: '마케팅팀' },
+        { id: 'u007', name: '한지민', title: '과장', dept: '재무팀' },
+        { id: 'u008', name: '윤아름', title: '대리', dept: '운영팀' },
+        { id: 'u009', name: '오세훈', title: '사원', dept: '고객지원' },
+        { id: 'u010', name: '신동엽', title: '부장', dept: '기술팀' }
+      ];
+      const lineTypes = [
+        { value: '기안', label: '기안' },
+        { value: '결재', label: '결재' },
+        { value: '합의', label: '합의' },
+        { value: '통보', label: '통보' },
+        { value: '확정', label: '확정' }
+      ];
+      const defaultLine = [
+        { order: 0, type: '기안', user: mockUsers[0], dept: mockUsers[0].dept }
+      ];
+      let approvalLine = JSON.parse(JSON.stringify(defaultLine));
+      let approvalGridApi = null;
+
+      // 동적 컬럼 생성 함수
+      function getApprovalColumnDefs() {
+        return [
+          {
+            headerName: '순번',
+            field: 'order',
+            minWidth: 60,
+            flex: 1,
+            valueGetter: params => params.node.rowIndex,
+            cellClass: 'ag-center-cell',
+            suppressMenu: true
+          },
+          {
+            headerName: '유형',
+            field: 'type',
+            minWidth: 100,
+            flex: 2,
+            cellRenderer: params => {
+              if (!isEdit) return `<span>${params.value}</span>`;
+              const options = lineTypes.map(t => `<option value='${t.value}' ${params.value === t.value ? 'selected' : ''}>${t.label}</option>`).join('');
+              return `<select class='form-control form-control-sm approval-type-select' style='border:none;box-shadow:none;height:36px;text-align:center;'>${options}</select>`;
+            },
+            editable: isEdit,
+            cellClass: 'ag-center-cell'
+          },
+          {
+            headerName: '결재자',
+            field: 'user',
+            minWidth: 180,
+            flex: 3,
+            cellRenderer: params => {
+              const user = params.value;
+              let display = user ? `${user.name} (${user.title}) [${user.id}]` : '';
+              if (!isEdit) {
+                return `<span>${display}</span>`;
+              }
+              return `<div style='display:flex;align-items:center;gap:6px;height:36px;'>
+              <input type='text' class='form-control form-control-sm approval-user-input' value='${display}' readonly style='background:#f7f9fb;width:120px;border:none;box-shadow:none;height:36px;text-align:center;'>
+              <button class='btn btn-outline-secondary btn-sm search-user-btn' title='검색' style='border:none;height:36px;'><i class='fa fa-search'></i></button>
+            </div>`;
+            },
+            editable: false,
+            cellClass: 'ag-center-cell'
+          },
+          {
+            headerName: '직책',
+            field: 'user.title',
+            minWidth: 100,
+            flex: 2,
+            valueGetter: params => params.data.user ? params.data.user.title : '',
+            cellClass: 'ag-center-cell',
+            editable: false
+          },
+          {
+            headerName: '부서',
+            field: 'dept',
+            minWidth: 120,
+            flex: 2,
+            cellRenderer: params => {
+              if (!isEdit) return `<span>${params.value || ''}</span>`;
+              return `<input type='text' class='form-control form-control-sm approval-dept-input' value='${params.value || ''}' style='background:#f7f9fb;border:none;box-shadow:none;height:36px;text-align:center;'>`;
+            },
+            editable: isEdit,
+            cellClass: 'ag-center-cell'
+          },
+          // [ADD] Approval Status column
+          {
+            headerName: '상태',
+            field: 'status',
+            minWidth: 90,
+            flex: 1,
+            cellRenderer: params => {
+              // status: 'approved', 'pending', 'rejected' (mock logic)
+              let status = params.data && params.data.user && params.data.user.status ? params.data.user.status : 'pending';
+              let color = '#f1c40f', icon = 'fa-clock', text = '대기중';
+              if (status === 'approved') { color = '#2ecc40'; icon = 'fa-check-circle'; text = '승인'; }
+              else if (status === 'rejected') { color = '#e74c3c'; icon = 'fa-times-circle'; text = '반려'; }
+              return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:500;color:${color};"><i class="fa ${icon}"></i> ${text}</span>`;
+            },
+            cellClass: 'ag-center-cell',
+            editable: false
+          },
+          ...(isEdit ? [{
+            headerName: '',
+            field: 'actions',
+            minWidth: 120,
+            flex: 2,
+            cellRenderer: params => {
+              return `<div style='display:flex;align-items:center;gap:4px;justify-content:flex-end;height:36px;'>
+              <i class='fa fa-trash remove-row-btn' style="color: red;cursor:pointer"></i>
+              <button class='btn btn-outline-dark btn-sm move-up-btn' title='위로' style='border:none;height:36px;'><i class='fa fa-arrow-up'></i></button>
+              <button class='btn btn-outline-dark btn-sm move-down-btn' title='아래로' style='border:none;height:36px;'><i class='fa fa-arrow-down'></i></button>
+            </div>`;
+            },
+            suppressMenu: true,
+            suppressSorting: true,
+            cellClass: 'ag-center-cell'
+          }] : [])
+        ];
       }
+
+      function renderApprovalGrid() {
+        const gridDiv = document.getElementById('approvalGrid');
+        gridDiv.innerHTML = '';
+        gridDiv.style.fontSize = '13px'; // Reduce font size for grid text
+        gridDiv.style.fontWeight = 'normal'; // Remove bold font from grid text
+        const gridOptions = {
+          columnDefs: getApprovalColumnDefs(),
+          rowData: approvalLine,
+          defaultColDef: {
+            resizable: true,
+            sortable: false,
+            filter: false,
+            editable: false,
+            minWidth: 60,
+            flex: 1,
+            cellClass: 'ag-center-cell',
+            cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }
+          },
+          suppressRowClickSelection: true,
+          rowSelection: 'single',
+          animateRows: true,
+          getRowHeight: function (params) {
+            return 52;
+          },
+          onGridReady: function (params) {
+            approvalGridApi = params.api;
+          },
+          onCellClicked: function (params) {
+            const rowIdx = params.node.rowIndex;
+            if (isEdit && params.colDef.field === 'add') {
+              addApprovalRow(rowIdx + 1);
+            }
+          },
+          onCellEditingStopped: function (params) {
+            // ...handle cell edit if needed...
+          }
+        };
+        new agGrid.Grid(gridDiv, gridOptions);
+      }
+
+      function addApprovalRow(idx) {
+        approvalLine.splice(idx, 0, { order: idx, type: '결재', user: null, dept: '' });
+        renderApprovalGrid();
+      }
+
+      // 버튼 상태에 따라 show/hide
+      function updateApprovalUI() {
+        if (isEdit) {
+          $('#applyDefaultLine').show();
+          $('#saveDefaultLine').show();
+          $('#addApprovalRow').show();
+          $("#parallelApprovalWrapper").show();
+
+        } else {
+          $('#applyDefaultLine').hide();
+          $('#saveDefaultLine').hide();
+          $('#parallelApproval').hide();
+          $('#addApprovalRow').hide();
+          $('#userSearchModal').modal('hide');
+          $("#parallelApprovalWrapper").hide();
+        }
+        renderApprovalGrid();
+        // Edit/Save 버튼 텍스트 변경
+        if (isEdit) {
+          $('#toggleEditBtn').html('<i class="fa fa-save"></i> 저장');
+          if ($('#cancelEditBtn').length === 0) {
+            $('#toggleEditBtn').after('<button id="cancelEditBtn" type="button" class="btn btn-outline-secondary btn-sm ml-2"><i class="fa fa-times"></i> 취소</button>');
+          }
+          $('#cancelEditBtn').show();
+        } else {
+          $('#toggleEditBtn').html('<i class="fa fa-edit"></i> 수정');
+          $('#cancelEditBtn').remove();
+        }
+      }
+
+      // Edit/Save 버튼 추가
+      if ($('#toggleEditBtn').length === 0) {
+        $('#zedd').first().prepend('<button id="toggleEditBtn" type="button" class="btn btn-outline-dark btn-sm mr-2">수정</button>');
+      }
+      $('#toggleEditBtn').off('click').on('click', function () {
+        if (isEdit) {
+          // 저장 로직 필요시 추가
+          toastr.success('저장되었습니다!');
+        }
+        isEdit = !isEdit;
+        updateApprovalUI();
+      });
+      $(document).off('click', '#cancelEditBtn').on('click', '#cancelEditBtn', function () {
+        isEdit = false;
+        updateApprovalUI();
+      });
+
+      // 이벤트 핸들러들 (edit 모드에서만 동작)
+      $('#addApprovalRow').off('click').on('click', function () {
+        if (isEdit) addApprovalRow(approvalLine.length);
+      });
+      $(document).off('click', '.remove-row-btn').on('click', '.remove-row-btn', function () {
+        if (!isEdit) return;
+        const idx = getRowIndexFromBtn(this);
+        if (idx !== null) {
+          approvalLine.splice(idx, 1);
+          renderApprovalGrid();
+        }
+      });
+      $(document).off('click', '.move-up-btn').on('click', '.move-up-btn', function () {
+        if (!isEdit) return;
+        const idx = getRowIndexFromBtn(this);
+        if (idx > 0) {
+          [approvalLine[idx - 1], approvalLine[idx]] = [approvalLine[idx], approvalLine[idx - 1]];
+          renderApprovalGrid();
+        }
+      });
+      $(document).off('click', '.move-down-btn').on('click', '.move-down-btn', function () {
+        if (!isEdit) return;
+        const idx = getRowIndexFromBtn(this);
+        if (idx < approvalLine.length - 1) {
+          [approvalLine[idx + 1], approvalLine[idx]] = [approvalLine[idx], approvalLine[idx + 1]];
+          renderApprovalGrid();
+        }
+      });
+      $(document).off('change', '.approval-type-select').on('change', '.approval-type-select', function () {
+        if (!isEdit) return;
+        const idx = getRowIndexFromBtn(this);
+        if (idx !== null) {
+          approvalLine[idx].type = $(this).val();
+          renderApprovalGrid();
+        }
+      });
+      $(document).off('change', '.approval-dept-input').on('change', '.approval-dept-input', function () {
+        if (!isEdit) return;
+        const idx = getRowIndexFromBtn(this);
+        if (idx !== null) {
+          approvalLine[idx].dept = $(this).val();
+        }
+      });
+      $(document).off('click', '.search-user-btn').on('click', '.search-user-btn', function () {
+        if (!isEdit) return;
+        const idx = getRowIndexFromBtn(this);
+        $('#userSearchModal').data('rowIdx', idx).modal('show');
+        renderUserSearchList('');
+        $('#userSearchInput').val('');
+      });
+      $('#userSearchInput').off('input').on('input', function () {
+        renderUserSearchList($(this).val());
+      });
+      $(document).off('click', '.user-search-item').on('click', '.user-search-item', function () {
+        if (!isEdit) return;
+        const idx = $('#userSearchModal').data('rowIdx');
+        const userId = $(this).data('userid');
+        const user = mockUsers.find(u => u.id === userId);
+        if (user && idx !== null) {
+          approvalLine[idx].user = user;
+          approvalLine[idx].dept = user.dept;
+          renderApprovalGrid();
+          $('#userSearchModal').modal('hide');
+        }
+      });
+      $('#applyDefaultLine').off('click').on('click', function () {
+        if (!isEdit) return;
+        approvalLine = JSON.parse(JSON.stringify(defaultLine));
+        renderApprovalGrid();
+      });
+      $('#saveDefaultLine').off('click').on('click', function () {
+        if (!isEdit) return;
+        toastr.success('현재 결재선을 저장했습니다!');
+      });
+      $('#parallelApproval').off('change').on('change', function () {
+        if (!isEdit) return;
+        if (this.checked) {
+          toastr.info('병렬 결재로 변경되었습니다!');
+        } else {
+          toastr.info('순차 결재로 변경되었습니다!');
+        }
+      });
+
+      function getRowIndexFromBtn(btn) {
+        const $row = $(btn).closest('.ag-row');
+        if ($row.length) {
+          return parseInt($row.attr('row-index'));
+        }
+        const val = $(btn).closest('div').find('input.approval-user-input').val();
+        return approvalLine.findIndex(r => r.user && `${r.user.name} (${r.user.title}) [${r.user.id}]` === val);
+      }
+      function renderUserSearchList(keyword) {
+        let list = mockUsers.filter(u => {
+          if (!keyword) return true;
+          keyword = keyword.toLowerCase();
+          return u.id.toLowerCase().includes(keyword) || u.name.toLowerCase().includes(keyword) || u.title.toLowerCase().includes(keyword);
+        });
+        $('#userSearchList').html(list.map(u =>
+          `<div class='user-search-item' data-userid='${u.id}' style='padding:8px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;'>
+        <b>${u.name}</b> <span style='color:#888;'>(${u.title})</span> <span style='color:#2563eb;'>[${u.id}]</span> <span style='color:#aaa;'>${u.dept}</span>
+      </div>`
+        ).join(''));
+      }
+
+      // 최초 UI 상태 세팅
+      updateApprovalUI();
     });
-    $('#requestDetailModal').modal('show');
-  }
-</script>
+  </script>
 
 </html>

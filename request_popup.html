@@ -95,6 +95,11 @@
     .cke {
       visibility: hidden;
     }
+
+    /* Make approval grid text smaller */
+    #approvalGrid .ag-cell {
+      font-size: 13px !important;
+    }
   </style>
 
   <script src="./저장위치 관리_files/pine.js.download"></script>
@@ -138,7 +143,7 @@
 
         <div class="navbar-collapse">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li class="nav-item">đọ
               <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i
                   class="ti-menu"></i></a>
             </li>
@@ -336,7 +341,7 @@
   <!-- Modal Request Popup -->
   <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" style="width: 1000px;" role="document">
       <form id="requestForm" class="modal-content" style="border-radius: 16px; overflow: hidden;">
         <div class="modal-header" style="border-bottom: 1px solid #f0f0f0;">
           <h5 class="modal-title" id="requestModalLabel"><i class="fa fa-paper-plane"></i> 새 요청 생성</h5>
@@ -344,75 +349,44 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body" style="background: #f7f9fb;">
+        <div class="modal-body" style="background: #f7f9fb; padding: 0px;">
 
 
-          <div
-            style="background: #fff; border-radius: 12px; box-shadow: 0 2px 8px #0001; padding: 24px 24px 12px 24px;">
-            <!-- 결재자 -->
-            <div class="row" style="margin-bottom: 18px;">
-              <div class="col-md-4" style="padding: 0 12px; border-right: 1px solid #e3e7ed; text-align: center;">
-                <div style="font-size:15px;color:#222;text-align: left; font-weight: bold ;">요청자</div>
+          <div style="background: #fff;  padding: 12px 24px 12px 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <div style=" display: flex; align-items: center; gap: 16px;">
                 <div
-                  style="width: 64px; height: 64px; margin: 0 auto 12px; background: #e3e7ed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; color: #4a5568;">
-                  <span id="userAvatar">AV</span>
+                  style="width: 50px; height: 50px; background: #e3e7ed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; color: #4a5568;">
+                  <span id="userAvatar">김</span>
                 </div>
-                <div style="font-size: 18px; font-weight: bold; color: #222;" id="userName">김철수</div>
-                <div style="font-size: 14px; color: #888; margin-bottom: 8px;" id="userOrg">홍길동</div>
-                <div style="font-size: 13px; color: #666;">조직: <span id="userDept">웹팀</span></div>
+                <div>
+                  <div style="font-size: 18px; font-weight: bold; color: #222;" id="userName">김철수</div>
+                  <div style="font-size: 13px; color: #666;">조직: <span id="userDept">웹팀</span></div>
+
+                </div>
+
+              </div>
+
+
+              <div>
                 <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일: <span id="userDate">2025/07/21</span>
                 </div>
-
-              </div>
-              <div class="col-md-8">
-                <div style="margin-bottom: 18px;">
-                  <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom: 6px;">결재자</div>
-                  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-                    <div id="approverList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                    <button class="btn btn-light btn-sm" type="button" id="showApproverSelect"
-                      style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;"><i
-                        class="fa fa-plus" style="color:#2563eb;"></i></button>
-                    <div id="approverSelectWrap" style="display:none;min-width:180px;">
-                      <div class="input-group mb-2" style="max-width: 220px;">
-                        <select class="form-control form-control-sm" id="approverSelect">
-                          <option value="">결재자 선택</option>
-                          <option value="박민수">박민수</option>
-                          <option value="이영희">이영희</option>
-                          <option value="최지훈">최지훈</option>
-                        </select>
-                        <div class="input-group-append">
-                          <button class="btn btn-primary btn-sm" type="button" id="addApprover">확인</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- 참조자 -->
-                <div style="margin-bottom: 18px;">
-                  <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom: 6px;">참조자</div>
-                  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-                    <div id="ccList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
-                    <button class="btn btn-light btn-sm" type="button" id="showCCSelect"
-                      style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;"><i
-                        class="fa fa-plus" style="color:#a259e6;"></i></button>
-                    <div id="ccSelectWrap" style="display:none;min-width:180px;">
-                      <div class="input-group mb-2" style="max-width: 220px;">
-                        <select class="form-control form-control-sm" id="ccSelect">
-                          <option value="">참조자 선택</option>
-                          <option value="김영수">김영수</option>
-                          <option value="박지은">박지은</option>
-                          <option value="정우성">정우성</option>
-                        </select>
-                        <div class="input-group-append">
-                          <button class="btn btn-purple btn-sm" type="button" id="addCC">확인</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div style="float: right;">
+                  <select id="priority" name="priority"
+                    style="padding: 0px 12px; border-radius: 5px; border: 1px solid #e3e7ed; font-size: 15px; font-weight: 500; background: #f7f9fb; color: #222; outline: none; appearance: none; position: relative; margin-bottom: 0;">
+                    <option value="low" data-color="#38b2ac">낮음</option>
+                    <option value="medium" data-color="#f6ad55">보통</option>
+                    <option value="high" data-color="#f56565">높음</option>
+                    <option value="urgent" data-color="#e53e3e">긴급</option>
+                  </select>
                 </div>
 
               </div>
+
             </div>
+
+            <!-- 결재자 -->
+
 
             <!-- 제목, 내용, 우선순위, 부서, 첨부파일 -->
             <div class="form-group">
@@ -426,21 +400,6 @@
               <textarea class="form-control form-control-sm" id="content" name="content" rows="3"
                 placeholder="요청 내용을 입력하세요" required></textarea>
             </div>
-            <div class="form-row mb-2">
-              <div class="form-group col-md-6">
-                <label for="priority" style="font-size: 14px; font-weight: bold;">우선순위</label>
-                <select class="form-control form-control-sm" id="priority" name="priority">
-                  <option value="낮음">낮음</option>
-                  <option value="보통">보통</option>
-                  <option value="높음">높음</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="department" style="font-size: 14px; font-weight: bold;">부서</label>
-                <input type="text" class="form-control form-control-sm" id="department" name="department"
-                  placeholder="관련 부서를 입력하세요">
-              </div>
-            </div>
             <!-- 첨부파일 (드래그 앤 드롭 유지) -->
             <div class="form-group">
               <label for="attachment" style="font-size: 14px; font-weight: bold;">첨부파일</label>
@@ -452,26 +411,72 @@
                 </div>
                 <input type="file" id="attachment" name="attachment" style="display: none;"
                   accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" />
-                <div id="fileName" style="margin-top: 10px; font-size: 14px; color: #2563eb;"></div>
               </div>
             </div>
-          </div>
 
-        </div>
-        <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
-          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
-          <button type="submit" class="btn btn-harmony-blue btn-sm"><i class="fa fa-paper-plane"></i> 요청 보내기</button>
-        </div>
+            <div>
+              <!-- approve line here  -->
+              <div>
+                <!-- Approval Line Component -->
+                <div class="approval-line-wrap" style="margin-top:18px;">
+                  <div class="d-flex align-items-center mb-2" style="gap:12px; justify-content: space-between; ">
+                    <div>
+                      <button id="applyDefaultLine" class="btn btn-harmony-blue btn-sm"><i class="fa fa-sync"></i> 기본
+                        결재선 적용</button>
+                      <button id="saveDefaultLine" class="btn btn-outline-secondary btn-sm"><i class="fa fa-save"></i>
+                        결재선 저장</button>
+
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div class="form-check form-switch ml-2">
+                        <input class="form-check-input" type="checkbox" id="parallelApproval" style="display: none;">
+                        <label class="form-check-label" for="parallelApproval" style="font-size:14px;">병렬 결재</label>
+
+                      </div>
+                      <button id="addApprovalRow" class="btn btn-outline-primary btn-sm"
+                        style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:18px;border:none;"><i
+                          class="fa fa-plus"></i></button>
+
+                    </div>
+
+
+                  </div>
+                  <div id="approvalGrid" class="ag-theme-balham"
+                    style="height: 300px; width: 100%; background: #fff; border-radius: 12px; box-shadow:0 1px 8px #0001; font-size:15px;">
+                  </div>
+
+                  <!-- User Search Popup -->
+                  <div id="userSearchModal" class="modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title"><i class="fa fa-search"></i> 결재자 검색</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                              aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+                          <input type="text" id="userSearchInput" class="form-control mb-2"
+                            placeholder="이름, 아이디, 직책으로 검색..." style="border:none;box-shadow:none;">
+                          <div id="userSearchList"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
+              <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
+              <button type="submit" class="btn btn-harmony-blue btn-sm"><i class="fa fa-paper-plane"></i> 요청
+                보내기</button>
+            </div>
       </form>
     </div>
   </div>
 
   <script>
     $(document).ready(function () {
-      // Lấy tên người đề nghị từ session
-      $('#requester').val($('#session_USER_NM').val() || '');
-      // Set ngày hiện tại cho ngày yêu cầu
-      $('#requestDate').val(new Date().toISOString().slice(0, 10));
       // Mở popup khi bấm nút Request
       $('#btn-new').on('click', function () {
         $('#requestModal').modal('show');
@@ -486,220 +491,241 @@
         toastr.success('Yêu cầu đã được gửi!');
         $('#requestModal').modal('hide');
         this.reset();
-        $('#requester').val($('#session_USER_NM').val() || '');
-        $('#requestDate').val(new Date().toISOString().slice(0, 10));
-      });
-    });
-  </script>
-  <!-- 타임리프 사용을 위해서 th:inline="javascript" -->
-  <script>
-  </script>
-  <script>
-    // Column definitions for production grid (tái sử dụng)
-    const productionColumnDefs = [
-      { headerName: "출력선택", field: "print_select", width: 90, checkboxSelection: true, headerCheckboxSelection: true },
-      { headerName: "생산일자", field: "prod_date", width: 110 },
-      { headerName: "작업순서", field: "work_order", width: 90 },
-      { headerName: "호기", field: "machine_no", width: 70 },
-      { headerName: "생태", field: "prod_type", width: 70 },
-      { headerName: "판매처", field: "seller", width: 110 },
-      { headerName: "납품처", field: "buyer", width: 110 },
-      { headerName: "납기일자", field: "due_date", width: 110 },
-      { headerName: "납기시간", field: "due_time", width: 90 },
-      { headerName: "영업오더", field: "sales_order", width: 110 },
-      { headerName: "작업유형", field: "job_type", width: 90 },
-      { headerName: "생산오더", field: "prod_order", width: 110 },
-      { headerName: "재단구분", field: "cut_type", width: 90 },
-      { headerName: "FSC", field: "fsc", width: 60 },
-      { headerName: "투입지종", field: "input_paper", width: 90 },
-      { headerName: "투입평량", field: "input_weight", width: 90 },
-      { headerName: "투입가로", field: "input_width", width: 90 },
-      { headerName: "투입세로", field: "input_height", width: 90 },
-      { headerName: "투입인치", field: "input_inch", width: 90 },
-      { headerName: "계획 폭", field: "plan_width", width: 90 },
-      { headerName: "계획 가로", field: "plan_garo", width: 90 },
-      { headerName: "계획 세로", field: "plan_sero", width: 90 },
-      { headerName: "계획 수량( R )", field: "plan_qty_r", width: 110 },
-      { headerName: "계획 중량 (Kg)", field: "plan_weight_kg", width: 120 },
-      { headerName: "투입 롤수", field: "input_roll_cnt", width: 90 },
-      { headerName: "기계 속도", field: "machine_speed", width: 90 },
-      { headerName: "작업시간(분)", field: "work_time_min", width: 110 },
-      { headerName: "소요 길이", field: "need_length", width: 90 },
-      { headerName: "소요 (분)", field: "need_min", width: 90 },
-      { headerName: "중지(분)", field: "stop_min", width: 90 },
-      { headerName: "중지사유", field: "stop_reason", width: 110 },
-      { headerName: "CUT (정매)", field: "cut_main", width: 90 },
-      { headerName: "CUT (여분)", field: "cut_extra", width: 90 },
-      { headerName: "PT", field: "pt", width: 60 },
-      { headerName: "생산지시 선택", field: "prod_select", width: 110 },
-      { headerName: "확정 처리", field: "confirm_proc", width: 90 },
-      { headerName: "삭제 처리", field: "delete_proc", width: 90 },
-      { headerName: "비고 (생산유의사항)", field: "note_prod", width: 160 },
-      { headerName: "비고2 (포장유의사항)", field: "note_pack", width: 160 },
-      { headerName: "전달 사항", field: "note_transfer", width: 120 }
-    ];
-
-    // Grid options for production grid
-    const productionGridOptions = {
-      columnDefs: productionColumnDefs,
-      rowSelection: 'multiple',
-      defaultColDef: {
-        resizable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 60
-      },
-      suppressRowClickSelection: false,
-      animateRows: true,
-      rowData: [
-        {
-          print_select: false,
-          prod_date: "2025-07-10",
-          work_order: "1",
-          machine_no: "1호기",
-          prod_type: "일반",
-          seller: "한솔PNS",
-          buyer: "고객A",
-          due_date: "2025-07-14",
-          due_time: "14:00",
-          sales_order: "SO123456",
-          job_type: "절단",
-          prod_order: "PO987654",
-          cut_type: "정매",
-          fsc: "Y",
-          input_paper: "백상지",
-          input_weight: "80",
-          input_width: "1000",
-          input_height: "1200",
-          input_inch: "39.4",
-          plan_width: "1000",
-          plan_garo: "1000",
-          plan_sero: "1200",
-          plan_qty_r: "10",
-          plan_weight_kg: "800",
-          input_roll_cnt: "2",
-          machine_speed: "150",
-          work_time_min: "60",
-          need_length: "1500",
-          need_min: "60",
-          stop_min: "0",
-          stop_reason: "",
-          cut_main: "10",
-          cut_extra: "1",
-          pt: "PT1",
-          prod_select: false,
-          confirm_proc: "N",
-          delete_proc: "N",
-          note_prod: "주의사항 없음",
-          note_pack: "포장 주의",
-          note_transfer: "전달사항 없음"
-        }
-      ] // Dữ liệu sẽ được load động
-    };
-
-    // Khởi tạo grid khi DOM ready
-    document.addEventListener('DOMContentLoaded', function () {
-      new agGrid.Grid(document.getElementById('productionGrid'), productionGridOptions);
-    });
-  </script>
-  <script>
-    $(function () {
-      var path = window.location.pathname;
-      $('#sidebarnav a[href="' + path + '"]').each(function () {
-        $(this).parent('li').addClass('active');
-        $(this).closest('ul').addClass('in show').attr('aria-expanded', 'true');
-        $(this).closest('li').addClass('active');
-        $(this).attr('aria-expanded', 'true');
       });
     });
   </script>
   <script>
-    // Set user info (avatar, name, org, date)
-    function getInitials(name) {
-      return name.split(' ').map(w => w[0]).join('').toUpperCase();
-    }
-    const userName = $('#session_USER_NM').val() || 'Nguyễn Hữu Quang';
-    const userOrg = 'Joey Nguyen'; // Có thể lấy từ session nếu có
-    const userDept = 'Web'; // Có thể lấy từ session nếu có
-    const userDate = new Date().toISOString().slice(0, 10);
-    $('#userAvatar').text(getInitials(userName));
-    $('#userName').text(userName);
-    $('#userOrg').text(userOrg);
-    $('#userDept').text(userDept);
-    $('#userDate').text(userDate.replace(/-/g, '/'));
-
-    // Approver logic
-    let approvers = ["박민수", "이영희"]; // 기본 결재자
-    function renderApprovers() {
-      $('#approverList').html(approvers.map((name, idx) =>
-        `<div style="display:flex;align-items:center;background:#f0f4fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
-      <div style='width:28px;height:28px;border-radius:50%;background:#2563eb22;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#2563eb;'><i class='fa fa-user'></i></div>
-      <span style='font-size:14px;color:#222;'>${name}</span>
-      <span style='cursor:pointer;color:#f00;font-size:16px;margin-left:4px;' onclick='removeApprover(${idx})' title='삭제'><i class='fa fa-times-circle'></i></span>
-    </div>`
-      ).join(''));
-    }
-    window.removeApprover = function (idx) {
-      approvers.splice(idx, 1);
-      renderApprovers();
-    }
-    // Approver select show/hide logic
-    $('#showApproverSelect').on('click', function () {
-      $('#approverSelectWrap').show();
-      $('#approverSelect').focus();
-    });
-    $('#addApprover').on('click', function () {
-      const val = $('#approverSelect').val();
-      if (val && !approvers.includes(val)) {
-        approvers.push(val);
-        renderApprovers();
-      }
-      $('#approverSelectWrap').hide();
-      $('#approverSelect').val('');
-    });
-    $(document).on('click', function (e) {
-      if (!$(e.target).closest('#approverSelectWrap, #showApproverSelect').length) {
-        $('#approverSelectWrap').hide();
-      }
-    });
-    // CC logic
-    let ccs = ["김영수", "박지은"]; // 기본 참조자
-    function renderCCs() {
-      $('#ccList').html(ccs.map((name, idx) =>
-        `<div style="display:flex;align-items:center;background:#f6f0fa;border-radius:20px;padding:4px 12px 4px 6px;box-shadow:0 1px 4px #0001;gap:7px;">
-      <div style='width:28px;height:28px;border-radius:50%;background:#a259e622;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:#a259e6;'><i class='fa fa-user'></i></div>
-      <span style='font-size:14px;color:#222;'>${name}</span>
-      <span style='cursor:pointer;color:#f00;font-size:16px;margin-left:4px;' onclick='removeCC(${idx})' title='삭제'><i class='fa fa-times-circle'></i></span>
-    </div>`
-      ).join(''));
-    }
-    window.removeCC = function (idx) {
-      ccs.splice(idx, 1);
-      renderCCs();
-    }
-    // CC select show/hide logic
-    $('#showCCSelect').on('click', function () {
-      $('#ccSelectWrap').show();
-      $('#ccSelect').focus();
-    });
-    $('#addCC').on('click', function () {
-      const val = $('#ccSelect').val();
-      if (val && !ccs.includes(val)) {
-        ccs.push(val);
-        renderCCs();
-      }
-      $('#ccSelectWrap').hide();
-      $('#ccSelect').val('');
-    });
-    $(document).on('click', function (e) {
-      if (!$(e.target).closest('#ccSelectWrap, #showCCSelect').length) {
-        $('#ccSelectWrap').hide();
-      }
-    });
-    // 기본 결재자/참조자 렌더링
     $(document).ready(function () {
-      renderApprovers();
-      renderCCs();
+      // Approval Line Component
+      const mockUsers = [
+        { id: 'u001', name: '김철수', title: '팀장', dept: '웹팀' },
+        { id: 'u002', name: '박민수', title: '과장', dept: '영업팀' },
+        { id: 'u003', name: '이영희', title: '대리', dept: '기획팀' },
+        { id: 'u004', name: '최지훈', title: '사원', dept: '개발팀' },
+        { id: 'u005', name: '정수진', title: '부장', dept: '인사팀' },
+        { id: 'u006', name: '조현우', title: '팀장', dept: '마케팅팀' },
+        { id: 'u007', name: '한지민', title: '과장', dept: '재무팀' },
+        { id: 'u008', name: '윤아름', title: '대리', dept: '운영팀' },
+        { id: 'u009', name: '오세훈', title: '사원', dept: '고객지원' },
+        { id: 'u010', name: '신동엽', title: '부장', dept: '기술팀' }
+      ];
+      const lineTypes = [
+        { value: '기안', label: '기안' },
+        { value: '결재', label: '결재' },
+        { value: '합의', label: '합의' },
+        { value: '통보', label: '통보' },
+        { value: '확정', label: '확정' }
+      ];
+      const defaultLine = [
+        { order: 0, type: '기안', user: mockUsers[0], dept: mockUsers[0].dept }
+      ];
+      let approvalLine = JSON.parse(JSON.stringify(defaultLine));
+      let approvalGridApi = null;
+      const approvalColumnDefs = [
+        {
+          headerName: '순번',
+          field: 'order',
+          minWidth: 60,
+          flex: 1,
+          valueGetter: params => params.node.rowIndex,
+          cellClass: 'ag-center-cell',
+          suppressMenu: true
+        },
+        {
+          headerName: '유형',
+          field: 'type',
+          minWidth: 100,
+          flex: 2,
+          cellRenderer: params => {
+            const options = lineTypes.map(t => `<option value='${t.value}' ${params.value === t.value ? 'selected' : ''}>${t.label}</option>`).join('');
+            return `<select class='form-control form-control-sm approval-type-select' style='border:none;box-shadow:none;height:36px;text-align:center;'>${options}</select>`;
+          },
+          editable: true,
+          cellClass: 'ag-center-cell'
+        },
+        {
+          headerName: '결재자',
+          field: 'user',
+          minWidth: 180,
+          flex: 3,
+          cellRenderer: params => {
+            const user = params.value;
+            let display = user ? `${user.name} (${user.title}) [${user.id}]` : '';
+            return `<div style='display:flex;align-items:center;gap:6px;height:36px;'>
+          <input type='text' class='form-control form-control-sm approval-user-input' value='${display}' readonly style='background:#f7f9fb;width:120px;border:none;box-shadow:none;height:36px;text-align:center;'>
+          <button class='btn btn-outline-secondary btn-sm search-user-btn' title='검색' style='border:none;height:36px;'><i class='fa fa-search'></i></button>
+        </div>`;
+          },
+          editable: false,
+          cellClass: 'ag-center-cell'
+        },
+        {
+          headerName: '직책',
+          field: 'user.title',
+          minWidth: 100,
+          flex: 2,
+          valueGetter: params => params.data.user ? params.data.user.title : '',
+          cellClass: 'ag-center-cell',
+          editable: false
+        },
+        {
+          headerName: '부서',
+          field: 'dept',
+          minWidth: 120,
+          flex: 2,
+          cellRenderer: params => `<input type='text' class='form-control form-control-sm approval-dept-input' value='${params.value || ''}' style='background:#f7f9fb;border:none;box-shadow:none;height:36px;text-align:center;'>`,
+          editable: true,
+          cellClass: 'ag-center-cell'
+        },
+        {
+          headerName: '',
+          field: 'actions',
+          minWidth: 120,
+          flex: 2,
+          cellRenderer: params => {
+            return `<div style='display:flex;align-items:center;gap:4px;justify-content:flex-end;height:36px;'>
+          <i class='fa fa-trash' style="color: red"></i>
+          <button class='btn btn-outline-dark btn-sm move-up-btn' title='위로' style='border:none;height:36px;'><i class='fa fa-arrow-up'></i></button>
+          <button class='btn btn-outline-dark btn-sm move-down-btn' title='아래로' style='border:none;height:36px;'><i class='fa fa-arrow-down'></i></button>
+        </div>`;
+          },
+          suppressMenu: true,
+          suppressSorting: true,
+          cellClass: 'ag-center-cell'
+        }
+      ];
+      const approvalGridOptions = {
+        columnDefs: approvalColumnDefs,
+        rowData: approvalLine,
+        defaultColDef: {
+          resizable: true,
+          sortable: false,
+          filter: false,
+          editable: false,
+          minWidth: 60,
+          flex: 1,
+          cellClass: 'ag-center-cell',
+          cellStyle: { display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }
+        },
+        suppressRowClickSelection: true,
+        rowSelection: 'single',
+        animateRows: true,
+        getRowHeight: function (params) {
+          return 52;
+        },
+        onGridReady: function (params) {
+          approvalGridApi = params.api;
+        },
+        onCellClicked: function (params) {
+          const rowIdx = params.node.rowIndex;
+          if (params.colDef.field === 'add') {
+            addApprovalRow(rowIdx + 1);
+          }
+        },
+        onCellEditingStopped: function (params) {
+          // ...handle cell edit if needed...
+        }
+      };
+      new agGrid.Grid(document.getElementById('approvalGrid'), approvalGridOptions);
+      function addApprovalRow(idx) {
+        approvalLine.splice(idx, 0, { order: idx, type: '결재', user: null, dept: '' });
+        refreshApprovalGrid();
+      }
+      $('#addApprovalRow').on('click', function () {
+        addApprovalRow(approvalLine.length);
+      });
+      $(document).on('click', '.remove-row-btn', function () {
+        const idx = getRowIndexFromBtn(this);
+        if (idx !== null) {
+          approvalLine.splice(idx, 1);
+          refreshApprovalGrid();
+        }
+      });
+      $(document).on('click', '.move-up-btn', function () {
+        const idx = getRowIndexFromBtn(this);
+        if (idx > 0) {
+          [approvalLine[idx - 1], approvalLine[idx]] = [approvalLine[idx], approvalLine[idx - 1]];
+          refreshApprovalGrid();
+        }
+      });
+      $(document).on('click', '.move-down-btn', function () {
+        const idx = getRowIndexFromBtn(this);
+        if (idx < approvalLine.length - 1) {
+          [approvalLine[idx + 1], approvalLine[idx]] = [approvalLine[idx], approvalLine[idx + 1]];
+          refreshApprovalGrid();
+        }
+      });
+      $(document).on('change', '.approval-type-select', function () {
+        const idx = getRowIndexFromBtn(this);
+        if (idx !== null) {
+          approvalLine[idx].type = $(this).val();
+          refreshApprovalGrid();
+        }
+      });
+      $(document).on('change', '.approval-dept-input', function () {
+        const idx = getRowIndexFromBtn(this);
+        if (idx !== null) {
+          approvalLine[idx].dept = $(this).val();
+        }
+      });
+      $(document).on('click', '.search-user-btn', function () {
+        const idx = getRowIndexFromBtn(this);
+        $('#userSearchModal').data('rowIdx', idx).modal('show');
+        renderUserSearchList('');
+        $('#userSearchInput').val('');
+      });
+      $('#userSearchInput').on('input', function () {
+        renderUserSearchList($(this).val());
+      });
+      $(document).on('click', '.user-search-item', function () {
+        const idx = $('#userSearchModal').data('rowIdx');
+        const userId = $(this).data('userid');
+        const user = mockUsers.find(u => u.id === userId);
+        if (user && idx !== null) {
+          approvalLine[idx].user = user;
+          approvalLine[idx].dept = user.dept;
+          refreshApprovalGrid();
+          $('#userSearchModal').modal('hide');
+        }
+      });
+      $('#applyDefaultLine').on('click', function () {
+        approvalLine = JSON.parse(JSON.stringify(defaultLine));
+        refreshApprovalGrid();
+      });
+      $('#saveDefaultLine').on('click', function () {
+        toastr.success('현재 결재선을 저장했습니다!');
+      });
+      $('#parallelApproval').on('change', function () {
+        if (this.checked) {
+          toastr.info('병렬 결재로 변경되었습니다!');
+        } else {
+          toastr.info('순차 결재로 변경되었습니다!');
+        }
+      });
+      function getRowIndexFromBtn(btn) {
+        const $row = $(btn).closest('.ag-row');
+        if ($row.length) {
+          return parseInt($row.attr('row-index'));
+        }
+        const val = $(btn).closest('div').find('input.approval-user-input').val();
+        return approvalLine.findIndex(r => r.user && `${r.user.name} (${r.user.title}) [${r.user.id}]` === val);
+      }
+      function refreshApprovalGrid() {
+        approvalGridApi.setRowData(approvalLine);
+        approvalGridApi.redrawRows();
+      }
+      function renderUserSearchList(keyword) {
+        let list = mockUsers.filter(u => {
+          if (!keyword) return true;
+          keyword = keyword.toLowerCase();
+          return u.id.toLowerCase().includes(keyword) || u.name.toLowerCase().includes(keyword) || u.title.toLowerCase().includes(keyword);
+        });
+        $('#userSearchList').html(list.map(u =>
+          `<div class='user-search-item' data-userid='${u.id}' style='padding:8px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;'>
+        <b>${u.name}</b> <span style='color:#888;'>(${u.title})</span> <span style='color:#2563eb;'>[${u.id}]</span> <span style='color:#aaa;'>${u.dept}</span>
+      </div>`
+        ).join(''));
+      }
     });
   </script>
 </body>
