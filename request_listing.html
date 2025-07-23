@@ -416,7 +416,7 @@
     const requestColumnDefs = [
       { headerName: '요청 번호', field: 'id', minWidth: 100, cellClass: 'ag-left-cell' },
       { headerName: '제목', field: 'title', minWidth: 180, cellClass: 'ag-left-cell' },
-      { headerName: '요청일', field: 'date', minWidth: 120, cellClass: 'ag-left-cell' },
+      { headerName: '요청일시', field: 'date', minWidth: 120, cellClass: 'ag-left-cell' },
       {
         headerName: '상태',
         field: 'status',
@@ -628,7 +628,7 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content" style=" overflow: hidden;">
       <div class="modal-header" style="border-bottom: 1px solid #f0f0f0;">
-        <h5 class="modal-title" id="requestDetailModalLabel"><i class="fa fa-eye"></i> 요청 상세</h5>
+        <h5 class="modal-title" id="requestDetailModalLabel"><i class="fa fa-eye"></i> 결재 상세</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -651,9 +651,11 @@
 
 
             <div>
-              <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일: <span id="userDate">2025/07/21</span>
+              <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일시: <span id="userDate">16:23 2025/07/21
+                </span>
               </div>
-              <div style="float: right;">
+              <div style="float: right; display: flex; gap: 5px;">
+                <div for="priority" style="font-size: 13px; color: #666; margin-top: 4px;">우선순위:</div>
                 <select id="priority" name="priority"
                   style="padding: 0px 12px; border-radius: 5px; border: 1px solid #e3e7ed; font-size: 15px; font-weight: 500; background: #f7f9fb; color: #222; outline: none; appearance: none; position: relative; margin-bottom: 0;">
                   <option value="low" data-color="#38b2ac">낮음</option>
@@ -681,37 +683,42 @@
             <label for="detailAttachmentInput" style="font-size: 14px; font-weight: bold;">첨부파일</label>
             <input type="text" class="form-control form-control-sm" id="detailAttachmentInput" name="attachment"
               readonly>
+              <div id="attachmentMarusys" style="display: none;">
+                            <div id="drop-area" 
+              style=" border: 2px dashed #bdbdbd; border-radius: 12px; background: #fff; padding: 32px 0; text-align: center; margin-top: 8px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s;">
+              <span style="font-size: 16px; color: #444;">여기로 파일을 끌어다 놓거나 <span id="browseFile"
+                  style="color: #2563eb; text-decoration: underline; cursor: pointer;">파일 선택</span></span>
+              <div style="font-size: 12px; color: #888; margin-top: 8px;">최대 크기: 5MB (PDF, DOCX, XLSX, JPG, PNG 지원)
+              </div>
+              <input type="file" id="attachment" name="attachment" style="display: none;"
+                accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" />
+            </div>
+
+              </div>
+
+
           </div>
 
           <div class="row" style="padding: 0;">
-            <div class="col-6" style="padding: 0; padding-right: 5px;">
+            <div class="col-12" style="padding: 0; padding-right: 5px;">
               <!-- History -->
-              <div style="margin-bottom: 18px;">
+              <div style="margin-bottom: 5px;">
                 <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">처리 이력</div>
                 <div id="detailHistory"
                   style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:200px;overflow:auto;">
                 </div>
               </div>
-
-            </div>
-
-            <div class="col-6" style="padding: 0; padding-left: 5px;">
-              <!-- Comment -->
-              <div style="margin-bottom: 18px;">
-                <div style="font-weight: bold; font-size: 15px; color: #222; margin-bottom:6px;">댓글</div>
-                <div id="detailComments"
-                  style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:200px;overflow:auto;">
-                </div>
-                <div class="input-group mt-2">
+                              <div class="input-group">
                   <input type="text" id="commentInput" class="form-control form-control-sm" placeholder="댓글을 입력하세요...">
                   <div class="input-group-append">
                     <button class="btn btn-harmony-blue btn-sm" id="addCommentBtn" type="button"><i
                         class="fa fa-paper-plane"></i> 등록</button>
                   </div>
                 </div>
-              </div>
 
             </div>
+
+
 
 
 
@@ -732,16 +739,16 @@
 
                 </div>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                  <div class="form-check form-switch ml-2">
+                  <!-- <div class="form-check form-switch ml-2">
                     <input class="form-check-input" type="checkbox" id="parallelApproval" style="display: none;">
                     <label id="parallelApprovalWrapper" class="form-check-label" for="parallelApproval"
                       style="font-size:14px;">병렬 결재</label>
 
-                  </div>
+                  </div> -->
                   <button id="addApprovalRow" type="button" class="btn btn-outline-primary btn-sm"
                     style="border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:18px;border:none;"><i
                       class="fa fa-plus"></i></button>
-                  <div id="zedd"></div>
+
 
                 </div>
 
@@ -775,7 +782,7 @@
         </div>
       </div>
       <div class="modal-footer" style="border-top: 1px solid #f0f0f0;">
-        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">닫기</button>
+        <div id="zedd"></div>
         <button type="button" class="btn btn-success btn-sm" id="approveBtn"
           style="background-color:#2ecc40;border-color:#2ecc40;color:#fff;"><i class="fa fa-check"></i>
           승인</button>
@@ -810,8 +817,8 @@
             <button class="btn btn-outline-secondary btn-sm" style="border-radius:6px;padding:2px 8px;" onclick="alert('다운로드: ${data.attachment.name}')"><i class="fa fa-download"></i> 다운로드</button>
           </div>
         `;
-      } else {
-        fileHtml = `<span style="font-size:14px;color:#888;">첨부파일 없음</span>`;
+      } else  {
+        fileHtml = `<span id="hehee" style="font-size:14px;color:#888;">첨부파일 없음</span>`;
       }
       $('#detailAttachmentInput').replaceWith(`<div id="detailAttachmentInput">${fileHtml}</div>`);
       // Approvers: show trạng thái từng người
@@ -840,9 +847,9 @@
       ).join(''));
       // Timeline style for history
       const historyItems = [
-        { date: '2025-07-18', text: '요청 생성', user: '김철수', type: 'create' },
-        { date: '2025-07-19', text: '이영희 승인', user: '이영희', type: 'approve' },
-        { date: '2025-07-20', text: '부서로 전달', user: '웹팀', type: 'send' }
+        { date: '18:05 2025-07-18 ', text: '요청 생성', user: '김철수', type: 'create' },
+        { date: '15:02 2025-07-19', text: '이영희 승인', user: '이영희', type: 'approve' },
+        { date: '13:08 2025-07-20', text: '부서로 전달', user: '웹팀', type: 'send' }
       ];
       $('#detailHistory').html(`
         <ul class="timeline-list" style="list-style:none;padding:0;margin:0;">
@@ -936,7 +943,9 @@
       const lineTypes = [
         { value: '기안', label: '기안' },
         { value: '결재', label: '결재' },
+        { value: '병렬결재', label: '병렬결재' },
         { value: '합의', label: '합의' },
+        { value: '병렬합의', label: '병렬합의' },
         { value: '통보', label: '통보' },
         { value: '확정', label: '확정' }
       ];
@@ -1100,13 +1109,24 @@
           $('#addApprovalRow').show();
           $("#parallelApprovalWrapper").show();
 
+          $('#detailTitleInput').prop('readonly', false);
+          $('#detailContentInput').prop('readonly', false);
+          document.getElementById('attachmentMarusys').style.display = 'block';
+                   document.getElementById('hehee').style.display = 'block';
+
         } else {
           $('#applyDefaultLine').hide();
           $('#saveDefaultLine').hide();
-          $('#parallelApproval').hide();
           $('#addApprovalRow').hide();
-          $('#userSearchModal').modal('hide');
           $("#parallelApprovalWrapper").hide();
+          ;
+          $('#detailTitleInput').prop('readonly', true);
+          $('#detailContentInput').prop('readonly', true);
+          $('#attachmentMarusys').css('display', 'none');
+          $('#hehee').css('display', 'none');
+
+
+
         }
         renderApprovalGrid();
         // Edit/Save 버튼 텍스트 변경
