@@ -651,7 +651,7 @@
 
 
             <div>
-              <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일시: <span id="userDate">16:23 2025/07/21
+              <div style="font-size: 13px; color: #666; margin-top: 4px;">요청일시: <span id="userDate">2025/07/21 16:23
                 </span>
               </div>
               <div style="float: right; display: flex; gap: 5px;">
@@ -679,25 +679,25 @@
             <textarea class="form-control form-control-sm" id="detailContentInput" name="content" rows="3"
               readonly></textarea>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label for="detailAttachmentInput" style="font-size: 14px; font-weight: bold;">첨부파일</label>
             <input type="text" class="form-control form-control-sm" id="detailAttachmentInput" name="attachment"
               readonly>
-              <div id="attachmentMarusys" style="display: none;">
-                            <div id="drop-area" 
-              style=" border: 2px dashed #bdbdbd; border-radius: 12px; background: #fff; padding: 32px 0; text-align: center; margin-top: 8px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s;">
-              <span style="font-size: 16px; color: #444;">여기로 파일을 끌어다 놓거나 <span id="browseFile"
-                  style="color: #2563eb; text-decoration: underline; cursor: pointer;">파일 선택</span></span>
-              <div style="font-size: 12px; color: #888; margin-top: 8px;">최대 크기: 5MB (PDF, DOCX, XLSX, JPG, PNG 지원)
+            <div id="attachmentMarusys" style="display: none;">
+              <div id="drop-area"
+                style=" border: 2px dashed #bdbdbd; border-radius: 12px; background: #fff; padding: 32px 0; text-align: center; margin-top: 8px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s;">
+                <span style="font-size: 16px; color: #444;">여기로 파일을 끌어다 놓거나 <span id="browseFile"
+                    style="color: #2563eb; text-decoration: underline; cursor: pointer;">파일 선택</span></span>
+                <div style="font-size: 12px; color: #888; margin-top: 8px;">최대 크기: 5MB (PDF, DOCX, XLSX, JPG, PNG 지원)
+                </div>
+                <input type="file" id="attachment" name="attachment" style="display: none;"
+                  accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" />
               </div>
-              <input type="file" id="attachment" name="attachment" style="display: none;"
-                accept=".pdf,.docx,.xlsx,.jpg,.jpeg,.png" />
+
             </div>
 
-              </div>
 
-
-          </div>
+          </div> -->
 
           <div class="row" style="padding: 0;">
             <div class="col-12" style="padding: 0; padding-right: 5px;">
@@ -708,13 +708,13 @@
                   style="background:#f7f7f7;border-radius:8px;padding:12px;font-size:14px;color:#444;max-height:200px;overflow:auto;">
                 </div>
               </div>
-                              <div class="input-group">
-                  <input type="text" id="commentInput" class="form-control form-control-sm" placeholder="댓글을 입력하세요...">
-                  <div class="input-group-append">
-                    <button class="btn btn-harmony-blue btn-sm" id="addCommentBtn" type="button"><i
-                        class="fa fa-paper-plane"></i> 등록</button>
-                  </div>
+              <div class="input-group">
+                <input type="text" id="commentInput" class="form-control form-control-sm" placeholder="댓글을 입력하세요...">
+                <div class="input-group-append">
+                  <button class="btn btn-harmony-blue btn-sm" id="addCommentBtn" type="button"><i
+                      class="fa fa-paper-plane"></i> 등록</button>
                 </div>
+              </div>
 
             </div>
 
@@ -817,7 +817,7 @@
             <button class="btn btn-outline-secondary btn-sm" style="border-radius:6px;padding:2px 8px;" onclick="alert('다운로드: ${data.attachment.name}')"><i class="fa fa-download"></i> 다운로드</button>
           </div>
         `;
-      } else  {
+      } else {
         fileHtml = `<span id="hehee" style="font-size:14px;color:#888;">첨부파일 없음</span>`;
       }
       $('#detailAttachmentInput').replaceWith(`<div id="detailAttachmentInput">${fileHtml}</div>`);
@@ -847,9 +847,9 @@
       ).join(''));
       // Timeline style for history
       const historyItems = [
-        { date: '18:05 2025-07-18 ', text: '요청 생성', user: '김철수', type: 'create' },
-        { date: '15:02 2025-07-19', text: '이영희 승인', user: '이영희', type: 'approve' },
-        { date: '13:08 2025-07-20', text: '부서로 전달', user: '웹팀', type: 'send' }
+        { date: '2025-07-18 18:05', text: '요청 생성', user: '김철수', type: 'create' },
+        { date: '2025-07-19 15:02', text: '이영희 승인', user: '이영희', type: 'approve' },
+        { date: '2025-07-20 13:08', text: '부서로 전달', user: '웹팀', type: 'send' }
       ];
       $('#detailHistory').html(`
         <ul class="timeline-list" style="list-style:none;padding:0;margin:0;">
@@ -1111,8 +1111,8 @@
 
           $('#detailTitleInput').prop('readonly', false);
           $('#detailContentInput').prop('readonly', false);
-          document.getElementById('attachmentMarusys').style.display = 'block';
-                   document.getElementById('hehee').style.display = 'block';
+          // document.getElementById('attachmentMarusys').style.display = 'block';
+          // document.getElementById('hehee').style.display = 'block';
 
         } else {
           $('#applyDefaultLine').hide();
@@ -1122,8 +1122,8 @@
           ;
           $('#detailTitleInput').prop('readonly', true);
           $('#detailContentInput').prop('readonly', true);
-          $('#attachmentMarusys').css('display', 'none');
-          $('#hehee').css('display', 'none');
+          // $('#attachmentMarusys').css('display', 'none');
+          // $('#hehee').css('display', 'none');
 
 
 
